@@ -120,6 +120,7 @@ class Note extends FNFSprite
 					newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('arrowEnds', assetModifier, Init.trueSettings.get("Note Skin"),
 						'noteskins/notes')), true, 7,
 						6);
+					
 					newNote.animation.add(noteColorID[noteData] + 'holdend', [pixelNoteID[noteData]]);
 					newNote.animation.add(noteColorID[noteData] + 'hold', [pixelNoteID[noteData] - 4]);
 				}
@@ -128,6 +129,7 @@ class Note extends FNFSprite
 					newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('arrows-pixels', assetModifier, Init.trueSettings.get("Note Skin"),
 						'noteskins/notes')),
 						true, 17, 17);
+					
 					newNote.animation.add(noteColorID[noteData] + 'Scroll', [pixelNoteID[noteData]]);
 				}
 				newNote.antialiasing = false;
@@ -136,14 +138,14 @@ class Note extends FNFSprite
 			default: // base game arrows for no reason whatsoever
 				newNote.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset('NOTE_assets', assetModifier, Init.trueSettings.get("Note Skin"),
 					'noteskins/notes'));
-				newNote.animation.addByPrefix(noteColorID[noteData] + 'Scroll', noteColorID[noteData] + '0');
 						
+				newNote.animation.addByPrefix(noteColorID[noteData] + 'Scroll', noteColorID[noteData] + '0');
+				newNote.animation.addByPrefix(noteColorID[noteData] + 'holdend', noteColorID[noteData] + ' hold end');
+				newNote.animation.addByPrefix(noteColorID[noteData] + 'hold', noteColorID[noteData] + ' hold piece');
+
 				if (noteData == 0)
 					newNote.animation.addByPrefix('purpleholdend', 'pruple end hold'); // uh?
-				else
-					newNote.animation.addByPrefix(noteColorID[noteData] + 'holdend', noteColorID[noteData] + ' hold end');
 				
-				newNote.animation.addByPrefix(noteColorID[noteData] + 'hold', noteColorID[noteData] + ' hold piece');
 				newNote.setGraphicSize(Std.int(newNote.width * 0.7));
 				newNote.updateHitbox();
 				newNote.antialiasing = true;
