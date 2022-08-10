@@ -51,6 +51,9 @@ class Note extends FNFSprite
 
 	// it has come to this.
 	public var endHoldOffset:Float = Math.NEGATIVE_INFINITY;
+	
+	static var noteColorID:Array<String> = ['purple', 'blue', 'green', 'red'];
+	static var pixelNoteID:Array<Int> = [4, 5, 6, 7];
 
 	public function new(strumTime:Float, noteData:Int, noteAlt:Float, ?prevNote:Note, ?sustainNote:Bool = false)
 	{
@@ -117,24 +120,15 @@ class Note extends FNFSprite
 					newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('arrowEnds', assetModifier, Init.trueSettings.get("Note Skin"),
 						'noteskins/notes')), true, 7,
 						6);
-					newNote.animation.add('purpleholdend', [4]);
-					newNote.animation.add('greenholdend', [6]);
-					newNote.animation.add('redholdend', [7]);
-					newNote.animation.add('blueholdend', [5]);
-					newNote.animation.add('purplehold', [0]);
-					newNote.animation.add('greenhold', [2]);
-					newNote.animation.add('redhold', [3]);
-					newNote.animation.add('bluehold', [1]);
+					newNote.animation.add(noteColorID[noteData] + 'holdend', [pixelNoteID[noteData]]);
+					newNote.animation.add(noteColorID[noteData] + 'hold', [pixelNoteID[noteData] - 4]);
 				}
 				else
 				{
 					newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('arrows-pixels', assetModifier, Init.trueSettings.get("Note Skin"),
 						'noteskins/notes')),
 						true, 17, 17);
-					newNote.animation.add('greenScroll', [6]);
-					newNote.animation.add('redScroll', [7]);
-					newNote.animation.add('blueScroll', [5]);
-					newNote.animation.add('purpleScroll', [4]);
+					newNote.animation.add(noteColorID[noteData] + 'Scroll', [pixelNoteID[noteData]]);
 				}
 				newNote.antialiasing = false;
 				newNote.setGraphicSize(Std.int(newNote.width * PlayState.daPixelZoom));
@@ -142,18 +136,14 @@ class Note extends FNFSprite
 			default: // base game arrows for no reason whatsoever
 				newNote.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset('NOTE_assets', assetModifier, Init.trueSettings.get("Note Skin"),
 					'noteskins/notes'));
-				newNote.animation.addByPrefix('greenScroll', 'green0');
-				newNote.animation.addByPrefix('redScroll', 'red0');
-				newNote.animation.addByPrefix('blueScroll', 'blue0');
-				newNote.animation.addByPrefix('purpleScroll', 'purple0');
-				newNote.animation.addByPrefix('purpleholdend', 'pruple end hold');
-				newNote.animation.addByPrefix('greenholdend', 'green hold end');
-				newNote.animation.addByPrefix('redholdend', 'red hold end');
-				newNote.animation.addByPrefix('blueholdend', 'blue hold end');
-				newNote.animation.addByPrefix('purplehold', 'purple hold piece');
-				newNote.animation.addByPrefix('greenhold', 'green hold piece');
-				newNote.animation.addByPrefix('redhold', 'red hold piece');
-				newNote.animation.addByPrefix('bluehold', 'blue hold piece');
+				newNote.animation.addByPrefix(noteColorID[noteData] + 'Scroll', noteColorID[noteData] + '0');
+						
+				if (noteData == 0)
+					newNote.animation.addByPrefix('purpleholdend', 'pruple end hold'); // uh?
+				else
+					newNote.animation.addByPrefix(noteColorID[noteData] + 'holdend', noteColorID[noteData] + ' hold end');
+				
+				newNote.animation.addByPrefix(noteColorID[noteData] + 'hold', noteColorID[noteData] + ' hold piece');
 				newNote.setGraphicSize(Std.int(newNote.width * 0.7));
 				newNote.updateHitbox();
 				newNote.antialiasing = true;
