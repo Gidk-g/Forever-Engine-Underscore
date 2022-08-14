@@ -45,6 +45,8 @@ class UIStaticArrow extends FlxSprite
 	public var angleTo:Float;
 
 	public var setAlpha:Float = (Init.trueSettings.get('Opaque Arrows')) ? 1 : 0.8;
+	
+	public var resetAnim:Float = 0;
 
 	public function new(x:Float, y:Float, ?babyArrowType:Int = 0)
 	{
@@ -56,6 +58,24 @@ class UIStaticArrow extends FlxSprite
 
 		updateHitbox();
 		scrollFactor.set();
+	}
+	
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+
+		if (resetAnim > 0)
+		{
+			resetAnim -= elapsed;
+
+			if (resetAnim <= 0.0975) // fade effect
+				playAnim('pressed');
+			if (resetAnim < 0)
+			{
+				playAnim('static');
+				resetAnim = 0;
+			}
+		}
 	}
 
 	// literally just character code
