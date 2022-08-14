@@ -51,6 +51,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 	var daPixelZoom = PlayState.daPixelZoom;
 
 	public var foreground:FlxTypedGroup<FlxBasic>;
+	public var layers:FlxTypedGroup<FlxBasic>;
 
 	public function new(curStage)
 	{
@@ -87,6 +88,9 @@ class Stage extends FlxTypedGroup<FlxBasic>
 
 		// to apply to foreground use foreground.add(); instead of add();
 		foreground = new FlxTypedGroup<FlxBasic>();
+		
+		// to apply above dad and boyfriend, use layers.add(); instead of add();
+		layers = new FlxTypedGroup<FlxBasic>();
 
 		//
 		switch (curStage)
@@ -188,6 +192,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				limo.animation.addByPrefix('drive', "Limo stage", 24);
 				limo.animation.play('drive');
 				limo.antialiasing = true;
+				layers.add(limo);
 
 				fastCar = new FNFSprite(-300, 160).loadGraphic(Paths.image('backgrounds/' + curStage + '/fastCarLol'));
 			// loadArray.add(limo);
