@@ -244,9 +244,8 @@ class PlayState extends MusicBeatState
 		// add characters
 		add(gf);
 
-		// add limo cus dumb layering
-		if (curStage == 'highway')
-			add(stageBuild.limo);
+		// layering
+		add(stageBuild.layers);
 
 		add(dadOpponent);
 		add(boyfriend);
