@@ -320,6 +320,8 @@ class OriginalChartingState extends MusicBeatState
 		tab_group_song.add(check_voices);
 		tab_group_song.add(check_mute_inst);
 		tab_group_song.add(check_mute_vocals);
+		tab_group_song.add(playTicksBf);
+		tab_group_song.add(playTicksDad);
 		tab_group_song.add(saveButton);
 		tab_group_song.add(reloadSong);
 		tab_group_song.add(reloadSongJson);
@@ -329,8 +331,6 @@ class OriginalChartingState extends MusicBeatState
 		tab_group_song.add(assetModifierDropDown);
 		tab_group_song.add(player1DropDown);
 		tab_group_song.add(player2DropDown);
-		tab_group_song.add(playTicksBf);
-		tab_group_song.add(playTicksDad);
 
 		UI_box.addGroup(tab_group_song);
 		UI_box.scrollFactor.set();
