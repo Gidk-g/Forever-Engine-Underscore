@@ -14,6 +14,7 @@ import flixel.addons.ui.FlxUITabMenu;
 import flixel.addons.ui.FlxUITooltip.FlxUITooltipStyle;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
@@ -24,6 +25,7 @@ import flixel.util.FlxColor;
 import gameObjects.*;
 import gameObjects.userInterface.*;
 import gameObjects.userInterface.notes.*;
+import gameObjects.userInterface.notes.Strumline.UIStaticArrow;
 import haxe.Json;
 import lime.utils.Assets;
 import meta.MusicBeat.MusicBeatState;
@@ -83,6 +85,8 @@ class OriginalChartingState extends MusicBeatState
 	 * WILL BE THE CURRENT / LAST PLACED NOTE
 	**/
 	var curSelectedNote:Array<Dynamic>;
+	
+	var arrowGroup:FlxTypedSpriteGroup<UIStaticArrow>;
 
 	var tempBpm:Float = 0;
 
@@ -181,6 +185,32 @@ class OriginalChartingState extends MusicBeatState
 		addSongUI();
 		addSectionUI();
 		addNoteUI();
+		
+		arrowGroup = new FlxTypedSpriteGroup<UIStaticArrow>(0, 0);
+		for (keys in 0...8)
+		{
+			var typeReal:Int = 0;
+			typeReal = keys;
+			if (typeReal > 3)
+				typeReal -= 4;
+
+			var newArrow:UIStaticArrow = ForeverAssets.generateUIArrows(GRID_SIZE * (keys + 1) - 98, 0, typeReal, 'chart editor');
+
+			newArrow.ID = keys;
+			newArrow.setGraphicSize(GRID_SIZE, GRID_SIZE);
+			newArrow.updateHitbox();
+			newArrow.alpha = 0.8;
+			newArrow.antialiasing = true;
+
+			newArrow.playAnim('static');
+
+			if (newArrow.animation.curAnim.name == 'confirm')
+				newArrow.alpha = 1;
+
+			arrowGroup.add(newArrow);
+		}
+
+		add(arrowGroup);
 
 		add(curRenderedNotes);
 		add(curRenderedSustains);
@@ -295,11 +325,11 @@ class OriginalChartingState extends MusicBeatState
 		tab_group_song.add(loadAutosaveBtn);
 		tab_group_song.add(stepperBPM);
 		tab_group_song.add(stepperSpeed);
+		tab_group_song.add(assetModifierDropDown);
 		tab_group_song.add(player1DropDown);
 		tab_group_song.add(player2DropDown);
 		tab_group_song.add(playTicksBf);
 		tab_group_song.add(playTicksDad);
-		tab_group_song.add(assetModifierDropDown);
 
 		UI_box.addGroup(tab_group_song);
 		UI_box.scrollFactor.set();
@@ -544,28 +574,6 @@ class OriginalChartingState extends MusicBeatState
 		Conductor.songPosition = songMusic.time;
 		_song.song = typingShit.text;
 
-		// real thanks for the help with this ShadowMario, you are the best -Ghost
-		var playedSound:Array<Bool> = [];
-		for (i in 0...8) {
-			playedSound.push(false);
-		}
-		curRenderedNotes.forEachAlive(function(note:Note)
-        {
-            if (note.strumTime < songMusic.time)
-            {
-				var data:Int = note.noteData % 4;
-
-				if (songMusic.playing && !playedSound[data] && note.noteData > -1 && note.strumTime >= lastSongPos)
-                {
-					if ((playTicksBf.checked) && (note.mustPress) || (playTicksDad.checked) && (!note.mustPress))
-					{
-						FlxG.sound.play(Paths.sound('soundNoteTick'));
-						playedSound[data] = true;
-					}
-                }
-            }
-        });
-
 		strumLine.y = getYfromStrum((Conductor.songPosition - sectionStartTime()) % (Conductor.stepCrochet * _song.notes[curSection].lengthInSteps));
 
 		if (curBeat % 4 == 0 && curStep >= 16 * (curSection + 1))
@@ -754,15 +762,40 @@ class OriginalChartingState extends MusicBeatState
 			changeSection(curSection - shiftThing);
 
 		bpmTxt.text = bpmTxt.text = Std.string(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))
-			+ " / "
-			+ Std.string(FlxMath.roundDecimal(songMusic.length / 1000, 2))
-			+ "\nSection: "
-			+ curSection
-			+ "\nBeat: "
-			+ curBeat
-			+ "\nStep: "
-			+ curStep;
+			+ " / " + Std.string(FlxMath.roundDecimal(songMusic.length / 1000, 2))
+			+ "\nSection: " + curSection
+			+ "\nBeat: " + curBeat
+			+ "\nStep: " + curStep;
 		super.update(elapsed);
+		
+		curRenderedNotes.forEachAlive(function(note:Note)
+		{
+			if ((note.strumTime < songMusic.time))
+			{
+				var data:Int = note.noteData % 4;
+
+				var floor = (Math.floor(Conductor.songPosition / Conductor.stepCrochet));
+
+				if (floor == Math.floor(note.strumTime / Conductor.stepCrochet))
+				{
+					var data:Null<Int> = note.noteData;
+					if (data > -1 && note.mustPress != _song.notes[curSection].mustHitSection)
+						data += 4;
+
+					arrowGroup.members[data].playAnim('confirm', true);
+					arrowGroup.members[data].resetAnim = (note.sustainLength / 1000) + 0.1;
+				}
+
+				if (songMusic.playing && !playedSound[data] && note.noteData > -1 && note.strumTime >= lastSongPos)
+				{
+					if ((playTicksBf.checked) && (note.mustPress) || (playTicksDad.checked) && (!note.mustPress))
+					{
+						FlxG.sound.play(Paths.sound('soundNoteTick'));
+						playedSound[data] = true;
+					}
+				}
+			}
+		});
 
 		lastSongPos = Conductor.songPosition;
 	}
@@ -973,7 +1006,7 @@ class OriginalChartingState extends MusicBeatState
 
 			if (daSus > 0)
 			{
-				var sustainVis:FlxSprite = new FlxSprite(note.x + (GRID_SIZE / 2),
+				var sustainVis:FlxSprite = new FlxSprite(note.x + (GRID_SIZE / 2 - 3),
 					note.y + GRID_SIZE).makeGraphic(8, Math.floor(FlxMath.remapToRange(daSus, 0, Conductor.stepCrochet * 16, 0, gridBG.height)));
 				curRenderedSustains.add(sustainVis);
 			}
