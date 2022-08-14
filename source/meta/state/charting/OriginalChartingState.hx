@@ -768,6 +768,12 @@ class OriginalChartingState extends MusicBeatState
 			+ "\nStep: " + curStep;
 		super.update(elapsed);
 		
+		var playedSound:Array<Bool> = [];
+		for (i in 0...8)
+		{
+			playedSound.push(false);
+		}
+		
 		curRenderedNotes.forEachAlive(function(note:Note)
 		{
 			if ((note.strumTime < songMusic.time))
