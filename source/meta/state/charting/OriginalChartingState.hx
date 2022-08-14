@@ -97,6 +97,7 @@ class OriginalChartingState extends MusicBeatState
 
 	var playTicksBf:FlxUICheckBox = null;
 	var playTicksDad:FlxUICheckBox = null;
+	var showStrumlineNotes:FlxUICheckBox = null;
 
 	override function create()
 	{
@@ -412,10 +413,7 @@ class OriginalChartingState extends MusicBeatState
 		stepperSusLength.value = 0;
 		stepperSusLength.name = 'note_susLength';
 
-		var applyLength:FlxButton = new FlxButton(100, 10, 'Apply');
-
 		tab_group_note.add(stepperSusLength);
-		tab_group_note.add(applyLength);
 
 		// note types
 		stepperType = new FlxUINumericStepper(10, 30, Conductor.stepCrochet / 125, 0, 0, (Conductor.stepCrochet / 125) + 10); // 10 is placeholder
@@ -424,6 +422,11 @@ class OriginalChartingState extends MusicBeatState
 		stepperType.name = 'note_type';
 
 		tab_group_note.add(stepperType);
+
+		showStrumlineNotes = new FlxUICheckBox(stepperType.x, stepperType.y + 30, null, null, 'Show Strumline Notes', 100);
+		showStrumlineNotes.checked = false;
+
+		tab_group_note.add(showStrumlineNotes);
 
 		UI_box.addGroup(tab_group_note);
 		// I'm genuinely tempted to go around and remove every instance of the word "sus" it is genuinely killing me inside
@@ -570,6 +573,8 @@ class OriginalChartingState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		curStep = recalculateSteps();
+		
+		arrowGroup.visible = showStrumlineNotes.checked;
 
 		Conductor.songPosition = songMusic.time;
 		_song.song = typingShit.text;
