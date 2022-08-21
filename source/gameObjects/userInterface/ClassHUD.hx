@@ -93,20 +93,16 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		cornerMark = new FlxText(0, 0, 0, engineDisplay);
 		cornerMark.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE);
 		cornerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-		add(cornerMark);
 		cornerMark.setPosition(FlxG.width - (cornerMark.width + 5), 5);
 		cornerMark.antialiasing = true;
+		add(cornerMark);
 
-		centerMark = new FlxText(0, 0, 0, '- ${infoDisplay + " [" + diffDisplay}] -');
+		centerMark = new FlxText(0, (Init.trueSettings.get('Downscroll') ? FlxG.height - 45 : 20), 0, '- $infoDisplay [$diffDisplay] -');
 		centerMark.setFormat(Paths.font('vcr.ttf'), 24, FlxColor.WHITE);
 		centerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-		add(centerMark);
-		if (Init.trueSettings.get('Downscroll'))
-			centerMark.y = (FlxG.height - centerMark.height / 2) - 30;
-		else
-			centerMark.y = (FlxG.height / 24) - 10;
-		centerMark.screenCenter(X);
 		centerMark.antialiasing = true;
+		centerMark.screenCenter(X);
+		add(centerMark);
 
 		// counter
 		if (Init.trueSettings.get('Counter') != 'None')
