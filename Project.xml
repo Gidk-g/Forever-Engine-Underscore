@@ -31,7 +31,7 @@
 	<define name="DISCORD_RPC" if="desktop" unless="web || neko" />
 	<define name="VIDEO_PLUGIN" if="desktop" unless="32bits || neko" />
 	<define name="HAXE_EXTENSION" unless="web" />
-	<define name="MODS_ALLOWED" unless="web" />
+	<define name="MOD_HANDLER" unless="web" />
 	<define name="DEBUG_TRACES" if="debug" />
 
 	<!-- _____________________________ Path Settings ____________________________ -->
@@ -43,7 +43,7 @@
 	<source path="source" />
 
 	<assets path="assets" />
-	<assets path="mods" if="MODS_ALLOWED" />
+	<assets path="mods" if="MOD_HANDLER" />
 
 	<assets path="art/dependencies/FE-CrashDialog.exe" rename="FE-CrashDialog.exe" type="template" if="windows release" />
 
@@ -59,7 +59,7 @@
 
 	<haxelib name="SScript" if="HAXE_EXTENSION" />
 	<haxelib name="hscript" if="HAXE_EXTENSION" /> <!-- if i ever need it -gabi -->
-	<haxelib name="polymod" if="MODS_ALLOWED" />
+	<haxelib name="polymod" if="MOD_HANDLER" />
 	<haxeflag name="-dce no" />
 
 	<haxedef name="HXC_DEBUG_TRACE" if="debug" />

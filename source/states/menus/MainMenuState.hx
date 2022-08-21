@@ -143,7 +143,7 @@ class MainMenuState extends MusicBeatState
 				Main.switchState(this, new TitleState());
 			}
 
-			#if MODS_ALLOWED
+			#if MOD_HANDLER
 			if (controls.RESET)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);

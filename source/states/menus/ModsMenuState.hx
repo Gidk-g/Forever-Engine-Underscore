@@ -33,7 +33,7 @@ typedef ModData =
 class ModsMenuState extends MusicBeatState
 {
 	// look I don't feel like commenting specific lines on a MODS menu.
-	#if MODS_ALLOWED
+	#if MOD_HANDLER
 	var bg:FlxSprite;
 	var fg:FlxSprite;
 	var infoText:FlxText;

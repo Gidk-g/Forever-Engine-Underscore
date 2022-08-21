@@ -1,6 +1,6 @@
 package base.mods;
 
-#if MODS_ALLOWED
+#if MOD_HANDLER
 import polymod.Polymod;
 import polymod.backends.OpenFLBackend;
 import polymod.backends.PolymodAssets.PolymodAssetType;
@@ -15,7 +15,7 @@ class ModHandler
 
     public static function loadModHandler()
     {
-        #if MODS_ALLOWED
+        #if MOD_HANDLER
         trace('Initializing Polymod...');
 		loadMods(getMods());
         #else
@@ -23,7 +23,7 @@ class ModHandler
         #end
     }
 
-    #if MODS_ALLOWED
+    #if MOD_HANDLER
     public static function loadMods(folders:Array<String>)
     {
         trace('Attempting to Load ${folders.length} mods...');
@@ -121,7 +121,7 @@ class ModHandler
     #end
 }
 
-#if MODS_ALLOWED
+#if MOD_HANDLER
 class ModBackend extends OpenFLBackend
 {
 	public function new()

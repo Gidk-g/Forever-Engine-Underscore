@@ -500,7 +500,7 @@ class Character extends FNFSprite
 		 */
 		var path = Paths.getPreloadPath('characters/$char/' + character + '.json');
 
-		#if MODS_ALLOWED
+		#if MOD_HANDLER
 		var rawJson = File.getContent(path);
 		#else
 		var rawJson = Assets.getText(path);
