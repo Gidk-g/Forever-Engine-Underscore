@@ -1,4 +1,4 @@
-package base;
+package base.mods;
 
 #if MODS_ALLOWED
 import polymod.Polymod;

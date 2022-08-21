@@ -1,7 +1,7 @@
 import base.CoolUtil;
-import base.ModHandler;
 import base.WeekParser;
 import base.debug.Overlay;
+import base.mods.ModHandler;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.graphics.FlxGraphic;
