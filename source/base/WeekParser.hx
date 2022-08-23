@@ -2,6 +2,7 @@ package base;
 
 import flixel.util.FlxColor;
 import haxe.Json;
+import openfl.utils.Assets;
 import states.menus.StoryMenuState;
 import sys.FileSystem;
 import sys.io.File;
@@ -70,12 +71,12 @@ class WeekParser
 		var dataFolders = [];
 		var pushedWeeks:Array<String> = [];
 
-		if (FileSystem.exists(Paths.getPreloadPath('weeks/')))
+		if (Assets.exists(Paths.getPreloadPath('weeks/')))
 			dataFolders.push(Paths.getPreloadPath('weeks/'));
 
 		for (folders in dataFolders)
 		{
-			if (FileSystem.exists(folders))
+			if (Assets.exists(folders))
 			{
 				for (file in FileSystem.readDirectory(folders))
 				{

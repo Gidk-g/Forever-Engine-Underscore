@@ -118,7 +118,7 @@ class Character extends FNFSprite
 				playAnim("shoot1");
 		}
 
-		var psychChar = FileSystem.exists(Paths.getPreloadPath('characters/$character/' + character + '.json'));
+		var psychChar = Assets.exists(Paths.getPreloadPath('characters/$character/' + character + '.json'));
 
 		switch (curCharacter)
 		{
@@ -384,7 +384,7 @@ class Character extends FNFSprite
 
 		for (i in scripts)
 		{
-			if (FileSystem.exists(i) && !pushedScripts.contains(i))
+			if (Assets.exists(i) && !pushedScripts.contains(i))
 			{
 				var script:ScriptHandler = new ScriptHandler(i);
 

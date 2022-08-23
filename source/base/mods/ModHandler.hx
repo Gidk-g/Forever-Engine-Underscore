@@ -31,7 +31,7 @@ class ModHandler
         var loadedModlist = Polymod.init({
             modRoot: MOD_DIR,
             dirs: folders,
-            framework: CUSTOM,
+            framework: OPENFL,
             apiVersion: API_VER,
 			errorCallback: onError,
 			frameworkParams: buildFrameworkParams(),

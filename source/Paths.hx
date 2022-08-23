@@ -144,7 +144,7 @@ class Paths
 
 		var path = getPath('$folder/$key.png', IMAGE, library);
 
-		if (FileSystem.exists(path))
+		if (Assets.exists(path))
 		{
 			if (!currentTrackedAssets.exists(key))
 			{
@@ -177,14 +177,14 @@ class Paths
 
 	static public function getTextFromFile(key:String):String
 	{
-		if (FileSystem.exists(getPreloadPath(key)))
+		if (Assets.exists(getPreloadPath(key)))
 			return File.getContent(getPreloadPath(key));
 
 		if (currentLevel != null)
 		{
 			var levelPath:String = '';
 			levelPath = getLibraryPathForce(key, '');
-			if (FileSystem.exists(levelPath))
+			if (Assets.exists(levelPath))
 				return File.getContent(levelPath);
 		}
 		return Assets.getText(getPath(key, TEXT));
@@ -266,7 +266,7 @@ class Paths
 	public inline static function getPreloadPath(file:String)
 	{
 		var returnPath:String = 'assets/$file';
-		if (!FileSystem.exists(returnPath))
+		if (!Assets.exists(returnPath))
 			returnPath = CoolUtil.swapSpaceDash(returnPath);
 		return returnPath;
 	}

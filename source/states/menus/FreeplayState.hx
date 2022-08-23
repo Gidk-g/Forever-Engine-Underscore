@@ -87,7 +87,9 @@ class FreeplayState extends MusicBeatState
 		// load in all songs that exist in folder
 		var folderSongs:Array<String> = CoolUtil.returnAssetsLibrary('songs', 'assets');
 
-		///*
+		// for mods, loads all songs specified on the song list file;
+		var modSongs = CoolUtil.coolTextFile(Paths.txt('songs/freeplaySonglist'));
+
 		for (i in 0...Main.gameWeeks.length)
 		{
 			addWeek(Main.gameWeeks[i][0], i, Main.gameWeeks[i][1], Main.gameWeeks[i][2]);
@@ -115,6 +117,25 @@ class FreeplayState extends MusicBeatState
 
 					addSong(CoolUtil.spaceToDash(castSong.song), 1, icon, color);
 				}
+			}
+		}
+
+		for (i in 0...modSongs.length)
+		{
+			if (modSongs[i].trim() != "")
+			{
+				var songListArray = modSongs[i].split(":");
+
+				var song = songListArray[0];
+				var icon = songListArray[1];
+				var color = songListArray[2];
+
+				var colorToPush:Null<FlxColor> = null;
+
+				if (color != null)
+					colorToPush = FlxColor.fromString(color);
+
+				addSong(song, 1, icon, colorToPush);
 			}
 		}
 

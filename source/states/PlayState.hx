@@ -31,6 +31,7 @@ import funkin.*;
 import funkin.Strumline.UIStaticArrow;
 import funkin.ui.*;
 import lime.app.Application;
+import openfl.Assets;
 import openfl.display.BlendMode;
 import openfl.display.BlendModeEffect;
 import openfl.display.GraphicsShader;
@@ -2101,11 +2102,7 @@ class PlayState extends MusicBeatState
 		inCutscene = true;
 
 		var filepath:String = Paths.video(name);
-		#if sys
-		if(!FileSystem.exists(filepath))
-		#else
-		if(!OpenFlAssets.exists(filepath))
-		#end
+		if(!Assets.exists(filepath))
 		{
 			FlxG.log.warn('Couldnt find video file: ' + name);
 			startAndEnd();
@@ -2409,7 +2406,7 @@ class PlayState extends MusicBeatState
 
 		for (fool in fools)
 		{
-			if (FileSystem.exists(fool))
+			if (Assets.exists(fool))
 			{
 				for (file in FileSystem.readDirectory(fool))
 				{

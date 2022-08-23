@@ -3,3 +3,12 @@ custom songs folders go here, song folders consist of 3 files at minimum
 - songName.json
 - Inst.ogg
 - Voices.ogg
+
+outside of the song folders, you should create a new file named "freeplaySonglist.txt"
+this file will store your current song list and order
+
+to add a new song to said list, write the following:
+
+songName:songIcon:songColor
+
+songColor should be an hex code, ex: #FFFFFFFF
