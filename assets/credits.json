@@ -8,15 +8,23 @@
         [
             "BeastlyGhost",
             "ghost",
-            "Main Coder", "I am definitely not a ghost, just trust me on that one.",
+            "Coder", "I am definitely not a ghost, just trust me on that one.",
             [["Twitter", "https://twitter.com/Fan_de_RPG"]],
             [176, 206, 255],
             380, 0, null
         ],
         [
+            "Satoru",
+            "satoru",
+            "Artist", "se a vaca bebe água e come mato, pq ela dá leite e não chá?",
+            [[""]],
+            [255, 159, 212],
+            200, 0, null
+        ],
+        [
             "NxtVithor",
             "vito",
-            "Main Artist", "I open the fucking door, and I piss on the floor.",
+            "Artist", "I open the fucking door, and I piss on the floor.",
             [
                 ["Twitter", "https://twitter.com/NxtVithor"],
                 ["Twitch", "https://www.twitch.tv/nxtvithor"]
@@ -25,12 +33,12 @@
             280, -5, 0.9
         ],
         [
-            "Satoru",
-            "satoru",
-            "Additional Artist", "se a vaca bebe água e come mato, pq ela dá leite e não chá?",
-            [[""]],
-            [255, 159, 212],
-            200, 0, null
+            "Suok",
+            "",
+            "External Art and banger artist overhaul.", "*gaster noises*",
+            [["Twitter", "https://twitter.com/SuokArts3"]],
+            [68, 68, 68],
+            380, 0, null
         ],
         [""],
         ["Former Project Members"],
@@ -41,16 +49,6 @@
             [[""]],
             [182, 84, 82],
             280, -3, null
-        ],
-        [""],
-	    ["Contribuitors"],
-    	[
-            "Suok",
-            "",
-            "External Art and banger artist overhaul.", "*gaster noises*",
-            [["Twitter", "https://twitter.com/SuokArts3"]],
-            [68, 68, 68],
-            380, 0, null
         ],
         [""],
         ["Special Thanks"],
@@ -67,6 +65,17 @@
             "",
             "Library for Loading Video Cutscenes", null,
             [["Twitter", "https://twitter.com/polybiusproxy"]],
+            [255, 234, 166],
+            380, 0, null
+        ],
+        [
+            "M.A Jigsaw",
+            "",
+            "Helped me with Polymod setup", null,
+            [
+                ["Git", "https://github.com/MAJigsaw77"],
+                ["Twitter", "https://twitter.com/jigsaw1_ma"]
+            ],
             [255, 234, 166],
             380, 0, null
         ],
