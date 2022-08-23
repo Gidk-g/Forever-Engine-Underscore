@@ -255,8 +255,16 @@ class Main extends Sprite
 		{
 			switch (stackItem)
 			{
+				case CFunction:
+					errMsg += 'a C function\n';
+				case Module(m):
+					errMsg += 'module ' + m + '\n';
 				case FilePos(s, file, line, column):
-					errMsg += file + " (line " + line + ")\n";
+					errMsg += file + ' (line ' + line + ')\n';
+				case Method(cname, meth):
+					errMsg += cname == null ? "<unknown>" : cname + '.' + meth + '\n';
+				case LocalFunction(n):
+					errMsg += 'local function ' + n + '\n';
 				default:
 					Sys.println(stackItem);
 			}

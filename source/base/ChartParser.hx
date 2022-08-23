@@ -5,6 +5,7 @@ import funkin.EventNote;
 import funkin.Note;
 import funkin.Strumline;
 import haxe.Json;
+import openfl.utils.Assets;
 import states.PlayState;
 import sys.io.File;
 
@@ -281,7 +282,7 @@ class Song
 
 		try
 		{
-			rawJson = File.getContent(Paths.songJson(folder.toLowerCase(), jsonInput.toLowerCase())).trim();
+			rawJson = Assets.getText(Paths.songJson(folder.toLowerCase(), jsonInput.toLowerCase())).trim();
 		}
 		catch (e)
 		{
@@ -296,7 +297,7 @@ class Song
 
 		try
 		{
-			rawMeta = File.getContent(Paths.songJson(folder.toLowerCase(), 'meta')).trim();
+			rawMeta = Assets.getText(Paths.songJson(folder.toLowerCase(), 'meta')).trim();
 		}
 		catch (e)
 		{

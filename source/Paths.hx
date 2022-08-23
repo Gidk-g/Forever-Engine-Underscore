@@ -144,11 +144,11 @@ class Paths
 
 		var path = getPath('$folder/$key.png', IMAGE, library);
 
-		if (Assets.exists(path))
+		if (OpenFlAssets.exists(path, IMAGE))
 		{
 			if (!currentTrackedAssets.exists(key))
 			{
-				var bitmap = BitmapData.fromFile(path);
+				var bitmap = OpenFlAssets.getBitmapData(path);
 				var newGraphic:FlxGraphic;
 				if (textureCompression)
 				{
@@ -171,7 +171,7 @@ class Paths
 			localTrackedAssets.push(key);
 			return currentTrackedAssets.get(key);
 		}
-		#if DEBUG_TRACES trace('oh no ' + key + ' is returning null NOOOO'); #end
+		#if DEBUG_TRACES trace('oh no $key is returning null NOOOO'); #end
 		return null;
 	}
 
@@ -190,16 +190,29 @@ class Paths
 		return Assets.getText(getPath(key, TEXT));
 	}
 
-	public static function returnSound(path:String, key:String, ?library:String)
+	public static function returnSound(path:String, key:String, ?library:String, cached:Bool = true) // cached is here for testing;
 	{
 		// I hate this so god damn much
-		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);
-		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
+		var gottenPath:String;
+
+		if (path == 'songs' && library == null)
+			gottenPath = getPath('$key.$SOUND_EXT', SOUND, 'songs');
+		else
+			gottenPath = getPath('$path/$key.$SOUND_EXT', SOUND, library);
+
+		// gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
 		// trace(gottenPath);
-		if (!currentTrackedSounds.exists(gottenPath))
-			currentTrackedSounds.set(gottenPath, Sound.fromFile(gottenPath));
-		localTrackedAssets.push(key);
-		return currentTrackedSounds.get(gottenPath);
+
+		if (OpenFlAssets.exists(gottenPath, SOUND))
+		{
+			if (!currentTrackedSounds.exists(gottenPath))
+				currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound(gottenPath, cached));
+			localTrackedAssets.push(key);
+			return currentTrackedSounds.get(gottenPath);
+		}
+
+		trace('oh no $key is returning null NOOOO');
+		return null;
 	}
 
 	//
