@@ -10,6 +10,7 @@ import funkin.Highscore;
 import openfl.filters.BitmapFilter;
 import openfl.filters.ColorMatrixFilter;
 import states.*;
+import sys.FileSystem;
 
 using StringTools;
 
@@ -43,7 +44,6 @@ class Init extends FlxState
 	public static var NOT_FORCED = 'not forced';
 
 	public static var gameSettings:Map<String, Dynamic> = [
-
 		// GAMEPLAY;
 		'Controller Mode' => [
 			false,
@@ -58,14 +58,14 @@ class Init extends FlxState
 			NOT_FORCED
 		],
 		'Centered Notefield' => [false, Checkmark, "Center the notes, disables the enemy's notes.", NOT_FORCED],
-		"Hitsound Type" => ['default', Selector, 'Choose the Note Hitsound you prefer.', NOT_FORCED, ''],
-		'Hitsound Volume' => [Checkmark, Selector, 'The volume for your Note Hitsounds.', NOT_FORCED],
 		'Ghost Tapping' => [
 			false,
 			Checkmark,
 			"Enables Ghost Tapping, allowing you to press inputs without missing.",
 			NOT_FORCED
 		],
+		"Hitsound Type" => ['default', Selector, 'Choose the Note Hitsound you prefer.', NOT_FORCED, ''],
+		'Hitsound Volume' => [Checkmark, Selector, 'The volume for your Note Hitsounds.', NOT_FORCED],
 		'Use Set Scroll Speed' => [
 			false,
 			Checkmark,
@@ -73,7 +73,6 @@ class Init extends FlxState
 			NOT_FORCED
 		],
 		'Scroll Speed' => [1, Selector, 'Set the scroll speed for the Notes.', NOT_FORCED],
-
 		// TEXT;
 		'Display Accuracy' => [true, Checkmark, 'Whether to display your accuracy on screen.', NOT_FORCED],
 		'Score Bar Size' => [18, Selector, 'Set the text size for the Score Bar.', NOT_FORCED],
@@ -84,7 +83,6 @@ class Init extends FlxState
 			NOT_FORCED,
 			['never', 'freeplay only', 'always']
 		],
-
 		// META;
 		'Auto Pause' => [
 			true,
@@ -125,7 +123,6 @@ class Init extends FlxState
 			'Whether to display information like your game state.',
 			NOT_FORCED
 		],
-
 		// USER INTERFACE;
 		"UI Skin" => [
 			'default',
@@ -159,9 +156,9 @@ class Init extends FlxState
 			NOT_FORCED,
 			['None', 'Left', 'Right']
 		],
-
 		// NOTES AND HOLDS;
 		"Note Skin" => ['default', Selector, 'Choose a note skin.', NOT_FORCED, ''],
+		'Arrow Opacity' => [80, Selector, "Set the opacity for your Strumline Notes.", NOT_FORCED],
 		"Clip Style" => [
 			'stepmania',
 			Selector,
@@ -175,12 +172,6 @@ class Init extends FlxState
 			'When enabled, left and right notes no longer move the camera.',
 			NOT_FORCED
 		],
-		'Arrow Opacity' => [
-			80,
-			Selector,
-			"Set the opacity for your Strumline Notes.",
-			NOT_FORCED
-		],
 		'Splash Opacity' => [
 			50,
 			Selector,
@@ -188,18 +179,11 @@ class Init extends FlxState
 			NOT_FORCED
 		],
 		"Opaque Holds" => [false, Checkmark, "Huh, why isnt the trail cut off?", NOT_FORCED],
-
 		// ACCESSIBILITY;
 		'Disable Antialiasing' => [
 			false,
 			Checkmark,
 			'Whether to disable Anti-aliasing. Helps improve performance in FPS.',
-			NOT_FORCED
-		],
-		'Disable Button Flickering' => [
-			false,
-			Checkmark,
-			"Whether to disable button flickering when interacting with the items on the Options Menu.",
 			NOT_FORCED
 		],
 		'Disable Flashing Lights' => [
@@ -220,6 +204,12 @@ class Init extends FlxState
 			'Whether to reduce movements, like icons bouncing or beat zooms in gameplay.',
 			NOT_FORCED
 		],
+		'Stage Opacity' => [
+			Checkmark,
+			Selector,
+			'Darkens non-ui elements, useful if you find the characters and backgrounds distracting.',
+			NOT_FORCED
+		],
 		'Filter' => [
 			'none',
 			Selector,
@@ -227,13 +217,6 @@ class Init extends FlxState
 			NOT_FORCED,
 			['none', 'Deuteranopia', 'Protanopia', 'Tritanopia']
 		],
-		'Stage Opacity' => [
-			Checkmark,
-			Selector,
-			'Darkens non-ui elements, useful if you find the characters and backgrounds distracting.',
-			NOT_FORCED
-		],
-
 		// custom ones lol
 		'Offset' => [Checkmark, 3],
 	];
@@ -313,7 +296,6 @@ class Init extends FlxState
 		#if MOD_HANDLER
 		ModHandler.loadModHandler(); // load mod handler and any mods you might have;
 		#end
-
 		WeekParser.loadWeeks(); // load any custom weeks you might have;
 
 		goToInitialDestination();

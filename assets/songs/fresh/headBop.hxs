@@ -3,8 +3,8 @@ function beatHit(curBeat)
     switch (curBeat)
     {
         case 16 | 80:
-		    gf.bopSpeed = 2;
+		    PlayState.gfSpeed = 2;
 	    case 48 | 112:
-    	    gf.bopSpeed = 1;
+    	    PlayState.gfSpeed = 1;
     }
 }

@@ -9,6 +9,7 @@ import haxe.Json;
 import haxe.format.JsonParser;
 import lime.utils.Assets;
 import states.PlayState;
+import sys.FileSystem;
 import sys.io.File;
 
 using StringTools;
@@ -130,14 +131,14 @@ class Conductor
 		}
 	}
 
-	public static function resetMusic()
+	public static function stopMusic()
 	{
 		for (vocals in vocalArray)
 		{
 			if (vocals != null)
 				vocals.stop();
 		}
-		// songMusic.stop();
+		//songMusic.stop();
 	}
 
 	public static function killMusic()

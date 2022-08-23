@@ -10,7 +10,7 @@ haxelib install flixel
 haxelib install flixel-ui
 haxelib install flixel-tools
 haxelib install hscript
-haxelib install polymod
+haxelib install hxCodec
 haxelib install newgrounds
 haxelib install hxcpp-debug-server
 haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons
@@ -23,6 +23,7 @@ echo Make sure you have git installed. You can download it here: https://git-scm
 echo Press any key to install necessary libraries.
 pause >nul
 title FNF Setup - Installing libraries
+haxelib git polymod https://github.com/larsiusprime/polymod.git
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
 haxelib git SScript https://github.com/TheWorldMachine/SScript
 cls

@@ -17,10 +17,11 @@ import flixel.util.FlxSort;
 import funkin.background.TankmenBG;
 import funkin.ui.HealthIcon;
 import haxe.Json;
+import openfl.Assets;
 import openfl.utils.Assets as OpenFlAssets;
-import openfl.utils.Assets;
 import states.PlayState;
 import states.substates.GameOverSubstate;
+import sys.FileSystem;
 import sys.io.File;
 
 using StringTools;
@@ -65,11 +66,15 @@ class Character extends FNFSprite
 
 	public var holdTimer:Float = 0;
 
+	public var adjustPos:Bool = true;
+
 	public var icon:String;
 
+	public var barColor:Array<Float> = [];
 	public var animationNotes:Array<Dynamic> = [];
 	public var idlePos:Array<Float> = [0, 0];
-	public var barColor:Array<Float> = [];
+
+	public var offsets:Array<Float> = [0, 0];
 	public var camOffsets:Array<Float> = [0, 0];
 	public var scales:Array<Float> = [0, 0];
 
@@ -88,9 +93,9 @@ class Character extends FNFSprite
 	// FOR PSYCH COMPATIBILITY
 	public var danceIdle:Bool = false; // Character use "danceLeft" and "danceRight" instead of "idle"
 	public var skipDance:Bool = false;
-	public var heyTimer:Float = 0;
 	public var specialAnim:Bool = false;
 	public var singDuration:Float = 4; // Multiplier of how long a character holds the sing pose
+	public var heyTimer:Float = 0;
 
 	public function new(?x:Float = 0, ?y:Float = 0, ?isPlayer:Bool = false, ?character:String = 'bf')
 	{
@@ -113,7 +118,7 @@ class Character extends FNFSprite
 				playAnim("shoot1");
 		}
 
-		var psychChar = openfl.utils.Assets.exists(Paths.getPreloadPath('characters/$character/' + character + '.json'));
+		var psychChar = FileSystem.exists(Paths.getPreloadPath('characters/$character/' + character + '.json'));
 
 		switch (curCharacter)
 		{
@@ -145,6 +150,7 @@ class Character extends FNFSprite
 					generateBaseChar(character);
 		}
 
+		recalcDance();
 		dance();
 
 		return this;
@@ -156,91 +162,100 @@ class Character extends FNFSprite
 		 * Special Animations Code.
 		 * @author: Shadow_Mario_
 		**/
-		if (heyTimer > 0)
+
+		if (!debugMode && animation.curAnim != null)
 		{
-			heyTimer -= elapsed;
-			if (heyTimer <= 0)
+			if (heyTimer > 0)
 			{
-				if (specialAnim && animation.curAnim.name == 'hey' || animation.curAnim.name == 'cheer')
+				heyTimer -= elapsed;
+				if (heyTimer <= 0)
 				{
-					specialAnim = false;
-					dance();
+					if (specialAnim && animation.curAnim.name == 'hey' || animation.curAnim.name == 'cheer')
+					{
+						specialAnim = false;
+						dance();
+					}
+					heyTimer = 0;
 				}
-				heyTimer = 0;
 			}
-		}
-		else if (specialAnim && animation.curAnim.finished)
-		{
-			specialAnim = false;
-			dance();
-		}
-
-		if (!isPlayer)
-		{
-			if (animation.curAnim != null && animation.curAnim.name.startsWith('sing'))
+			else if (specialAnim && animation.curAnim.finished)
 			{
-				holdTimer += elapsed;
-			}
-
-			if (holdTimer >= Conductor.stepCrochet * 0.0011 * singDuration)
-			{
+				specialAnim = false;
 				dance();
-				holdTimer = 0;
-			}
-		}
-		else if (!debugMode && !skipDance && !specialAnim && animation.curAnim != null)
-		{
-			if (animation.curAnim.name.startsWith('sing'))
-			{
-				holdTimer += elapsed;
-			}
-			else
-				holdTimer = 0;
-
-			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
-			{
-				playAnim('idle', true, false, 10);
 			}
 
-			if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished)
+			if (!isPlayer)
 			{
-				playAnim('deathLoop');
-			}
-		}
-
-		switch (curCharacter)
-		{
-			case 'pico-speaker':
-				if (animationNotes.length > 0 && Conductor.songPosition > animationNotes[0][0])
+				if (animation.curAnim != null && animation.curAnim.name.startsWith('sing'))
 				{
-					var noteData:Int = 1;
-					if (animationNotes[0][1] > 2)
-						noteData = 3;
-
-					noteData += FlxG.random.int(0, 1);
-					playAnim('shoot' + noteData, true);
-					animationNotes.shift();
+					holdTimer += elapsed;
 				}
-				if (animation.curAnim.finished)
-					playAnim(animation.curAnim.name, false, false, animation.curAnim.frames.length - 3);
-		}
 
-		var curCharSimplified:String = simplifyCharacter();
-
-		if (animation.curAnim != null)
-			switch (curCharSimplified)
+				if (holdTimer >= Conductor.stepCrochet * 0.0011 * singDuration)
+				{
+					dance();
+					holdTimer = 0;
+				}
+			}
+			else if (isPlayer && !skipDance && !specialAnim)
 			{
-				case 'gf':
-					if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
-						playAnim('danceRight');
-					if ((animation.curAnim.name.startsWith('sad')) && (animation.curAnim.finished))
-						playAnim('danceLeft');
+				if (animation.curAnim.name.startsWith('sing'))
+				{
+					holdTimer += elapsed;
+				}
+				else
+					holdTimer = 0;
+
+				if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
+				{
+					playAnim('idle', true, false, 10);
+				}
+
+				if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished)
+				{
+					playAnim('deathLoop');
+				}
 			}
 
-		if (animation.curAnim != null && animation.curAnim.finished && animation.curAnim.name == 'idle')
-		{
-			if (animation.getByName('idlePost') != null)
-				animation.play('idlePost', true, false, 0);
+			if (animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null)
+			{
+				playAnim(animation.curAnim.name + '-loop');
+			}
+
+			switch (curCharacter)
+			{
+				case 'pico-speaker':
+					if (animationNotes.length > 0 && Conductor.songPosition > animationNotes[0][0])
+					{
+						var noteData:Int = 1;
+						if (animationNotes[0][1] > 2)
+							noteData = 3;
+
+						noteData += FlxG.random.int(0, 1);
+						playAnim('shoot' + noteData, true);
+						animationNotes.shift();
+					}
+					if (animation.curAnim.finished)
+						playAnim(animation.curAnim.name, false, false, animation.curAnim.frames.length - 3);
+			}
+
+			var curCharSimplified:String = simplifyCharacter();
+
+			if (animation.curAnim != null)
+				switch (curCharSimplified)
+				{
+					case 'gf':
+						if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
+							playAnim('danceRight');
+						if ((animation.curAnim.name.startsWith('sad')) && (animation.curAnim.finished))
+							playAnim('danceLeft');
+				}
+
+			if (animation.curAnim != null && animation.curAnim.finished && animation.curAnim.name == 'idle')
+			{
+				if (animation.getByName('idlePost') != null)
+					animation.play('idlePost', true, false, 0);
+			}
 		}
 
 		super.update(elapsed);
@@ -264,19 +279,20 @@ class Character extends FNFSprite
 						danced = !danced;
 
 						if (!danced)
-							playAnim('danceLeft', forced);
+							playAnim('danceLeft$idleSuffix', forced);
 						else
-							playAnim('danceRight', forced);
+							playAnim('danceRight$idleSuffix', forced);
 					}
 				default:
 					// Left/right dancing, think Skid & Pump
-					if (animation.getByName('danceLeft') != null && animation.getByName('danceRight') != null || danceIdle)
+					if (animation.getByName('danceLeft$idleSuffix') != null
+						&& animation.getByName('danceRight$idleSuffix') != null || danceIdle)
 					{
 						danced = !danced;
 						if (danced)
-							playAnim('danceRight', forced);
+							playAnim('danceRight$idleSuffix', forced);
 						else
-							playAnim('danceLeft', forced);
+							playAnim('danceLeft$idleSuffix', forced);
 					}
 					else
 						playAnim('idle$idleSuffix', forced);
@@ -331,16 +347,48 @@ class Character extends FNFSprite
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1[0], Obj2[0]);
 	}
 
+	private var settingCharacterUp:Bool = true;
+
+	/**
+	* for Psych Engine Characters;
+	* @author Shadow_Mario_
+	**/
+	public function recalcDance()
+	{
+		var lastDanceIdle:Bool = danceIdle;
+		danceIdle = (animation.getByName('danceLeft' + idleSuffix) != null && animation.getByName('danceRight' + idleSuffix) != null);
+
+		if (settingCharacterUp)
+		{
+			bopSpeed = (danceIdle ? 1 : 2);
+		}
+		else if (lastDanceIdle != danceIdle)
+		{
+			var calc:Float = bopSpeed;
+			if (danceIdle)
+				calc /= 2;
+			else
+				calc *= 2;
+
+			bopSpeed = Math.round(Math.max(calc, 1));
+		}
+		settingCharacterUp = false;
+	}
+
 	function generateBaseChar(char:String = 'bf')
 	{
-		var path:String = Paths.getPreloadPath('characters/$char/config.hxs');
+		var path:String = Paths.getPreloadPath('characters/$char/config.hx');
 		var scripts:Array<String> = [path];
+
+		#if MOD_HANDLER
+		scripts.insert(0, Paths.getModPath('characters/$char', 'config', 'hxs'));
+		#end
 
 		var pushedScripts:Array<String> = [];
 
 		for (i in scripts)
 		{
-			if (openfl.utils.Assets.exists(i) && !pushedScripts.contains(i))
+			if (FileSystem.exists(i) && !pushedScripts.contains(i))
 			{
 				var script:ScriptHandler = new ScriptHandler(i);
 
@@ -357,7 +405,14 @@ class Character extends FNFSprite
 
 		var spriteType = "sparrow";
 
+		#if MOD_HANDLER
+		var modTxtToFind:String = Paths.getModPath('characters/$char', char, 'txt');
+		var txtToFind:String = Paths.getPath('characters/$char/$char.txt', TEXT);
+
+		if (FileSystem.exists(modTxtToFind) || FileSystem.exists(txtToFind) || Assets.exists(txtToFind))
+		#else
 		if (Assets.exists(Paths.getPath('characters/$char/$char.txt', TEXT)))
+		#end
 		{
 			spriteType = "packer";
 		}
@@ -397,6 +452,11 @@ class Character extends FNFSprite
 		setVar('setSingDuration', function(amount:Int)
 		{
 			singDuration = amount;
+		});
+
+		setVar('setOffsets', function(?x:Float = 0, ?y:Float = 0)
+		{
+			offsets = [x, y];
 		});
 
 		setVar('setCamOffsets', function(?x:Float = 0, ?y:Float = 0)
@@ -466,6 +526,13 @@ class Character extends FNFSprite
 		if (icon == null)
 			icon = char;
 
+		if (adjustPos)
+		{
+			x += offsets[0];
+			#if DEBUG_TRACES trace('character ${curCharacter} scale ${scale.y}'); #end
+			y += (offsets[1] - (frameHeight * scale.y));
+		}
+
 		if (animation.getByName('danceLeft') != null)
 			playAnim('danceLeft');
 		else
@@ -509,7 +576,14 @@ class Character extends FNFSprite
 		var json:PsychEngineChar = cast Json.parse(rawJson);
 		var spriteType = "sparrow";
 
+		#if MOD_HANDLER
+		var modTxtToFind:String = Paths.getModPath('characters/$char', json.image, 'txt');
+		var txtToFind:String = Paths.getPath('characters/$char/${json.image}.txt', TEXT);
+
+		if (FileSystem.exists(modTxtToFind) || FileSystem.exists(txtToFind) || Assets.exists(txtToFind))
+		#else
 		if (Assets.exists(Paths.getPath('characters/$char/${json.image}.txt', TEXT)))
+		#end
 		{
 			spriteType = "packer";
 		}
@@ -542,6 +616,7 @@ class Character extends FNFSprite
 		}
 		flipX = json.flip_x;
 		antialiasing = !json.no_antialiasing;
+		offsets = json.position;
 
 		if (isPlayer) // fuck you ninjamuffin lmao
 		{

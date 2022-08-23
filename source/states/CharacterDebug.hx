@@ -339,7 +339,7 @@ class CharacterDebug extends MusicBeatState
 
 			var text:FlxText = new FlxText(10, 38, 0, '
 				No animations found
-				\nplease make sure your ${curCharacter}.hxs script
+				\nplease make sure your ${curCharacter}.hx script
 				has the offsets properly set up
 				\n\nTry: addOffset(\'animationName\', offsetX, offsetY);
 				', 15);
@@ -368,7 +368,7 @@ class CharacterDebug extends MusicBeatState
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
-			_file.save(result.trim(), curCharacter + "Offsets.hxs");
+			_file.save(result.trim(), curCharacter + "Offsets.hx");
 		}
 	}
 

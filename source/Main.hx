@@ -16,12 +16,12 @@ import haxe.CallStack.StackItem;
 import haxe.CallStack;
 import haxe.io.Path;
 import lime.app.Application;
+import openfl.Assets;
 import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.UncaughtErrorEvent;
-import openfl.utils.Assets;
 import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;
@@ -246,7 +246,7 @@ class Main extends Sprite
 		dateNow = StringTools.replace(dateNow, " ", "_");
 		dateNow = StringTools.replace(dateNow, ":", "'");
 
-		path = "crash/" + "FE_" + dateNow + ".txt";
+		path = "./crash/" + "FE_" + dateNow + ".txt";
 
 		errMsg = "Friday Night Funkin' v" + Lib.application.meta["version"] + "\n";
 		errMsg += "Forever Engine Underscore v" + Main.underscoreVersion + (showCommitHash ? ' (${commitHash})' : '') + "\n";
@@ -267,33 +267,16 @@ class Main extends Sprite
 			+
 			"\nPlease report this error to the GitHub page: https://github.com/BeastlyGhost/Forever-Engine-Underscore\non the \"master\" branch\n\n>Crash Handler written by: sqirra-rng\n\n";
 
-		if (!openfl.utils.Assets.exists("/crash/"))
-			FileSystem.createDirectory("/crash/");
+		if (!FileSystem.exists("./crash/"))
+			FileSystem.createDirectory("./crash/");
 
 		File.saveContent(path, errMsg + "\n");
 
 		Sys.println(errMsg);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 
-		var crashDialoguePath:String = "FE-CrashDialog";
-
-		#if windows
-		crashDialoguePath += ".exe";
-		#elseif (linux || mac)
-		crashDialoguePath = "./FE-CrashDialog";
-		#end
-
-		if (openfl.utils.Assets.exists(crashDialoguePath))
-		{
-			Sys.println("Found crash dialog: " + crashDialoguePath);
-			new Process(crashDialoguePath, [path]);
-		}
-		else
-		{
-			Sys.println("No crash dialog found! Making a simple alert instead...");
-			Application.current.window.alert(errMsg, "Error!");
-		}
-
+		Application.current.window.alert(errMsg, "Error!");
+		Discord.shutdownRPC();
 		Sys.exit(1);
 	}
 

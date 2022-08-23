@@ -7,8 +7,6 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.util.FlxColor;
 import funkin.*;
-import funkin.ColorSwap.ColorSwapShader;
-import funkin.ColorSwap;
 import funkin.Strumline.UIStaticArrow;
 import funkin.Timings;
 import funkin.ui.menu.*;
@@ -259,12 +257,6 @@ class ForeverAssets
 			else // calculate a new visual offset based on that note's width and newnote's width
 				newNote.noteVisualOffset = ((prevNote.width / 2) - (newNote.width / 2));
 		}
-
-		/*var colorSwap:ColorSwap = new ColorSwap();
-			colorSwap.hue = Note.arrowColors[noteData][0] / 360;
-			colorSwap.saturation = Note.arrowColors[noteData][1] / 100;
-			colorSwap.brightness = Note.arrowColors[noteData][2] / 100;
-			newNote.shader = colorSwap.shader; */
 
 		return newNote;
 	}

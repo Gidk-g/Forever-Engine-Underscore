@@ -323,5 +323,33 @@ class ScriptFuncs extends PlayState
 				}
 			});
 		});
+
+		PlayState.contents.setVar('doTweenScaleX', function(tweenID:String, object:Dynamic, value:Float, time:Float, ease:String)
+		{
+			var leTween:FlxTween;
+
+			leTween = FlxTween.tween(object, {"scale.x": value}, time, {
+				ease: ForeverTools.getEaseFromString(ease),
+				onComplete: function(tween:FlxTween)
+				{
+					PlayState.contents.completeTween(tweenID);
+					leTween = null;
+				}
+			});
+		});
+
+		PlayState.contents.setVar('doTweenScaleY', function(tweenID:String, object:Dynamic, value:Float, time:Float, ease:String)
+		{
+			var leTween:FlxTween;
+
+			leTween = FlxTween.tween(object, {"scale.y": value}, time, {
+				ease: ForeverTools.getEaseFromString(ease),
+				onComplete: function(tween:FlxTween)
+				{
+					PlayState.contents.completeTween(tweenID);
+					leTween = null;
+				}
+			});
+		});
 	}
 }

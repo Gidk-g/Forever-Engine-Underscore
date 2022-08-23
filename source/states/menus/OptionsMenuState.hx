@@ -65,24 +65,24 @@ class OptionsMenuState extends MusicBeatState
 			'preferences' => [
 				[
 					['Gameplay Settings', null],
-					//
+
 					['Controller Mode', getFromOption],
 					['Downscroll', getFromOption],
 					['Centered Notefield', getFromOption],
+					['Ghost Tapping', getFromOption],
 					['Hitsound Type', getFromOption],
 					['Hitsound Volume', getFromOption],
-					['Ghost Tapping', getFromOption],
 					['Use Set Scroll Speed', getFromOption],
 					['Scroll Speed', getFromOption],
 					['', null],
 					['Text Settings', null],
-					//
+
 					['Display Accuracy', getFromOption],
 					['Score Bar Size', getFromOption],
 					['Skip Text', getFromOption],
 					['', null],
 					['Meta Settings', null],
-					//
+
 					['Auto Pause', getFromOption],
 					['Check for Updates', getFromOption],
 					['Hardware Caching', getFromOption],
@@ -96,7 +96,7 @@ class OptionsMenuState extends MusicBeatState
 			'appearance' => [
 				[
 					['User Interface', null],
-					//
+
 					["UI Skin", getFromOption],
 					['Fixed Judgements', getFromOption],
 					['Simply Judgements', getFromOption],
@@ -104,23 +104,22 @@ class OptionsMenuState extends MusicBeatState
 					['Counter', getFromOption],
 					['', null],
 					['Notes and Holds', null],
-					//
+
 					["Note Skin", getFromOption],
+					['Arrow Opacity', getFromOption],
 					["Clip Style", getFromOption],
 					['No Camera Note Movement', getFromOption],
-					['Arrow Opacity', getFromOption],
 					["Splash Opacity", getFromOption],
 					['Opaque Holds', getFromOption],
 					['', null],
 					['Accessibility Settings', null],
-					//
+
 					['Disable Antialiasing', getFromOption],
-					['Disable Button Flickering', getFromOption],
 					['Disable Flashing Lights', getFromOption],
 					['Disable Shaders', getFromOption],
 					['Reduced Movements', getFromOption],
-					['Filter', getFromOption],
 					["Stage Opacity", getFromOption],
+					['Filter', getFromOption],
 				]
 			]
 		];
@@ -351,7 +350,7 @@ class OptionsMenuState extends MusicBeatState
 			}
 			else if (PauseSubstate.toOptions)
 			{
-				Conductor.resetMusic();
+				Conductor.stopMusic();
 				Main.switchState(this, new PlayState());
 			}
 			else
@@ -476,20 +475,12 @@ class OptionsMenuState extends MusicBeatState
 					// checkmark basics lol
 					if (controls.ACCEPT || FlxG.mouse.justPressed)
 					{
-						if (!Init.trueSettings.get('Disable Button Flickering'))
+						playSound('confirmMenu');
+						lockedMovement = true;
+						FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
 						{
-							playSound('confirmMenu');
-							lockedMovement = true;
-							FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
-							{
-								checkmarkBasics();
-							});
-						}
-						else
-						{
-							playSound('scrollMenu');
 							checkmarkBasics();
-						}
+						});
 					}
 				case Init.SettingTypes.Selector:
 					#if !html5
@@ -617,20 +608,12 @@ class OptionsMenuState extends MusicBeatState
 	{
 		if (controls.ACCEPT || FlxG.mouse.justPressed)
 		{
-			if (!Init.trueSettings.get('Disable Button Flickering'))
+			playSound('confirmMenu');
+			lockedMovement = true;
+			FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
 			{
-				playSound('confirmMenu');
-				lockedMovement = true;
-				FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
-				{
-					loadSubgroup(activeSubgroup.members[curSelection].text);
-				});
-			}
-			else
-			{
-				playSound('scrollMenu');
 				loadSubgroup(activeSubgroup.members[curSelection].text);
-			}
+			});
 		}
 	}
 
@@ -638,21 +621,13 @@ class OptionsMenuState extends MusicBeatState
 	{
 		if (controls.ACCEPT || FlxG.mouse.justPressed)
 		{
-			if (!Init.trueSettings.get('Disable Button Flickering'))
+			playSound('confirmMenu');
+			lockedMovement = true;
+			FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
 			{
-				playSound('confirmMenu');
-				lockedMovement = true;
-				FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
-				{
-					openSubState(new ControlsSubstate());
-					lockedMovement = false;
-				});
-			}
-			else
-			{
-				playSound('scrollMenu');
 				openSubState(new ControlsSubstate());
-			}
+				lockedMovement = false;
+			});
 		}
 	}
 
@@ -665,42 +640,24 @@ class OptionsMenuState extends MusicBeatState
 
 	public function exitMenu()
 	{
-		//
 		if (controls.ACCEPT || FlxG.mouse.justPressed)
 		{
-			if (!Init.trueSettings.get('Disable Button Flickering'))
+			playSound('confirmMenu');
+			lockedMovement = true;
+			FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
 			{
-				playSound('confirmMenu');
-				lockedMovement = true;
-				FlxFlicker.flicker(activeSubgroup.members[curSelection], 0.5, 0.06 * 2, true, false, function(flick:FlxFlicker)
-				{
-					if (PauseSubstate.toOptions)
-					{
-						Conductor.resetMusic();
-						Main.switchState(this, new PlayState());
-					}
-					else
-					{
-						Main.switchState(this, new MainMenuState());
-					}
-					lockedMovement = false;
-				});
-			}
-			else
-			{
-				playSound('scrollMenu');
 				if (PauseSubstate.toOptions)
 				{
-					Conductor.resetMusic();
+					Conductor.stopMusic();
 					Main.switchState(this, new PlayState());
 				}
 				else
 				{
 					Main.switchState(this, new MainMenuState());
 				}
-			}
+				lockedMovement = false;
+			});
 		}
-		//
 	}
 
 	function playSound(soundToPlay:String)

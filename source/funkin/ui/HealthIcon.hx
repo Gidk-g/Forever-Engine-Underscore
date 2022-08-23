@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
+import sys.FileSystem;
 
 using StringTools;
 
@@ -44,8 +45,8 @@ class HealthIcon extends FlxSprite
 	public function updateIcon(icon:String = 'bf', isPlayer:Bool = false)
 	{
 		var path = Paths.image('$icon/icon', 'characters');
-		var iconExists = openfl.utils.Assets.exists(Paths.getPath('characters/$icon/icon.png', IMAGE));
-		var sparrowIcon = openfl.utils.Assets.exists(Paths.getPath('characters/$icon/icon.xml', TEXT));
+		var iconExists = FileSystem.exists(Paths.getPath('characters/$icon/icon.png', IMAGE));
+		var sparrowIcon = FileSystem.exists(Paths.getPath('characters/$icon/icon.xml', TEXT));
 
 		var trimmedIcon:String = icon;
 		if (trimmedIcon.contains('-'))

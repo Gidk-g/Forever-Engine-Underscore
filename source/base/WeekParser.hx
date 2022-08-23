@@ -3,6 +3,7 @@ package base;
 import flixel.util.FlxColor;
 import haxe.Json;
 import states.menus.StoryMenuState;
+import sys.FileSystem;
 import sys.io.File;
 
 using StringTools;
@@ -67,15 +68,16 @@ class WeekParser
 	public static function parseJson():Bool
 	{
 		var dataFolders = [];
-		dataFolders.push(Paths.getPreloadPath('weeks/'));
-
 		var pushedWeeks:Array<String> = [];
+
+		if (FileSystem.exists(Paths.getPreloadPath('weeks/')))
+			dataFolders.push(Paths.getPreloadPath('weeks/'));
 
 		for (folders in dataFolders)
 		{
-			if (openfl.utils.Assets.exists(folders))
+			if (FileSystem.exists(folders))
 			{
-				for (file in openfl.utils.Assets.list(TEXT))
+				for (file in FileSystem.readDirectory(folders))
 				{
 					// quick file check to prevent crashes with non-json files;
 					if (file.endsWith('.json'))
@@ -87,7 +89,6 @@ class WeekParser
 				}
 			}
 		}
-
 		return false;
 	}
 

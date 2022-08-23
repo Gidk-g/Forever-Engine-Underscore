@@ -28,7 +28,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import funkin.Alphabet;
 import lime.app.Application;
-import openfl.utils.Assets;
+import openfl.Assets;
 import states.menus.*;
 
 using StringTools;
@@ -149,14 +149,6 @@ class TitleState extends MusicBeatState
 		titleText.updateHitbox();
 		add(titleText);
 
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('menus/base/title/newgrounds_logo'));
-		ngSpr.visible = false;
-		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
-		ngSpr.updateHitbox();
-		ngSpr.screenCenter(X);
-		ngSpr.antialiasing = true;
-		add(ngSpr);
-
 		credGroup = new FlxGroup();
 		textGroup = new FlxGroup();
 
@@ -169,6 +161,15 @@ class TitleState extends MusicBeatState
 		credTextShit.screenCenter();
 
 		credTextShit.visible = false;
+
+		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadGraphic(Paths.image('menus/base/title/newgrounds_logo'));
+		add(ngSpr);
+		ngSpr.visible = false;
+		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
+		ngSpr.updateHitbox();
+		ngSpr.screenCenter(X);
+		ngSpr.antialiasing = true;
+
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
 		if (initialized)

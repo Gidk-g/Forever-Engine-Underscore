@@ -54,10 +54,8 @@ class Note extends FNFSprite
 	public var hitsoundSuffix = '';
 
 	static var noteColorID:Array<String> = ['purple', 'blue', 'green', 'red'];
-	static var pixelNoteID:Array<Int> = [4, 5, 6, 7];
-
-	// quants
 	static var directionID:Array<String> = ['left', 'down', 'up', 'right'];
+	static var pixelNoteID:Array<Int> = [4, 5, 6, 7];
 
 	public function new(strumTime:Float, noteData:Int, noteAlt:Float, ?prevNote:Note, ?sustainNote:Bool = false, ?noteType:Int = 0)
 	{

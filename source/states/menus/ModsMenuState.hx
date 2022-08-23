@@ -42,7 +42,7 @@ class ModsMenuState extends MusicBeatState
 
 	var grpMenuMods:FlxTypedGroup<Alphabet>;
 
-	var modList:Array<String> = ['NONE'];
+	var modList:Array<String> = [];
 
 	var isEnabled = true;
 
@@ -73,6 +73,14 @@ class ModsMenuState extends MusicBeatState
 		grpMenuMods = new FlxTypedGroup<Alphabet>();
 		add(grpMenuMods);
 
+		for (modFolders in Paths.getModDirs())
+		{
+			modList.push(modFolders);
+		}
+
+		var mod:Int = modList.indexOf(Paths.currentPack);
+		if (mod > -1)
+			curSelection = mod;
 		for (i in 0...modList.length)
 		{
 			var alphabet:Alphabet = new Alphabet(0, 70 * i, modList[i], true);
@@ -130,6 +138,17 @@ class ModsMenuState extends MusicBeatState
 				else
 					item.alpha = 0.6;
 			}
+		}
+
+		if (modList[curSelection] == null || modList[curSelection].length < 1)
+		{
+			modList[curSelection] = 'NO MODS LOADED';
+			Paths.currentPack = Paths.defaultPack;
+		}
+		else
+		{
+			Paths.currentPack = modList[curSelection];
+			modList[curSelection] = Paths.currentPack;
 		}
 	}
 	#end

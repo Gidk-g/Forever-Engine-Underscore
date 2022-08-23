@@ -291,10 +291,6 @@ class OriginalChartingState extends MusicBeatState
 		var baseStages:Array<String> = CoolUtil.returnAssetsLibrary('backgrounds', 'assets/images');
 		var baseAssets:Array<String> = CoolUtil.returnAssetsLibrary('UI/default', 'assets/images');
 
-		// var modChars:Array<String> = CoolUtil.returnAssetsLibrary('characters', 'mods/${Paths.defaultPack}');
-		// var modAssets:Array<String> = CoolUtil.returnAssetsLibrary('UI', 'mods/${Paths.defaultPack}/images');
-		// var modStages:Array<String> = CoolUtil.returnAssetsLibrary('backgrounds', 'mods/${Paths.defaultPack}/images');
-
 		var characters:Array<String> = baseChars;
 
 		var player1DropDown = new PsychDropDown(10, stepperSpeed.y + 45, PsychDropDown.makeStrIdLabelArray(characters, true), function(character:String)
@@ -323,7 +319,7 @@ class OriginalChartingState extends MusicBeatState
 		player2DropDown.selectedLabel = _song.player2;
 		blockPressWhileScrolling.push(player2DropDown);
 
-		var stages:Array<String> = baseStages /*, modStages*/;
+		var stages:Array<String> = baseStages;
 
 		var stageDropDown = new PsychDropDown(player1DropDown.x + 140, player1DropDown.y, PsychDropDown.makeStrIdLabelArray(stages, true),
 			function(stage:String)
@@ -333,7 +329,7 @@ class OriginalChartingState extends MusicBeatState
 		stageDropDown.selectedLabel = _song.stage;
 		blockPressWhileScrolling.push(stageDropDown);
 
-		var assetModifiers:Array<String> = baseAssets /*, modAssets*/;
+		var assetModifiers:Array<String> = baseAssets;
 
 		var assetModifierDropDown = new PsychDropDown(stageDropDown.x, gfVersionDropDown.y, PsychDropDown.makeStrIdLabelArray(assetModifiers, true),
 			function(asset:String)
@@ -1208,7 +1204,7 @@ class OriginalChartingState extends MusicBeatState
 			var daSus = i[2];
 			var daNoteType:Int = i[3];
 
-			trace('Current note type is $daNoteType.');
+			#if DEBUG_TRACES trace('Current note type is ' + curNoteName[daNoteType] + '.'); #end
 			
 			var note:Note = ForeverAssets.generateArrow(PlayState.assetModifier, daStrumTime, daNoteInfo % 4, 0, null, null, daNoteType);
 			note.sustainLength = daSus;

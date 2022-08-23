@@ -16,6 +16,7 @@ import openfl.media.Sound;
 import openfl.system.System;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
+import sys.FileSystem;
 import sys.io.File;
 
 using StringTools;
@@ -39,6 +40,11 @@ class Paths
 	// Return the paths of assets and call on those assets as well.
 	inline public static var SOUND_EXT = "ogg";
 	inline public static var VIDEO_EXT = "mp4";
+
+	public static var currentPack:String = '';
+
+	// in case anything goes wrong with your mods
+	public static var defaultPack:String = 'default';
 
 	// level we're loading
 	static var currentLevel:String;
@@ -89,9 +95,9 @@ class Paths
 						currentTrackedTextures.remove(key);
 					}
 					@:privateAccess
-					if (openfl.utils.Assets.cache.hasBitmapData(key))
+					if (openfl.Assets.cache.hasBitmapData(key))
 					{
-						openfl.utils.Assets.cache.removeBitmapData(key);
+						openfl.Assets.cache.removeBitmapData(key);
 						FlxG.bitmap._cache.remove(key);
 					}
 					#if DEBUG_TRACES trace('removed $key, ' + (isTexture ? 'is a texture' : 'is not a texture')); #end
@@ -118,7 +124,7 @@ class Paths
 			var obj = FlxG.bitmap._cache.get(key);
 			if (obj != null && !currentTrackedAssets.exists(key))
 			{
-				openfl.utils.Assets.cache.removeBitmapData(key);
+				openfl.Assets.cache.removeBitmapData(key);
 				FlxG.bitmap._cache.remove(key);
 				obj.destroy();
 			}
@@ -140,9 +146,40 @@ class Paths
 	public static function returnGraphic(key:String, folder:String = 'images', ?library:String, ?textureCompression:Bool)
 	{
 		textureCompression = Init.trueSettings.get('Hardware Caching');
+
+		#if MOD_HANDLER
+		var modPath:String = modImages(key);
+		if (FileSystem.exists(modPath))
+		{
+			if (!currentTrackedAssets.exists(modPath))
+			{
+				var bitmap = BitmapData.fromFile(modPath);
+				var newGraphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmap, false, modPath);
+				if (textureCompression)
+				{
+					var texture = FlxG.stage.context3D.createTexture(bitmap.width, bitmap.height, BGRA, true, 0);
+					texture.uploadFromBitmapData(bitmap);
+					currentTrackedTextures.set(key, texture);
+					bitmap.dispose();
+					bitmap.disposeImage();
+					bitmap = null;
+					#if DEBUG_TRACES trace('new mod texture $key, bitmap is $bitmap'); #end
+					newGraphic = FlxGraphic.fromBitmapData(BitmapData.fromTexture(texture), false, key, false);
+				}
+				else
+				{
+					newGraphic = FlxGraphic.fromBitmapData(bitmap, false, key, false);
+					#if DEBUG_TRACES trace('new mod bitmap $key, not textured'); #end
+				}
+				currentTrackedAssets.set(key, newGraphic);
+			}
+			localTrackedAssets.push(modPath);
+			return currentTrackedAssets.get(modPath);
+		}
+		#end
 		var path = getPath('$folder/$key.png', IMAGE, library);
 
-		if (openfl.utils.Assets.exists(path))
+		if (FileSystem.exists(path))
 		{
 			if (!currentTrackedAssets.exists(key))
 			{
@@ -175,14 +212,18 @@ class Paths
 
 	static public function getTextFromFile(key:String, ignoreMods:Bool = false):String
 	{
-		if (openfl.utils.Assets.exists(getPreloadPath(key)))
+		#if MOD_HANDLER
+		if (!ignoreMods && FileSystem.exists(getModPath('', key, '')))
+			return File.getContent(getModPath('', key, ''));
+		#end
+		if (FileSystem.exists(getPreloadPath(key)))
 			return File.getContent(getPreloadPath(key));
 
 		if (currentLevel != null)
 		{
 			var levelPath:String = '';
 			levelPath = getLibraryPathForce(key, '');
-			if (openfl.utils.Assets.exists(levelPath))
+			if (FileSystem.exists(levelPath))
 				return File.getContent(levelPath);
 		}
 		return Assets.getText(getPath(key, TEXT));
@@ -190,12 +231,35 @@ class Paths
 
 	public static function returnSound(path:String, key:String, ?library:String)
 	{
+		#if MOD_HANDLER
+		var file:String = modSounds(path, key);
+		if (FileSystem.exists(file))
+		{
+			if (!currentTrackedSounds.exists(file))
+			{
+				currentTrackedSounds.set(file, Sound.fromFile(file));
+			}
+			localTrackedAssets.push(key);
+			return currentTrackedSounds.get(file);
+		}
+		#end
 		// I hate this so god damn much
 		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);
 		gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
 		// trace(gottenPath);
 		if (!currentTrackedSounds.exists(gottenPath))
-			currentTrackedSounds.set(gottenPath, Sound.fromFile(gottenPath));
+			#if MOD_HANDLER
+			currentTrackedSounds.set(gottenPath, Sound.fromFile('./' + gottenPath));
+			#else
+			{
+				var folder:String = '';
+				if (path == 'songs')
+					folder = 'songs:';
+
+				currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound(folder + getPath('$path/$key.$SOUND_EXT', SOUND, library)));
+			}
+			#end
+		// currentTrackedSounds.set(gottenPath, Sound.fromFile(gottenPath));
 		localTrackedAssets.push(key);
 		return currentTrackedSounds.get(gottenPath);
 	}
@@ -264,7 +328,7 @@ class Paths
 	public inline static function getPreloadPath(file:String)
 	{
 		var returnPath:String = 'assets/$file';
-		if (!openfl.utils.Assets.exists(returnPath))
+		if (!FileSystem.exists(returnPath))
 			returnPath = CoolUtil.swapSpaceDash(returnPath);
 		return returnPath;
 	}
@@ -357,11 +421,77 @@ class Paths
 
 	inline static public function video(key:String)
 	{
+		#if MOD_HANDLER
+		var file:String = modVideos(key);
+		if (FileSystem.exists(file))
+		{
+			return file;
+		}
+		#end
 		return 'assets/videos/$key.$VIDEO_EXT';
 	}
 
 	inline static public function shader(key:String)
 	{
+		#if MOD_HANDLER
+		var file:String = getModPath('shaders', key, 'frag');
+		if (FileSystem.exists(file))
+		{
+			return file;
+		}
+		#end
 		return 'assets/shaders/$key.frag';
 	}
+
+	/**
+	 * MOD PATHS AND ANYTHING RELATED TO MODS
+	 * something that i'm gonna work on soon! -gabi
+	**/
+	#if MOD_HANDLER
+	inline static public function getModpack(key:String = '')
+	{
+		return 'mods/' + key;
+	}
+
+	inline static public function modImages(key:String)
+	{
+		return getModPath('images', key, 'png');
+	}
+
+	inline static public function modSounds(path:String, key:String)
+	{
+		return getModPath(path, key, SOUND_EXT);
+	}
+
+	inline static public function modVideos(key:String)
+	{
+		return getModPath('videos', key, VIDEO_EXT);
+	}
+
+	public inline static function getModPath(path:String, file:String, extension:String)
+	{
+		var returnPath:String = 'mods/$currentPack/$path/$file.$extension';
+		if (!FileSystem.exists(returnPath))
+			returnPath = CoolUtil.swapSpaceDash(returnPath);
+		return returnPath;
+	}
+
+	public static function getModDirs():Array<String>
+	{
+		var modsList:Array<String> = [];
+		var modsFolder:String = getModpack();
+		if (FileSystem.exists(modsFolder))
+		{
+			for (folder in FileSystem.readDirectory(modsFolder))
+			{
+				var path = haxe.io.Path.join([modsFolder, folder]);
+				if (sys.FileSystem.isDirectory(path) && folder != 'default' && !modsList.contains(folder))
+				{
+					modsList.push(folder);
+				}
+			}
+		}
+		return modsList;
+	}
+	#end
 }
