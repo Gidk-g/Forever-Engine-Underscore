@@ -190,15 +190,10 @@ class Paths
 		return Assets.getText(getPath(key, TEXT));
 	}
 
-	public static function returnSound(path:String, key:String, ?library:String, cached:Bool = true) // cached is here for testing;
+	public static function returnSound(path:String, key:String, ?library:String, cached:Bool = true)
 	{
 		// I hate this so god damn much
-		var gottenPath:String;
-
-		if (path == 'songs' && library == null)
-			gottenPath = getPath('$key.$SOUND_EXT', SOUND, 'songs');
-		else
-			gottenPath = getPath('$path/$key.$SOUND_EXT', SOUND, library);
+		var gottenPath:String = getPath('$path/$key.$SOUND_EXT', SOUND, library);
 
 		// gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
 		// trace(gottenPath);
@@ -276,9 +271,9 @@ class Paths
 		return '$library/$file';
 	}
 
-	public inline static function getPreloadPath(file:String)
+	public inline static function getPreloadPath(file:String, library:String = 'assets')
 	{
-		var returnPath:String = 'assets/$file';
+		var returnPath:String = '$library/$file';
 		if (!Assets.exists(returnPath))
 			returnPath = CoolUtil.swapSpaceDash(returnPath);
 		return returnPath;

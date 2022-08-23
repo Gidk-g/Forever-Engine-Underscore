@@ -67,7 +67,7 @@ class ModHandler
 			trace(' * [$item]');
     }
 
-    static function getMods():Array<String>
+    public static function getMods():Array<String>
     {
         trace('Searching for Mods...');
         // look i'm NEW to this ok? -gabi

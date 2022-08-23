@@ -2408,7 +2408,7 @@ class PlayState extends MusicBeatState
 		{
 			if (Assets.exists(fool))
 			{
-				for (file in FileSystem.readDirectory(fool))
+				for (file in Assets.list(TEXT))
 				{
 					if (file.endsWith('.hx') && !pushedScripts.contains(file))
 					{

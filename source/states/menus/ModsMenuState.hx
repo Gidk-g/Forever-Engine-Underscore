@@ -1,6 +1,7 @@
 package states.menus;
 
 import base.MusicBeat.MusicBeatState;
+import base.mods.ModHandler;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
@@ -42,13 +43,16 @@ class ModsMenuState extends MusicBeatState
 
 	var grpMenuMods:FlxTypedGroup<Alphabet>;
 
-	var modList:Array<String> = ['NONE'];
+	var modList:Array<String> = [];
 
 	var isEnabled = true;
 
 	override function create()
 	{
 		super.create();
+
+		// get current modlist
+		modList = ModHandler.getMods();
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menus/base/menuDesat'));
 		bg.setGraphicSize(Std.int(bg.width * 1.1));

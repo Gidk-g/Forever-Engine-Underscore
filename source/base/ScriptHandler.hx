@@ -35,6 +35,23 @@ class ScriptHandler extends SScript
 		interp.variables.set('FlxEase', FlxEase);
 		interp.variables.set('FlxMath', FlxMath);
 		interp.variables.set('FlxSound', FlxSound);
+
+		interp.variables.set("Polymod", polymod.Polymod);
+		interp.variables.set("Assets", openfl.utils.Assets);
+		interp.variables.set("LimeAssets", lime.utils.Assets);
+		interp.variables.set("StringTools", StringTools);
+		interp.variables.set("Math", Math);
+		interp.variables.set("Std", Std);
+
+		interp.variables.set("Paths", Paths);
+		interp.variables.set("PlayState", states.PlayState);
+		interp.variables.set("Conductor", base.Conductor);
+		interp.variables.set("CoolUtil", base.CoolUtil);
+
+		interp.variables.set('Controls', base.Controls);
+		interp.variables.set('Note', funkin.Note);
+		interp.variables.set('Strumline', funkin.Strumline);
+		interp.variables.set('Timings', funkin.Timings);
 	}
 }
 
@@ -50,14 +67,6 @@ class ScriptFuncs extends PlayState
 		PlayState.contents.setVar('comboRating', Timings.comboDisplay);
 		PlayState.contents.setVar('accuracy', Math.floor(Timings.getAccuracy() * 100) / 100);
 		PlayState.contents.setVar('rank', Timings.returnScoreRating().toUpperCase());
-
-		PlayState.contents.setVar('Paths', Paths);
-		PlayState.contents.setVar('Controls', Controls);
-		PlayState.contents.setVar('PlayState', PlayState);
-		PlayState.contents.setVar('Note', Note);
-		PlayState.contents.setVar('Strumline', Strumline);
-		PlayState.contents.setVar('Timings', Timings);
-		PlayState.contents.setVar('Conductor', Conductor);
 
 		PlayState.contents.setVar('makeSprite', function(spriteID:String, x:Int = 0, y:Int = 0, graphicCol:Dynamic)
 		{
