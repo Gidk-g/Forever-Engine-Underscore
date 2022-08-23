@@ -11,7 +11,7 @@ import polymod.format.ParseRules.TextFileFormat;
 class ModHandler
 {
     static final API_VER = "0.1.0";
-    static final MOD_DIR = "mods";
+    static final MOD_DIR = "mods/";
 
     public static function loadModHandler()
     {
@@ -26,8 +26,9 @@ class ModHandler
     #if MOD_HANDLER
     public static function loadMods(folders:Array<String>)
     {
+        trace(folders);
         trace('Attempting to Load ${folders.length} mods...');
-        var loadedModlist = polymod.Polymod.init({
+        var loadedModlist = Polymod.init({
             modRoot: MOD_DIR,
             dirs: folders,
             framework: CUSTOM,
@@ -38,6 +39,7 @@ class ModHandler
 			ignoredFiles: Polymod.getDefaultIgnoreList(),
 			parseRules: parseRules(),
         });
+        trace(loadedModlist);
 
 		trace('Loading Successful, ${loadedModlist.length} / ${folders.length} new mods.');
 
@@ -45,22 +47,22 @@ class ModHandler
             trace('Name: ${mod.title}, [${mod.id}]');
 
         var fileList = Polymod.listModFiles("IMAGE");
-		trace('Installed mods replaced ${fileList.length} images');
+		trace('Installed mods added / replaced ${fileList.length} images');
 		for (item in fileList)
 			trace(' * [$item]');
 
 		var fileList = Polymod.listModFiles("TEXT");
-		trace('Installed mods replaced ${fileList.length} text files');
+		trace('Installed mods added / replaced ${fileList.length} text files');
 		for (item in fileList)
 			trace(' * [$item]');
 
 		var fileList = Polymod.listModFiles("MUSIC");
-		trace('Installed mods replaced ${fileList.length} songs');
+		trace('Installed mods added / replaced ${fileList.length} songs');
 		for (item in fileList)
 			trace(' * [$item]');
 
 		var fileList = Polymod.listModFiles("SOUNDS");
-		trace('Installed mods replaced ${fileList.length} sounds');
+		trace('Installed mods added / replaced ${fileList.length} sounds');
 		for (item in fileList)
 			trace(' * [$item]');
     }
@@ -68,7 +70,8 @@ class ModHandler
     static function getMods():Array<String>
     {
         trace('Searching for Mods...');
-        var modMeta = Polymod.scan(MOD_DIR);
+        // look i'm NEW to this ok? -gabi
+        var modMeta = Polymod.scan('$MOD_DIR/', "*.*.*");
         trace('Found ${modMeta.length} new mods.');
         var modNames = [for (i in modMeta) i.id];
         return modNames;
@@ -86,8 +89,12 @@ class ModHandler
 		return
         {
 			assetLibraryPaths: [
-				"default" => "/assets",
-			]
+                "default" => "assets",
+                "characters" => "characters",
+                "songs" => "songs",
+                "fonts" => "fonts",
+				"stages" => "stages",
+            ]
 		}
 	}
 

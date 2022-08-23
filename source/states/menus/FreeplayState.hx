@@ -95,8 +95,6 @@ class FreeplayState extends MusicBeatState
 				existingSongs.push(j.toLowerCase());
 		}
 
-		// */
-
 		for (i in folderSongs)
 		{
 			if (!existingSongs.contains(i.toLowerCase()))
@@ -104,7 +102,7 @@ class FreeplayState extends MusicBeatState
 				var icon:String = 'gf';
 				var color:FlxColor = FlxColor.WHITE;
 				var colorArray:Array<Int> = [255, 255, 255];
-				var chartExists:Bool = FileSystem.exists(Paths.songJson(i, i));
+				var chartExists:Bool = Assets.exists(Paths.songJson(i, i));
 				if (chartExists)
 				{
 					var castSong:SwagSong = Song.loadSong(i, i);
@@ -177,8 +175,8 @@ class FreeplayState extends MusicBeatState
 	{
 		var coolDiffs = [];
 		for (i in CoolUtil.baseDifficulties)
-			if (FileSystem.exists(Paths.songJson(songName, songName + '-' + i))
-				|| (FileSystem.exists(Paths.songJson(songName, songName)) && i == "NORMAL"))
+			if (Assets.exists(Paths.songJson(songName, songName + '-' + i))
+				|| (Assets.exists(Paths.songJson(songName, songName)) && i == "NORMAL"))
 				coolDiffs.push(i);
 
 		if (coolDiffs.length > 0)
