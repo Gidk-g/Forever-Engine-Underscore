@@ -39,10 +39,10 @@ class Main extends Sprite
 	public static var framerate:Int = 120; // How many frames per second the game should run at.
 
 	public static var foreverVersion:String = '0.3.1';
-	public static var underscoreVersion:String = '0.2.1';
+	public static var underscoreVersion:String = '0.2.2 BETA';
 	public static var commitHash:String;
 
-	public static var showCommitHash:Bool = false;
+	public static var showCommitHash:Bool = true;
 
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.

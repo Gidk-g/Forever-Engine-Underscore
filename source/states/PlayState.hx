@@ -2407,12 +2407,6 @@ class PlayState extends MusicBeatState
 		var fools:Array<String> = [Paths.getPreloadPath('scripts/'), Paths.getPreloadPath('songs/${SONG.song.toLowerCase().replace(' ', '-')}/')];
 		var pushedScripts:Array<String> = [];
 
-		#if MOD_HANDLER
-		fools.insert(0, Paths.getModPath('scripts', '', ''));
-		fools.insert(0, Paths.getModPath('songs/${SONG.song.toLowerCase().replace(' ', '-')}', '', ''));
-		fools.insert(0, Paths.getModPath('songs/${SONG.song.toLowerCase().replace(' ', '-')}', '', ''));
-		#end
-
 		for (fool in fools)
 		{
 			if (FileSystem.exists(fool))

@@ -43,7 +43,7 @@
 	<source path="source" />
 
 	<assets path="assets" />
-	<!-- <assets path="mods" if="MOD_HANDLER" /> -->
+	<assets path="mods" if="MOD_HANDLER" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
 
