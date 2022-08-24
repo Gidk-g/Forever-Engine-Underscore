@@ -859,20 +859,19 @@ class Stage extends FlxTypedGroup<FlxBasic>
 	{
 		stageScript = new ScriptHandler(Paths.getPreloadPath('stages/$curStage.hx'));
 
-		stageScript.set('createSprite',
-			function(spriteID:String, image:String, x:Float, y:Float, onForeground:Bool = false)
-			{
-				var newSprite:FNFSprite = new FNFSprite(x, y).loadGraphic(Paths.image(image));
-				newSprite.updateHitbox();
-				newSprite.antialiasing = true;
-				PlayState.GraphicMap.set(spriteID, newSprite);
-				PlayState.contents.setVar('$spriteID', newSprite);
+		stageScript.set('createSprite', function(spriteID:String, image:String, x:Float, y:Float, onForeground:Bool = false)
+		{
+			var newSprite:FNFSprite = new FNFSprite(x, y).loadGraphic(Paths.image(image));
+			newSprite.updateHitbox();
+			newSprite.antialiasing = true;
+			PlayState.GraphicMap.set(spriteID, newSprite);
+			PlayState.contents.setVar('$spriteID', newSprite);
 
-				if (onForeground)
-					foreground.add(newSprite);
-				else
-					add(newSprite);
-			});
+			if (onForeground)
+				foreground.add(newSprite);
+			else
+				add(newSprite);
+		});
 
 		stageScript.set('createAnimatedSprite',
 			function(spriteID:String, key:String, spriteType:String, x:Float = 0, y:Float = 0, spriteAnims:Array<Array<Dynamic>>, defAnim:String,

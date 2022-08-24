@@ -39,7 +39,7 @@ class MenuCharacter extends FlxSprite
 	public function createCharacter(newCharacter:String = 'bf', canChange:Bool = false)
 	{
 		this.character = newCharacter;
-		
+
 		var rawJson = null;
 		var path:String = Paths.getPreloadPath('images/menus/base/storymenu/characters/' + newCharacter + '.json');
 
@@ -72,7 +72,7 @@ class MenuCharacter extends FlxSprite
 				setPosition(baseX + charJson.position[0], baseY + charJson.position[1]);
 				updateHitbox();
 			}
-			
+
 			flipX = charJson.flipX;
 		}
 		else

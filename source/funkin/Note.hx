@@ -229,7 +229,8 @@ class Note extends FNFSprite
 		return newNote;
 	}
 
-	public static function returnQuantNote(assetModifier, strumTime, noteData, noteAlt, ?isSustainNote:Bool = false, ?prevNote:Note = null, noteType:Int = 0):Note
+	public static function returnQuantNote(assetModifier, strumTime, noteData, noteAlt, ?isSustainNote:Bool = false, ?prevNote:Note = null,
+			noteType:Int = 0):Note
 	{
 		var newNote:Note = new Note(strumTime, noteData, noteAlt, prevNote, isSustainNote, noteType);
 
@@ -374,7 +375,7 @@ class Note extends FNFSprite
 	}
 
 	/**
-	* Custom Note Functions (for when you hit a note), this should execute in PlayState;
+	 * Custom Note Functions (for when you hit a note), this should execute in PlayState;
 	**/
 	public function goodNoteHit(newNote:Note)
 	{
@@ -383,7 +384,7 @@ class Note extends FNFSprite
 		{
 			case 5:
 				PlayState.contents.decreaseCombo(true);
-				PlayState.health -= healthLoss;	
+				PlayState.health -= healthLoss;
 			default:
 				if (newNote.hitSounds)
 				{

@@ -120,7 +120,7 @@ class Conductor
 	{
 		songMusic.time = Math.max(songMusic.time, 0);
 		songMusic.time = Math.min(songMusic.time, songMusic.length);
-		
+
 		songMusic.pause();
 		for (vocals in vocalArray)
 		{
@@ -138,7 +138,7 @@ class Conductor
 			if (vocals != null)
 				vocals.stop();
 		}
-		//songMusic.stop();
+		// songMusic.stop();
 	}
 
 	public static function killMusic()

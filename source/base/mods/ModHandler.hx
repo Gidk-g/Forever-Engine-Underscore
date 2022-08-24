@@ -10,43 +10,43 @@ import polymod.format.ParseRules.TextFileFormat;
 
 class ModHandler
 {
-    static final API_VER = "0.1.0";
-    static final MOD_DIR = "mods/";
+	static final API_VER = "0.1.0";
+	static final MOD_DIR = "mods/";
 
-    public static function loadModHandler()
-    {
-        #if MOD_HANDLER
-        trace('Initializing Polymod...');
+	public static function loadModHandler()
+	{
+		#if MOD_HANDLER
+		trace('Initializing Polymod...');
 		loadMods(getMods());
-        #else
-        trace("Polymod is not supported on your Platform!")
-        #end
-    }
+		#else
+		trace("Polymod is not supported on your Platform!")
+		#end
+	}
 
-    #if MOD_HANDLER
-    public static function loadMods(folders:Array<String>)
-    {
-        trace(folders);
-        trace('Attempting to Load ${folders.length} mods...');
-        var loadedModlist = Polymod.init({
-            modRoot: MOD_DIR,
-            dirs: folders,
-            framework: OPENFL,
-            apiVersion: API_VER,
+	#if MOD_HANDLER
+	public static function loadMods(folders:Array<String>)
+	{
+		trace(folders);
+		trace('Attempting to Load ${folders.length} mods...');
+		var loadedModlist = Polymod.init({
+			modRoot: MOD_DIR,
+			dirs: folders,
+			framework: OPENFL,
+			apiVersion: API_VER,
 			errorCallback: onError,
 			frameworkParams: buildFrameworkParams(),
 			customBackend: ModBackend,
 			ignoredFiles: Polymod.getDefaultIgnoreList(),
 			parseRules: parseRules(),
-        });
-        trace(loadedModlist);
+		});
+		trace(loadedModlist);
 
 		trace('Loading Successful, ${loadedModlist.length} / ${folders.length} new mods.');
 
-        for (mod in loadedModlist)
-            trace('Name: ${mod.title}, [${mod.id}]');
+		for (mod in loadedModlist)
+			trace('Name: ${mod.title}, [${mod.id}]');
 
-        var fileList = Polymod.listModFiles("IMAGE");
+		var fileList = Polymod.listModFiles("IMAGE");
 		trace('Installed mods added / replaced ${fileList.length} images');
 		for (item in fileList)
 			trace(' * [$item]');
@@ -65,42 +65,41 @@ class ModHandler
 		trace('Installed mods added / replaced ${fileList.length} sounds');
 		for (item in fileList)
 			trace(' * [$item]');
-    }
+	}
 
-    public static function getMods():Array<String>
-    {
-        trace('Searching for Mods...');
-        // look i'm NEW to this ok? -gabi
-        var modMeta = Polymod.scan('$MOD_DIR/', "*.*.*");
-        trace('Found ${modMeta.length} new mods.');
-        var modNames = [for (i in modMeta) i.id];
-        return modNames;
-    }
+	public static function getMods():Array<String>
+	{
+		trace('Searching for Mods...');
+		// look i'm NEW to this ok? -gabi
+		var modMeta = Polymod.scan('$MOD_DIR/', "*.*.*");
+		trace('Found ${modMeta.length} new mods.');
+		var modNames = [for (i in modMeta) i.id];
+		return modNames;
+	}
 
-    public static function parseRules():polymod.format.ParseRules
-    {
+	public static function parseRules():polymod.format.ParseRules
+	{
 		var output = polymod.format.ParseRules.getDefault();
 		output.addType("txt", TextFileFormat.LINES);
 		return output;
-    }
+	}
 
 	static inline function buildFrameworkParams():polymod.FrameworkParams
 	{
-		return
-        {
+		return {
 			assetLibraryPaths: [
-                "default" => "assets",
-                "characters" => "characters",
-                "songs" => "songs",
+				"default" => "assets",
+				"characters" => "characters",
+				"songs" => "songs",
 				"shaders" => "shaders",
-                "fonts" => "fonts",
+				"fonts" => "fonts",
 				"stages" => "stages",
 				"videos" => "videos",
-            ]
+			]
 		}
 	}
 
-    static function onError(error:PolymodError):Void
+	static function onError(error:PolymodError):Void
 	{
 		switch (error.code)
 		{
@@ -116,7 +115,7 @@ class ModHandler
 				}
 		}
 	}
-    #end
+	#end
 }
 
 #if MOD_HANDLER
@@ -158,4 +157,4 @@ class ModBackend extends OpenFLBackend
 		return super.list(type);
 	}
 }
-#end 
+#end

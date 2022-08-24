@@ -286,7 +286,8 @@ class Character extends FNFSprite
 				default:
 					// Left/right dancing, think Skid & Pump
 					if (animation.getByName('danceLeft$idleSuffix') != null
-						&& animation.getByName('danceRight$idleSuffix') != null || danceIdle)
+						&& animation.getByName('danceRight$idleSuffix') != null
+						|| danceIdle)
 					{
 						danced = !danced;
 						if (danced)
@@ -350,8 +351,8 @@ class Character extends FNFSprite
 	private var settingCharacterUp:Bool = true;
 
 	/**
-	* for Psych Engine Characters;
-	* @author Shadow_Mario_
+	 * for Psych Engine Characters;
+	 * @author Shadow_Mario_
 	**/
 	public function recalcDance()
 	{
@@ -555,6 +556,7 @@ class Character extends FNFSprite
 		 * @author Shadow_Mario_
 		 */
 		var path = Paths.getPreloadPath('characters/$char/' + character + '.json');
+
 		var rawJson = Assets.getText(path);
 
 		var json:PsychEngineChar = cast Json.parse(rawJson);

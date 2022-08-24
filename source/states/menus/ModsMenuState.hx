@@ -52,7 +52,7 @@ class ModsMenuState extends MusicBeatState
 		super.create();
 
 		// refresh mods
-		ModHandler.loadModHandler(); 
+		ModHandler.loadModHandler();
 
 		// get current modlist
 		modList = ModHandler.getMods();

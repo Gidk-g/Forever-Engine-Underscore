@@ -424,11 +424,11 @@ class ChartingState extends MusicBeatState
 			autosaveSong();
 			saveLevel();
 		}
-		
+
 		var left = FlxG.keys.justPressed.LEFT;
 		var right = FlxG.keys.justPressed.RIGHT;
 
-		if(left || right)
+		if (left || right)
 			changeQuant(left ? -1 : 1);
 
 		if (FlxG.keys.anyPressed([W, S]))
@@ -782,7 +782,7 @@ class ChartingState extends MusicBeatState
 
 		songMusic = new FlxSound();
 		vocals = new FlxSound();
-		
+
 		songMusic.loadEmbedded(Paths.songSounds(daSong, 'Inst'), false, true);
 
 		if (_song.needsVoices)
@@ -837,8 +837,8 @@ class ChartingState extends MusicBeatState
 				note.y + gridSize).makeGraphic(8, Math.floor(FlxMath.remapToRange(daSus, 0, Conductor.stepCrochet * 16, 0, baseGrid.height)));
 			curRenderedSustains.add(sustainVis);
 		}
-		
-		//generateSustain(daStrumTime, daNoteInfo, daSus, daNoteAlt, daNoteType, note);
+
+		// generateSustain(daStrumTime, daNoteInfo, daSus, daNoteAlt, daNoteType, note);
 	}
 
 	function generateEvent(strumTime:Float, val1:String, val2:String, id:String, ?shouldPush:Bool = false):Void
@@ -862,33 +862,33 @@ class ChartingState extends MusicBeatState
 	function generateSustain(daStrumTime:Float = 0, daNoteInfo:Int = 0, daSus:Float = 0, daNoteAlt:Float = 0, danoteType:Int = 0, note:Note)
 	{
 		/*
-		if (daSus > 0)
-		{
-			var prevNote:Note = null;
-			prevNote = note;
-			var constSize = Std.int(gridSize / 3);
+			if (daSus > 0)
+			{
+				var prevNote:Note = null;
+				prevNote = note;
+				var constSize = Std.int(gridSize / 3);
 
-			var sustainVis:Note = new Note(daStrumTime + (Conductor.stepCrochet * daSus) + Conductor.stepCrochet, daNoteInfo % 4, daNoteAlt, prevNote, true, daNoteType);
-			sustainVis.setGraphicSize(constSize,
-				Math.floor(FlxMath.remapToRange((daSus / 2) - constSize, 0, Conductor.stepCrochet * 16, 0, gridSize * gridSize)));
-			sustainVis.updateHitbox();
-			sustainVis.x = note.x + constSize;
-			sustainVis.y = note.y + (gridSize / 2);
+				var sustainVis:Note = new Note(daStrumTime + (Conductor.stepCrochet * daSus) + Conductor.stepCrochet, daNoteInfo % 4, daNoteAlt, prevNote, true, daNoteType);
+				sustainVis.setGraphicSize(constSize,
+					Math.floor(FlxMath.remapToRange((daSus / 2) - constSize, 0, Conductor.stepCrochet * 16, 0, gridSize * gridSize)));
+				sustainVis.updateHitbox();
+				sustainVis.x = note.x + constSize;
+				sustainVis.y = note.y + (gridSize / 2);
 
-			var sustainEnd:Note = new Note(daStrumTime + (Conductor.stepCrochet * daSus) + Conductor.stepCrochet, daNoteInfo % 4, daNoteAlt, sustainVis, true, daNoteType);
-			sustainEnd.setGraphicSize(constSize, constSize);
-			sustainEnd.updateHitbox();
-			sustainEnd.x = sustainVis.x;
-			sustainEnd.y = note.y + (sustainVis.height) + (gridSize / 2);
+				var sustainEnd:Note = new Note(daStrumTime + (Conductor.stepCrochet * daSus) + Conductor.stepCrochet, daNoteInfo % 4, daNoteAlt, sustainVis, true, daNoteType);
+				sustainEnd.setGraphicSize(constSize, constSize);
+				sustainEnd.updateHitbox();
+				sustainEnd.x = sustainVis.x;
+				sustainEnd.y = note.y + (sustainVis.height) + (gridSize / 2);
 
-			// loll for later
-			sustainVis.rawNoteData = daNoteInfo;
-			sustainEnd.rawNoteData = daNoteInfo;
+				// loll for later
+				sustainVis.rawNoteData = daNoteInfo;
+				sustainEnd.rawNoteData = daNoteInfo;
 
-			curRenderedSustains.add(sustainVis);
-			curRenderedSustains.add(sustainEnd);
-		}
-		*/
+				curRenderedSustains.add(sustainVis);
+				curRenderedSustains.add(sustainEnd);
+			}
+		 */
 	}
 
 	///*
@@ -1044,10 +1044,10 @@ class ChartingState extends MusicBeatState
 
 	function updateText()
 	{
-		bpmTxt.text = bpmTxt.text = Std.string('BEAT: ' + FlxMath.roundDecimal(decBeat, 2)
-			+ '  SNAP: ' + curSnap + '  MEASURE: ' + currentSection
+		bpmTxt.text = bpmTxt.text = Std.string('BEAT: ' + FlxMath.roundDecimal(decBeat, 2) + '  SNAP: ' + curSnap + '  MEASURE: ' + currentSection
 			+ '  TIME: ' + FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))
-			+ '  BPM: ' + _song.bpm;
+			+ '  BPM: '
+			+ _song.bpm;
 	}
 
 	function generateIcons()
@@ -1189,6 +1189,7 @@ class ChartingState extends MusicBeatState
 		_file = null;
 		FlxG.log.error("Problem saving Level data");
 	}
+
 	//
 
 	function pauseMusic()

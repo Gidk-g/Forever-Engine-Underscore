@@ -42,15 +42,14 @@ import states.menus.*;
 import states.substates.*;
 
 using StringTools;
+
 #if sys
 import sys.FileSystem;
 import sys.io.File;
 #end
-
 #if VIDEO_PLUGIN
 import vlc.MP4Handler;
 #end
-
 
 class PlayState extends MusicBeatState
 {
@@ -83,7 +82,7 @@ class PlayState extends MusicBeatState
 
 	public var notes:FlxTypedGroup<Note> = new FlxTypedGroup<Note>();
 	public var unspawnNotes:Array<Note> = [];
-	
+
 	var ratingArray:Array<String> = [];
 	var allSicks:Bool = true;
 
@@ -618,7 +617,7 @@ class PlayState extends MusicBeatState
 
 				if (dialogueBox.portraitData.confirmSound != null)
 					sound = dialogueBox.portraitData.confirmSound;
-				
+
 				FlxG.sound.play(Paths.sound(sound));
 				dialogueBox.curPage += 1;
 
@@ -1835,6 +1834,7 @@ class PlayState extends MusicBeatState
 	}
 
 	public var characterArray:Array<Character> = [];
+
 	function charactersDance(curBeat:Int)
 	{
 		if (curBeat % Math.round(gfSpeed * gf.bopSpeed) == 0
@@ -2102,7 +2102,7 @@ class PlayState extends MusicBeatState
 		inCutscene = true;
 
 		var filepath:String = Paths.video(name);
-		if(!Assets.exists(filepath))
+		if (!Assets.exists(filepath))
 		{
 			FlxG.log.warn('Couldnt find video file: ' + name);
 			startAndEnd();
@@ -2401,23 +2401,26 @@ class PlayState extends MusicBeatState
 
 	function setupScripts()
 	{
-		var fools:Array<String> = [Paths.getPreloadPath('scripts/'), Paths.getPreloadPath('songs/${SONG.song.toLowerCase().replace(' ', '-')}/')];
+		var fools:Array<String> = [
+			Paths.getPreloadPath('scripts/'),
+			Paths.getPreloadPath('songs/${SONG.song.toLowerCase().replace(' ', '-')}/')
+		];
 		var pushedScripts:Array<String> = [];
 
 		// BROKEN AND NOT REALLY WORKING WITH MODS RN
 		/*for (fool in fools)
-		{
-			if (Assets.exists(fool))
 			{
-				for (file in FileSystem.readDirectory(fool))
+				if (Assets.exists(fool))
 				{
-					if (file.endsWith('.hx') && !pushedScripts.contains(file))
+					for (file in FileSystem.readDirectory(fool))
 					{
-						scriptArray.push(new ScriptHandler(fool.replace('.', '') + file));
-						pushedScripts.push(file);
+						if (file.endsWith('.hx') && !pushedScripts.contains(file))
+						{
+							scriptArray.push(new ScriptHandler(fool.replace('.', '') + file));
+							pushedScripts.push(file);
+						}
 					}
 				}
-			}
 		}*/
 	}
 

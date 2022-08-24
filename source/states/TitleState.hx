@@ -340,13 +340,13 @@ class TitleState extends MusicBeatState
 			case 16:
 				skipIntro();
 		}
-		//trace('Beat: ' + curBeat);
+		// trace('Beat: ' + curBeat);
 	}
 
 	override function stepHit()
 	{
 		super.stepHit();
-		//trace('Step: ' + curStep);
+		// trace('Step: ' + curStep);
 
 		switch (curStep)
 		{

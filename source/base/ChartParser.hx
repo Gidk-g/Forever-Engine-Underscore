@@ -17,7 +17,6 @@ using StringTools;
 	and so on. This class will handle both saving and loading of charts with useful features and scripts that will make things much easier
 	to handle and load, as well as much more modular!
 **/
-
 /**
  * Song Information, such as name, notes, events, bpm, etc;
 **/

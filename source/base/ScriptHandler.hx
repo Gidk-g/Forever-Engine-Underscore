@@ -115,7 +115,7 @@ class ScriptFuncs extends PlayState
 				PlayState.contents.setVar('$spriteID', newSprite);
 				PlayState.contents.add(newSprite);
 			});
-			
+
 		PlayState.contents.setVar('addSpriteAnimation', function(spriteID:String, newAnims:Array<Dynamic>)
 		{
 			var gottenSprite:FNFSprite = PlayState.GraphicMap.get(spriteID);
@@ -130,7 +130,7 @@ class ScriptFuncs extends PlayState
 			var gottenSprite:FNFSprite = PlayState.GraphicMap.get(spriteID);
 			gottenSprite.addOffset(anim, x, y);
 		});
-		
+
 		PlayState.contents.setVar('spritePlayAnimation', function(spriteID:String, animToPlay:String, forced:Bool = true)
 		{
 			var gottenSprite:FNFSprite = PlayState.GraphicMap.get(spriteID);
@@ -253,7 +253,7 @@ class ScriptFuncs extends PlayState
 		PlayState.contents.setVar('doTweenX', function(tweenID:String, object:Dynamic, value:Float, time:Float, ease:String)
 		{
 			var leTween:FlxTween;
-			
+
 			leTween = FlxTween.tween(object, {x: value}, time, {
 				ease: ForeverTools.getEaseFromString(ease),
 				onComplete: function(tween:FlxTween)

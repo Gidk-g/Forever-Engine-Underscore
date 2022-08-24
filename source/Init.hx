@@ -290,7 +290,7 @@ class Init extends FlxState
 		FlxG.mouse.visible = false; // Hide mouse on start
 		FlxGraphic.defaultPersist = true; // make sure we control all of the memory
 
-		if(Main.showCommitHash)
+		if (Main.showCommitHash)
 			Main.commitHash = Main.getGitCommitHash(); // get the commit hash for use on menu texts and such;
 
 		#if MOD_HANDLER
@@ -344,9 +344,7 @@ class Init extends FlxState
 				case "Splash Opacity":
 					defaultValue = 50;
 			}
-			if (!Std.isOfType(trueSettings.get(i), Int)
-				|| trueSettings.get(i) < 0
-				|| trueSettings.get(i) > 100)
+			if (!Std.isOfType(trueSettings.get(i), Int) || trueSettings.get(i) < 0 || trueSettings.get(i) > 100)
 				trueSettings.set(i, defaultValue);
 		}
 

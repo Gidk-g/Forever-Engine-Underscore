@@ -27,6 +27,7 @@ using StringTools;
 class MainMenuState extends MusicBeatState
 {
 	var menuItems:FlxTypedGroup<FlxSprite>;
+
 	private static var curSelected:Float = 0;
 
 	var bg:FlxSprite;
@@ -124,8 +125,7 @@ class MainMenuState extends MusicBeatState
 			+ Main.foreverVersion
 			+ " - Underscore v"
 			+ Main.underscoreVersion
-			+ (Main.showCommitHash ? ' (${Main.commitHash})' : ''),
-			12);
+			+ (Main.showCommitHash ? ' (${Main.commitHash})' : ''), 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);

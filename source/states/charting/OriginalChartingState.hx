@@ -487,10 +487,10 @@ class OriginalChartingState extends MusicBeatState
 		blockPressWhileTypingOnStepper.push(stepperType);
 
 		tab_group_note.add(new FlxText(10, 10, 0, 'Sustain length:'));
-		//tab_group_note.add(new FlxText(10, stepperType.y - 15, 0, 'Note Type:'));
+		// tab_group_note.add(new FlxText(10, stepperType.y - 15, 0, 'Note Type:'));
 		tab_group_note.add(showStrumlineNotes);
 		tab_group_note.add(stepperSusLength);
-		//tab_group_note.add(stepperType);
+		// tab_group_note.add(stepperType);
 
 		UI_box.addGroup(tab_group_note);
 		// I'm genuinely tempted to go around and remove every instance of the word "sus" it is genuinely killing me inside
@@ -513,7 +513,7 @@ class OriginalChartingState extends MusicBeatState
 
 		if (_song.needsVoices)
 			vocals.loadEmbedded(Paths.songSounds(daSong, 'Voices'), false, true);
-		
+
 		FlxG.sound.list.add(songMusic);
 		FlxG.sound.list.add(vocals);
 
@@ -649,7 +649,7 @@ class OriginalChartingState extends MusicBeatState
 		Conductor.songPosition = songMusic.time;
 
 		gridBlackLine.x = gridBG.x + gridBG.width / 2;
-		
+
 		UI_box.x = FlxG.width / 2;
 		UI_box.y = 20;
 
@@ -913,11 +913,16 @@ class OriginalChartingState extends MusicBeatState
 			changeSection(curSection - shiftThing);
 
 		bpmTxt.text = bpmTxt.text = Std.string(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))
-			+ " / " + Std.string(FlxMath.roundDecimal(songMusic.length / 1000, 2))
-			+ "\nSection: " + curSection
-			+ "\nBeat: " + curBeat
-			+ "\nStep: " + curStep
-			+ "\nNote: " + curNoteName[curNoteType]
+			+ " / "
+			+ Std.string(FlxMath.roundDecimal(songMusic.length / 1000, 2))
+			+ "\nSection: "
+			+ curSection
+			+ "\nBeat: "
+			+ curBeat
+			+ "\nStep: "
+			+ curStep
+			+ "\nNote: "
+			+ curNoteName[curNoteType]
 			+ "\n1-5 to change Notetypes";
 		super.update(elapsed);
 
@@ -1146,7 +1151,7 @@ class OriginalChartingState extends MusicBeatState
 	function generateGrid()
 	{
 		gridGroup.clear();
-		
+
 		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 8, GRID_SIZE * 16);
 		gridGroup.add(gridBG);
 
@@ -1205,7 +1210,7 @@ class OriginalChartingState extends MusicBeatState
 			var daNoteType:Int = i[3];
 
 			#if DEBUG_TRACES trace('Current note type is ' + curNoteName[daNoteType] + '.'); #end
-			
+
 			var note:Note = ForeverAssets.generateArrow(PlayState.assetModifier, daStrumTime, daNoteInfo % 4, 0, null, null, daNoteType);
 			note.sustainLength = daSus;
 			note.noteType = daNoteType;

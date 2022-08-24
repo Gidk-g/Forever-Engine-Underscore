@@ -38,7 +38,6 @@ typedef PortraitDataDef =
 	var soundChance:Null<Int>;
 	var soundPath:Null<String>;
 	var confirmSound:String;
-
 	var textFont:Null<String>;
 	var textSize:Null<Int>;
 	var textBorderSize:Null<Int>;
@@ -189,7 +188,7 @@ class DialogueBox extends FlxSpriteGroup
 		add(portrait);
 		add(box);
 
-		if(boxData.textType != 'custom')
+		if (boxData.textType != 'custom')
 			add(alphabetText);
 		else
 			add(pixelText);
@@ -225,7 +224,7 @@ class DialogueBox extends FlxSpriteGroup
 
 			if (pageData.text != null)
 				textToDisplay = pageData.text;
-			
+
 			if (boxData.textType != 'custom')
 				alphabetText.startText(textToDisplay, true);
 
@@ -587,10 +586,10 @@ class DialogueBox extends FlxSpriteGroup
 	public function closeDialog()
 	{
 		whenDaFinish();
-		
+
 		var fadeOut = dialogueData.songFadeOut;
 		FlxG.sound.music.fadeOut((fadeOut != null ? fadeOut : 2.2), 0);
-		
+
 		alphabetText.playSounds = false;
 		kill();
 	}
@@ -609,7 +608,7 @@ class DialogueBox extends FlxSpriteGroup
 	}
 
 	override function update(elapsed:Float)
-	{		
+	{
 		if (box.animation.finished)
 		{
 			if (boxData.singleFrame != true)

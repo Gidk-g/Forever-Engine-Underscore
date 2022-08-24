@@ -38,7 +38,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	override function create()
 	{
 		super.create();
-		
+
 		PlayState.contents.callFunc('gameOverBegins', null);
 	}
 
@@ -126,6 +126,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	}
 
 	var isEnding:Bool = false;
+
 	function endBullshit():Void
 	{
 		if (!isEnding)
