@@ -158,7 +158,7 @@ class Init extends FlxState
 		],
 		// NOTES AND HOLDS;
 		"Note Skin" => ['default', Selector, 'Choose a note skin.', NOT_FORCED, ''],
-		'Arrow Opacity' => [80, Selector, "Set the opacity for your Strumline Notes.", NOT_FORCED],
+		'Arrow Opacity' => [60, Selector, "Set the opacity for your Strumline Notes.", NOT_FORCED],
 		"Clip Style" => [
 			'stepmania',
 			Selector,
@@ -173,7 +173,7 @@ class Init extends FlxState
 			NOT_FORCED
 		],
 		'Splash Opacity' => [
-			50,
+			80,
 			Selector,
 			"Set the opacity for your notesplashes, usually shown when hit a \"Sick!\" Judgement on Notes.",
 			NOT_FORCED
@@ -340,9 +340,9 @@ class Init extends FlxState
 				case "Hitsound Volume":
 					defaultValue = 0;
 				case "Arrow Opacity":
-					defaultValue = 80;
+					defaultValue = 60;
 				case "Splash Opacity":
-					defaultValue = 50;
+					defaultValue = 80;
 			}
 			if (!Std.isOfType(trueSettings.get(i), Int) || trueSettings.get(i) < 0 || trueSettings.get(i) > 100)
 				trueSettings.set(i, defaultValue);
