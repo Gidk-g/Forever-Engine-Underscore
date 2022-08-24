@@ -32,20 +32,11 @@ import sys.io.Process;
 class Main extends Sprite
 {
 	// class action variables
-	public static var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
-	public static var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
-
 	public static var mainClassState:Class<FlxState> = Init; // Determine the main class state of the game
-	public static var framerate:Int = 120; // How many frames per second the game should run at.
-
 	public static var foreverVersion:String = '0.3.1';
 	public static var underscoreVersion:String = '0.2.2 BETA';
 	public static var commitHash:String;
-
 	public static var showCommitHash:Bool = true;
-
-	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
-	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 
 	static var infoCounter:Overlay; // initialize the heads up display that shows information before creating it.
 
@@ -125,14 +116,6 @@ class Main extends Sprite
 		],
 	];
 
-	// most of these variables are just from the base game!
-	// be sure to mess around with these if you'd like.
-
-	public static function main():Void
-	{
-		Lib.current.addChild(new Main());
-	}
-
 	// calls a function to set the game up
 	public function new()
 	{
@@ -147,34 +130,10 @@ class Main extends Sprite
 
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 
-		#if (html5 || neko)
-		framerate = 60;
-		#end
-
-		// simply said, a state is like the 'surface' area of the window where everything is drawn.
-		// if you've used gamemaker you'll probably understand the term surface better
-		// this defines the surface bounds
-
-		var stageWidth:Int = Lib.current.stage.stageWidth;
-		var stageHeight:Int = Lib.current.stage.stageHeight;
-
-		if (zoom == -1)
-		{
-			var ratioX:Float = stageWidth / gameWidth;
-			var ratioY:Float = stageHeight / gameHeight;
-			zoom = Math.min(ratioX, ratioY);
-			gameWidth = Math.ceil(stageWidth / zoom);
-			gameHeight = Math.ceil(stageHeight / zoom);
-			// this just kind of sets up the camera zoom in accordance to the surface width and camera zoom.
-			// if set to negative one, it is done so automatically, which is the default.
-		}
-
 		FlxTransitionableState.skipNextTransIn = true;
 
 		// here we set up the base game
-		var gameCreate:FlxGame;
-		gameCreate = new FlxGame(gameWidth, gameHeight, mainClassState, zoom, framerate, framerate, skipSplash);
-		addChild(gameCreate); // and create it afterwards
+		addChild(new FlxGame(0, 0, mainClassState, 1, #if (html5 || neko) 60 #else 120 #end, #if (html5 || neko) 60 #else 120 #end, true)); // and create it afterwards
 
 		// default game FPS settings, I'll probably comment over them later.
 		// addChild(new FPS(10, 3, 0xFFFFFF));
@@ -246,7 +205,7 @@ class Main extends Sprite
 		dateNow = StringTools.replace(dateNow, " ", "_");
 		dateNow = StringTools.replace(dateNow, ":", "'");
 
-		path = "./crash/" + "FE_" + dateNow + ".txt";
+		path = "crash/" + "FE_" + dateNow + ".txt";
 
 		errMsg = "Friday Night Funkin' v" + Lib.application.meta["version"] + "\n";
 		errMsg += "Forever Engine Underscore v" + Main.underscoreVersion + (showCommitHash ? ' (${commitHash})' : '') + "\n";
@@ -275,10 +234,13 @@ class Main extends Sprite
 			+
 			"\nPlease report this error to the GitHub page: https://github.com/BeastlyGhost/Forever-Engine-Underscore\non the \"master\" branch\n\n>Crash Handler written by: sqirra-rng\n\n";
 
-		if (!Assets.exists("./crash/"))
-			FileSystem.createDirectory("./crash/");
+		try // to make the game to not crash if it can't save the crash file
+		{
+			if (!Assets.exists("crash"))
+				FileSystem.createDirectory("crash");
 
-		File.saveContent(path, errMsg + "\n");
+			File.saveContent(path, errMsg + "\n");
+		}
 
 		Sys.println(errMsg);
 		Sys.println("Crash dump saved in " + Path.normalize(path));

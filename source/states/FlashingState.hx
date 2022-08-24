@@ -38,7 +38,7 @@ class FlashingState extends MusicBeatState
 		bg.setGraphicSize(Std.int(bg.width * 1.1));
 		bg.updateHitbox();
 		bg.screenCenter();
-		bg.antialiasing = true;
+		bg.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 		add(bg);
 
 		warnText = new FlxText(0, 0, FlxG.width, "Hey, watch out!\n

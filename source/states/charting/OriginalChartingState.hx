@@ -200,7 +200,7 @@ class OriginalChartingState extends MusicBeatState
 			newArrow.setGraphicSize(GRID_SIZE, GRID_SIZE);
 			newArrow.updateHitbox();
 			newArrow.alpha = 0.8;
-			newArrow.antialiasing = true;
+			newArrow.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 
 			newArrow.playAnim('static');
 

@@ -109,7 +109,7 @@ class StoryMenuState extends MusicBeatState
 			grpWeekText.add(weekThing);
 
 			weekThing.screenCenter(X);
-			weekThing.antialiasing = true;
+			weekThing.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 			// weekThing.updateHitbox();
 			weekThing.visible = Main.gameWeeks[curWeek][5];
 
@@ -121,7 +121,7 @@ class StoryMenuState extends MusicBeatState
 				lock.animation.addByPrefix('lock', 'lock');
 				lock.animation.play('lock');
 				lock.ID = i;
-				lock.antialiasing = true;
+				lock.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 				grpLocks.add(lock);
 			}
 		}
@@ -131,7 +131,7 @@ class StoryMenuState extends MusicBeatState
 		for (char in 0...3)
 		{
 			var weekCharacterThing:MenuCharacter = new MenuCharacter((FlxG.width * 0.25) * (1 + char) - 150, weekCharacters[curWeek][char]);
-			weekCharacterThing.antialiasing = true;
+			weekCharacterThing.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 			grpWeekCharacters.add(weekCharacterThing);
 		}
 
@@ -154,7 +154,7 @@ class StoryMenuState extends MusicBeatState
 		curDifficulty = Math.round(Math.max(0, CoolUtil.baseDifficulties.indexOf(lastDifficultyName)));
 
 		sprDifficulty = new FlxSprite(0, leftArrow.y);
-		sprDifficulty.antialiasing = true;
+		sprDifficulty.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 
 		difficultySelectors.add(sprDifficulty);
 

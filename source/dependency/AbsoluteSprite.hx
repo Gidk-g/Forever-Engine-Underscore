@@ -23,7 +23,7 @@ class AbsoluteSprite extends FlxSprite
 
 		loadGraphic(Paths.image(image), false);
 
-		antialiasing = true;
+		antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 		scrollFactor.set();
 	}
 

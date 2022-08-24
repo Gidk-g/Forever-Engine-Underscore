@@ -350,7 +350,7 @@ class DialogueBox extends FlxSpriteGroup
 				boxData.scale = 1;
 
 			if (boxData.antialiasing == null)
-				boxData.antialiasing = true;
+				boxData.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 
 			box.scale = new FlxPoint(boxData.scale, boxData.scale);
 			box.antialiasing = boxData.antialiasing;
@@ -403,7 +403,7 @@ class DialogueBox extends FlxSpriteGroup
 					portraitData.scale = 1;
 
 				if (portraitData.antialiasing == null)
-					portraitData.antialiasing = true;
+					portraitData.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 
 				// change some smaller values
 				portrait.scale.set(portraitData.scale, portraitData.scale);

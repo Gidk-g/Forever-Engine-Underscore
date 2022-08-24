@@ -215,7 +215,7 @@ class ChartingState extends MusicBeatState
 			newArrow.setGraphicSize(gridSize);
 			newArrow.updateHitbox();
 			newArrow.alpha = 0.8;
-			newArrow.antialiasing = true;
+			newArrow.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 
 			// lol silly idiot
 			newArrow.playAnim('static');
@@ -1081,12 +1081,12 @@ class ChartingState extends MusicBeatState
 		// load animations
 		quantL.loadGraphic(Paths.image('UI/forever/base/chart editor/marker'));
 		quantL.updateHitbox();
-		quantL.antialiasing = true;
+		quantL.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 
 		// RIGHT
 		quantR.loadGraphic(Paths.image('UI/forever/base/chart editor/marker'));
 		quantR.updateHitbox();
-		quantR.antialiasing = true;
+		quantR.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 
 		quantL.scrollFactor.set(1, 1);
 		quantR.scrollFactor.set(1, 1);

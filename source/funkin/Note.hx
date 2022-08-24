@@ -186,7 +186,7 @@ class Note extends FNFSprite
 
 						newNote.setGraphicSize(Std.int(newNote.width * 0.8));
 						newNote.updateHitbox();
-						newNote.antialiasing = true;
+						newNote.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 
 					default: // anything else
 						newNote.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset('NOTE_assets', assetModifier, Init.trueSettings.get("Note Skin"),
@@ -201,7 +201,7 @@ class Note extends FNFSprite
 
 						newNote.setGraphicSize(Std.int(newNote.width * 0.7));
 						newNote.updateHitbox();
-						newNote.antialiasing = true;
+						newNote.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 				}
 		}
 		//
@@ -343,7 +343,7 @@ class Note extends FNFSprite
 				{
 					newNote.setGraphicSize(Std.int(newNote.width * sizeThing));
 					newNote.updateHitbox();
-					newNote.antialiasing = true;
+					newNote.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 				}
 		}
 

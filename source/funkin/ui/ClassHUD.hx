@@ -104,20 +104,20 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		scoreBar = new FlxText(FlxG.width / 2, Math.floor(healthBarBG.y + 40), 0, scoreDisplay);
 		scoreBar.setFormat(Paths.font('vcr.ttf'), Init.trueSettings.get('Score Bar Size'), FlxColor.WHITE);
 		scoreBar.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
-		scoreBar.antialiasing = true;
+		scoreBar.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 		add(scoreBar);
 
 		cornerMark = new FlxText(0, 0, 0, engineDisplay);
 		cornerMark.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE);
 		cornerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		cornerMark.setPosition(FlxG.width - (cornerMark.width + 5), 5);
-		cornerMark.antialiasing = true;
+		cornerMark.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 		add(cornerMark);
 
 		centerMark = new FlxText(0, (Init.trueSettings.get('Downscroll') ? FlxG.height - 45 : 20), 0, '- $infoDisplay [$diffDisplay] -');
 		centerMark.setFormat(Paths.font('vcr.ttf'), 24, FlxColor.WHITE);
 		centerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-		centerMark.antialiasing = true;
+		centerMark.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 		centerMark.screenCenter(X);
 		add(centerMark);
 

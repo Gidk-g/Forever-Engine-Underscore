@@ -61,7 +61,7 @@ class ModsMenuState extends MusicBeatState
 		bg.setGraphicSize(Std.int(bg.width * 1.1));
 		bg.updateHitbox();
 		bg.screenCenter();
-		bg.antialiasing = true;
+		bg.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 		bg.color = 0xCE64DF;
 		add(bg);
 
@@ -73,7 +73,7 @@ class ModsMenuState extends MusicBeatState
 		var text:FlxText = new FlxText(0, 0, 0, '- MODS MENU -');
 		text.setFormat(Paths.font('vcr.ttf'), 36, FlxColor.WHITE);
 		text.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
-		text.antialiasing = true;
+		text.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 		text.screenCenter(X);
 		add(text);
 

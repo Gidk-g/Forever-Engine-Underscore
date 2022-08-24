@@ -73,7 +73,7 @@ class ScriptFuncs extends PlayState
 		{
 			var newSprite = new FNFSprite();
 			newSprite.makeGraphic(x, y, graphicCol);
-			newSprite.antialiasing = true;
+			newSprite.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 			PlayState.GraphicMap.set(spriteID, newSprite);
 			PlayState.contents.setVar('$spriteID', newSprite);
 			PlayState.contents.add(newSprite);
@@ -83,7 +83,7 @@ class ScriptFuncs extends PlayState
 		{
 			var newSprite:FNFSprite = new FNFSprite(x, y).loadGraphic(Paths.image(key));
 			newSprite.updateHitbox();
-			newSprite.antialiasing = true;
+			newSprite.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 			PlayState.GraphicMap.set(spriteID, newSprite);
 			PlayState.contents.setVar('$spriteID', newSprite);
 			PlayState.contents.add(newSprite);
@@ -109,7 +109,7 @@ class ScriptFuncs extends PlayState
 					newSprite.animation.addByPrefix(anim[0], anim[1], anim[2], anim[3]);
 				}
 				newSprite.updateHitbox();
-				newSprite.antialiasing = true;
+				newSprite.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 				newSprite.animation.play(defAnim);
 				PlayState.GraphicMap.set(spriteID, newSprite);
 				PlayState.contents.setVar('$spriteID', newSprite);

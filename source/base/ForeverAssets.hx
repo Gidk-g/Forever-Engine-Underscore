@@ -56,7 +56,7 @@ class ForeverAssets
 			newSprite.setGraphicSize(Std.int(newSprite.width * PlayState.daPixelZoom));
 		else
 		{
-			newSprite.antialiasing = true;
+			newSprite.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 			newSprite.setGraphicSize(Std.int(newSprite.width * 0.5));
 		}
 		newSprite.updateHitbox();
@@ -105,7 +105,7 @@ class ForeverAssets
 			rating.setGraphicSize(Std.int(rating.width * PlayState.daPixelZoom * 0.7));
 		else
 		{
-			rating.antialiasing = true;
+			rating.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 			rating.setGraphicSize(Std.int(rating.width * 0.7));
 		}
 
@@ -206,7 +206,7 @@ class ForeverAssets
 				newStaticArrow.animation.addByPrefix('pressed', stringSect + ' press', 24, false);
 				newStaticArrow.animation.addByPrefix('confirm', stringSect + ' confirm', 24, false);
 
-				newStaticArrow.antialiasing = true;
+				newStaticArrow.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 				newStaticArrow.setGraphicSize(Std.int(newStaticArrow.width * 0.7));
 
 				// set little offsets per note!
@@ -272,7 +272,7 @@ class ForeverAssets
 		{
 			default:
 				newCheckmark.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary));
-				newCheckmark.antialiasing = true;
+				newCheckmark.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 
 				newCheckmark.animation.addByPrefix('false finished', 'uncheckFinished');
 				newCheckmark.animation.addByPrefix('false', 'uncheck', 12, false);

@@ -69,7 +69,7 @@ class CreditsMenuState extends MusicBeatState
 		else
 			bg.loadGraphic(Paths.image('menus/base/menuDesat'));
 
-		bg.antialiasing = true;
+		bg.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 		bg.screenCenter();
 		var finalColor:FlxColor = FlxColor.fromRGB(creditsData.menuBGColor[0], creditsData.menuBGColor[1], creditsData.menuBGColor[2]);
 		bg.color = finalColor;

@@ -16,7 +16,7 @@ class BaseButton extends FlxSprite
 		this.size = size;
 
 		loadGraphic(Paths.image('UI/default/base/charter/charting_button${size.toUpperCase()}'));
-		antialiasing = true;
+		antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 		scrollFactor.set();
 	}
 
