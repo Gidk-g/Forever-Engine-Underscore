@@ -400,20 +400,24 @@ class PlayState extends MusicBeatState
 		uiHUD = new ClassHUD();
 		add(uiHUD);
 		uiHUD.cameras = [camHUD];
-		//
 
 		// create a hud over the hud camera for dialogue
 		dialogueHUD = new FlxCamera();
 		dialogueHUD.bgColor.alpha = 0;
 		FlxG.cameras.add(dialogueHUD, false);
 
-		//
 		keysArray = [
 			copyKey(Init.gameControls.get('LEFT')[0]),
 			copyKey(Init.gameControls.get('DOWN')[0]),
 			copyKey(Init.gameControls.get('UP')[0]),
 			copyKey(Init.gameControls.get('RIGHT')[0])
 		];
+
+		if (!Init.trueSettings.get('Controller Mode'))
+		{
+			FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
+			FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
+		}
 
 		for (key => type in precacheList)
 		{
@@ -2376,13 +2380,6 @@ class PlayState extends MusicBeatState
 					});
 					FlxG.sound.play(Paths.sound('introGo-' + assetModifier), 0.6);
 					Conductor.songPosition = -(Conductor.crochet * 1);
-
-				case 4:
-					if (!Init.trueSettings.get('Controller Mode'))
-					{
-						FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
-						FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
-					}
 			}
 
 			callFunc('onCountdownTick', swagCounter);

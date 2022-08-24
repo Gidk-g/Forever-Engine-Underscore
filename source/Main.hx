@@ -33,6 +33,7 @@ class Main extends Sprite
 {
 	// class action variables
 	public static var mainClassState:Class<FlxState> = Init; // Determine the main class state of the game
+
 	public static var foreverVersion:String = '0.3.1';
 	public static var underscoreVersion:String = '0.2.2 BETA';
 	public static var commitHash:String;
@@ -259,11 +260,19 @@ class Main extends Sprite
 	{
 		var process = new sys.io.Process('git', ['rev-parse', 'HEAD']);
 
-		// read the output of the process
-		var commitHash:String = process.stdout.readLine();
+		var commitHash:String;
+
+		try // read the output of the process
+		{
+			commitHash = process.stdout.readLine();
+		}
+		catch (e) // leave it as null in the event of an error
+		{
+			commitHash = null;
+		}
 		var trimmedCommitHash:String = commitHash.substr(0, 7);
 
 		// Generates a string expression
-		return trimmedCommitHash;
+		return commitHash != null ? trimmedCommitHash : 'UNKNOWN';
 	}
 }
