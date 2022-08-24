@@ -92,8 +92,10 @@ class ModHandler
                 "default" => "assets",
                 "characters" => "characters",
                 "songs" => "songs",
+				"shaders" => "shaders",
                 "fonts" => "fonts",
 				"stages" => "stages",
+				"videos" => "videos",
             ]
 		}
 	}
