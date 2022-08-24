@@ -37,11 +37,11 @@ import funkin.*;
 import funkin.Strumline.UIStaticArrow;
 import funkin.ui.*;
 import haxe.Json;
-import openfl.utils.Assets;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.media.Sound;
 import openfl.net.FileReference;
+import openfl.utils.Assets;
 import openfl.utils.ByteArray;
 import states.charting.data.*;
 import states.menus.FreeplayState;
@@ -464,7 +464,7 @@ class OriginalChartingState extends MusicBeatState
 	}
 
 	var stepperSusLength:FlxUINumericStepper;
-	var stepperType:FlxUINumericStepper;
+	var noteTypeDropDown:PsychDropDown;
 	var key:Int = 0;
 
 	function addNoteUI():Void
@@ -481,16 +481,27 @@ class OriginalChartingState extends MusicBeatState
 		showStrumlineNotes.checked = false;
 
 		// note types
-		stepperType = new FlxUINumericStepper(10, 85, Conductor.stepCrochet / 125, 0, 0, (Conductor.stepCrochet / 125) + 10);
-		stepperType.value = 0;
-		stepperType.name = 'note_type';
-		blockPressWhileTypingOnStepper.push(stepperType);
+		for (i in 0...curNoteName.length)
+		{
+			curNoteName[i] = i + '. ' + curNoteName[i];
+		}
+		noteTypeDropDown = new PsychDropDown(10, 65, PsychDropDown.makeStrIdLabelArray(curNoteName, false), function(type:String)
+		{
+			curNoteType = Std.parseInt(type);
+			if (curSelectedNote != null && curSelectedNote[1] > -1)
+			{
+				curSelectedNote[3] = curNoteType;
+				updateGrid();
+			}
+		});
+
+		blockPressWhileScrolling.push(noteTypeDropDown);
 
 		tab_group_note.add(new FlxText(10, 10, 0, 'Sustain length:'));
-		// tab_group_note.add(new FlxText(10, stepperType.y - 15, 0, 'Note Type:'));
+		tab_group_note.add(new FlxText(10, noteTypeDropDown.y - 15, 0, 'Note Type:'));
 		tab_group_note.add(showStrumlineNotes);
 		tab_group_note.add(stepperSusLength);
-		// tab_group_note.add(stepperType);
+		tab_group_note.add(noteTypeDropDown);
 
 		UI_box.addGroup(tab_group_note);
 		// I'm genuinely tempted to go around and remove every instance of the word "sus" it is genuinely killing me inside
@@ -796,21 +807,6 @@ class OriginalChartingState extends MusicBeatState
 				}
 			}
 
-			// temporary note type controls until I make a new dropdown or something
-			if (FlxG.keys.justPressed.ONE)
-				curNoteType = 0;
-			if (FlxG.keys.justPressed.TWO)
-				curNoteType = 1;
-			if (FlxG.keys.justPressed.THREE)
-				curNoteType = 2;
-			if (FlxG.keys.justPressed.FOUR)
-				curNoteType = 3;
-			if (FlxG.keys.justPressed.FIVE)
-				curNoteType = 4;
-			if (FlxG.keys.justPressed.SIX)
-				curNoteType = 5;
-			// I know this is a lot of duplicated code, but then again, it's temporary;
-
 			if (!typingShit.hasFocus)
 			{
 				if (FlxG.keys.justPressed.SPACE)
@@ -913,17 +909,10 @@ class OriginalChartingState extends MusicBeatState
 			changeSection(curSection - shiftThing);
 
 		bpmTxt.text = bpmTxt.text = Std.string(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))
-			+ " / "
-			+ Std.string(FlxMath.roundDecimal(songMusic.length / 1000, 2))
-			+ "\nSection: "
-			+ curSection
-			+ "\nBeat: "
-			+ curBeat
-			+ "\nStep: "
-			+ curStep
-			+ "\nNote: "
-			+ curNoteName[curNoteType]
-			+ "\n1-5 to change Notetypes";
+			+ " / " + Std.string(FlxMath.roundDecimal(songMusic.length / 1000, 2))
+			+ "\nSection: " + curSection
+			+ "\nBeat: " + curBeat
+			+ "\nStep: " + curStep;
 		super.update(elapsed);
 
 		var playedSound:Array<Bool> = [];
@@ -1145,7 +1134,14 @@ class OriginalChartingState extends MusicBeatState
 	function updateNoteUI():Void
 	{
 		if (curSelectedNote != null)
+		{
 			stepperSusLength.value = curSelectedNote[2];
+			if (curSelectedNote[3] != null)
+			{
+				curNoteType = Std.parseInt(noteTypeDropDown.selectedLabel);
+				noteTypeDropDown.selectedLabel = (curNoteType <= 0 ? '' : curNoteType + '. ' + curNoteName[curNoteType]);
+			}
+		}
 	}
 
 	function generateGrid()

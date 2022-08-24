@@ -1346,19 +1346,33 @@ class PlayState extends MusicBeatState
 				altString = '';
 		}
 
-		if (coolNote.fullString != null)
-			stringArrow = coolNote.fullString;
-		altString = coolNote.altString;
-
 		switch (coolNote.noteType)
 		{
-			case 3:
+			case 1: // alt animations notes
+				altString = '-alt'; // sets the animation string for this note;
+
+				// note parameters;
+				coolNote.hitSounds = true;
+				coolNote.badNote = false;
+				coolNote.gfNote = false;
+			case 2: // hey notes
+				stringArrow = 'hey';
 				character.specialAnim = true;
 				character.heyTimer = 0.6;
-			case 4:
+
+				coolNote.hitSounds = true;
+				coolNote.badNote = false;
+				coolNote.gfNote = false;
+			case 3: // gf notes
+				coolNote.gfNote = true;
+			case 4: // no animation notes
 				stringArrow = '';
 				altString = '';
-			case 5:
+
+				coolNote.hitSounds = false;
+				coolNote.badNote = false;
+				coolNote.gfNote = false;
+			case 5: // mines
 				if (character.curCharacter == 'bf-psych')
 					stringArrow = 'hurt';
 				else
@@ -1366,8 +1380,17 @@ class PlayState extends MusicBeatState
 				character.specialAnim = true;
 				character.heyTimer = 0.6;
 
-			default:
+				coolNote.healthLoss = 0.065;
+				coolNote.badNote = true;
+				coolNote.hitSounds = false;
+				coolNote.gfNote = false;
+			default: // anything else
 				stringArrow = baseString + altString;
+
+				character.specialAnim = false;
+				coolNote.hitSounds = true;
+				coolNote.badNote = false;
+				coolNote.gfNote = false;
 		}
 
 		character.playAnim(stringArrow, true);

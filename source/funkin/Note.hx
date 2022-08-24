@@ -49,8 +49,6 @@ class Note extends FNFSprite
 	public var badNote:Bool = false;
 	public var gfNote:Bool = false;
 
-	public var fullString = '';
-	public var altString = '';
 	public var hitsoundSuffix = '';
 
 	static var noteColorID:Array<String> = ['purple', 'blue', 'green', 'red'];
@@ -70,23 +68,6 @@ class Note extends FNFSprite
 
 		if (noteType == null)
 			noteType = 0;
-
-		switch (noteType)
-		{
-			case 1:
-				altString = '-alt';
-			case 2:
-				fullString = 'hey';
-			case 3:
-				gfNote = true;
-			case 5:
-				healthLoss = 0.065;
-				badNote = true;
-			default:
-				hitSounds = true;
-				badNote = false;
-				gfNote = false;
-		}
 
 		// oh okay I know why this exists now
 		y -= 2000;

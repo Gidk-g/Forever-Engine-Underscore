@@ -110,13 +110,7 @@ class Character extends FNFSprite
 		this.character = character;
 		curCharacter = character;
 
-		switch (curCharacter)
-		{
-			case 'pico-speaker':
-				skipDance = true;
-				loadMappedAnims();
-				playAnim("shoot1");
-		}
+		antialiasing = (!character.endsWith('-pixel'));
 
 		var psychChar = Assets.exists(Paths.getPreloadPath('characters/$character/' + character + '.json'));
 
@@ -153,6 +147,14 @@ class Character extends FNFSprite
 		recalcDance();
 		dance();
 
+		switch (curCharacter)
+		{
+			case 'pico-speaker':
+				skipDance = true;
+				loadMappedAnims();
+				playAnim("shoot1");
+		}
+
 		return this;
 	}
 
@@ -184,44 +186,6 @@ class Character extends FNFSprite
 				dance();
 			}
 
-			if (!isPlayer)
-			{
-				if (animation.curAnim != null && animation.curAnim.name.startsWith('sing'))
-				{
-					holdTimer += elapsed;
-				}
-
-				if (holdTimer >= Conductor.stepCrochet * 0.0011 * singDuration)
-				{
-					dance();
-					holdTimer = 0;
-				}
-			}
-			else if (isPlayer && !skipDance && !specialAnim)
-			{
-				if (animation.curAnim.name.startsWith('sing'))
-				{
-					holdTimer += elapsed;
-				}
-				else
-					holdTimer = 0;
-
-				if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
-				{
-					playAnim('idle', true, false, 10);
-				}
-
-				if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished)
-				{
-					playAnim('deathLoop');
-				}
-			}
-
-			if (animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null)
-			{
-				playAnim(animation.curAnim.name + '-loop');
-			}
-
 			switch (curCharacter)
 			{
 				case 'pico-speaker':
@@ -239,17 +203,41 @@ class Character extends FNFSprite
 						playAnim(animation.curAnim.name, false, false, animation.curAnim.frames.length - 3);
 			}
 
-			var curCharSimplified:String = simplifyCharacter();
-
-			if (animation.curAnim != null)
-				switch (curCharSimplified)
+			if (!isPlayer)
+			{
+				if (animation.curAnim.name.startsWith('sing'))
 				{
-					case 'gf':
-						if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
-							playAnim('danceRight');
-						if ((animation.curAnim.name.startsWith('sad')) && (animation.curAnim.finished))
-							playAnim('danceLeft');
+					holdTimer += elapsed;
 				}
+
+				if (holdTimer >= Conductor.stepCrochet * 0.0011 * singDuration)
+				{
+					dance();
+					holdTimer = 0;
+				}
+			}
+			else if (isPlayer && !skipDance && !specialAnim && !debugMode)
+			{
+				if (animation.curAnim.name.startsWith('sing'))
+				{
+					holdTimer += elapsed;
+				}
+				else
+					holdTimer = 0;
+			}
+
+			if (animation.curAnim.name.endsWith('miss') && animation.curAnim != null && animation.curAnim.finished)
+				dance();
+
+			if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
+				playAnim('danceRight');
+			if ((animation.curAnim.name.startsWith('sad')) && (animation.curAnim.finished))
+				playAnim('danceLeft');
+
+			if (animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null)
+			{
+				playAnim(animation.curAnim.name + '-loop');
+			}
 
 			if (animation.curAnim != null && animation.curAnim.finished && animation.curAnim.name == 'idle')
 			{
@@ -270,34 +258,16 @@ class Character extends FNFSprite
 	{
 		if (!debugMode && !skipDance && !specialAnim && animation.curAnim != null)
 		{
-			var curCharSimplified:String = simplifyCharacter();
-			switch (curCharSimplified)
+			if (danceIdle)
 			{
-				case 'gf':
-					if ((!animation.curAnim.name.startsWith('hair')) && (!animation.curAnim.name.startsWith('sad')))
-					{
-						danced = !danced;
-
-						if (!danced)
-							playAnim('danceLeft$idleSuffix', forced);
-						else
-							playAnim('danceRight$idleSuffix', forced);
-					}
-				default:
-					// Left/right dancing, think Skid & Pump
-					if (animation.getByName('danceLeft$idleSuffix') != null
-						&& animation.getByName('danceRight$idleSuffix') != null
-						|| danceIdle)
-					{
-						danced = !danced;
-						if (danced)
-							playAnim('danceRight$idleSuffix', forced);
-						else
-							playAnim('danceLeft$idleSuffix', forced);
-					}
-					else
-						playAnim('idle$idleSuffix', forced);
+				danced = !danced;
+				if (danced)
+					playAnim('danceRight$idleSuffix', forced);
+				else
+					playAnim('danceLeft$idleSuffix', forced);
 			}
+			else
+				playAnim('idle$idleSuffix', forced);
 		}
 	}
 
@@ -307,7 +277,7 @@ class Character extends FNFSprite
 		if (animation.getByName(AnimName) != null)
 			super.playAnim(AnimName, Force, Reversed, Frame);
 
-		if (curCharacter == 'gf')
+		if (curCharacter.startsWith('gf'))
 		{
 			if (AnimName == 'singLEFT')
 				danced = true;
@@ -317,16 +287,6 @@ class Character extends FNFSprite
 			if (AnimName == 'singUP' || AnimName == 'singDOWN')
 				danced = !danced;
 		}
-	}
-
-	public function simplifyCharacter():String
-	{
-		var base = curCharacter;
-
-		if (base.contains('-'))
-			base = base.substring(0, base.indexOf('-'));
-
-		return base;
 	}
 
 	function loadMappedAnims()
@@ -508,11 +468,6 @@ class Character extends FNFSprite
 
 		callFunc('loadAnimations', null);
 
-		if (isPlayer) // fuck you ninjamuffin lmao
-		{
-			flipX = !!flipX;
-		}
-
 		if (icon == null)
 			icon = char;
 
@@ -521,6 +476,11 @@ class Character extends FNFSprite
 			x += offsets[0];
 			#if DEBUG_TRACES trace('character ${curCharacter} scale ${scale.y}'); #end
 			y += (offsets[1] - (frameHeight * scale.y));
+		}
+
+		if (isPlayer) // fuck you ninjamuffin lmao
+		{
+			flipX = !!flipX;
 		}
 
 		if (animation.getByName('danceLeft') != null)

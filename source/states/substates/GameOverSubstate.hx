@@ -102,6 +102,8 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			bf.playAnim('deathLoop');
 			deathSong.play(false);
+			deathSong.persist = true;
+			deathSong.looped = true;
 		}
 
 		if (PlayState.SONG.stage == 'military')

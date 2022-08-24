@@ -23,6 +23,7 @@ import funkin.Stage;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileReference;
+import states.charting.data.PsychDropDown;
 import states.menus.FreeplayState;
 
 using StringTools;
@@ -32,9 +33,6 @@ using StringTools;
 	this is just code from the base game
 	with some tweaking here and there to make it work on forever engine
 	and some other additional features
-
-	[BUGS]:
-	* some animations can`t move
  */
 class CharacterDebug extends MusicBeatState
 {
@@ -51,6 +49,8 @@ class CharacterDebug extends MusicBeatState
 	var textAnim:FlxText;
 	var dumbTexts:FlxTypedGroup<FlxText>;
 	var animList:Array<String> = [];
+
+	var ghostAnimList:Array<String> = [''];
 
 	var camFollow:FlxObject;
 
@@ -85,7 +85,7 @@ class CharacterDebug extends MusicBeatState
 
 		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 
-		// set up camera
+		// set up camFollow
 		camFollow = new FlxObject(0, 0, 2, 2);
 		camFollow.screenCenter();
 		add(camFollow);
@@ -136,7 +136,7 @@ class CharacterDebug extends MusicBeatState
 		addPreferencesUI();
 	}
 
-	var ghostAnimDropDown:FlxUIDropDownMenu;
+	var ghostAnimDropDown:PsychDropDown;
 	var check_offset:FlxUICheckBox;
 
 	function addPreferencesUI()
@@ -152,18 +152,10 @@ class CharacterDebug extends MusicBeatState
 			saveCharOffsets();
 		});
 
-		ghostAnimDropDown = new FlxUIDropDownMenu(10, 30, FlxUIDropDownMenu.makeStrIdLabelArray(animList, true), function(animation:String)
+		ghostAnimDropDown = new PsychDropDown(10, 30, PsychDropDown.makeStrIdLabelArray(ghostAnimList, true), function(animation:String)
 		{
-			if (animList[0] != '' || animList[0] != null)
-			{
-				ghost.visible = true;
-				ghost.alpha = 0.85;
-				ghost.playAnim(animList[Std.parseInt(animation)], true);
-			}
-			else
-			{
-				ghost.visible = false;
-			}
+			if (ghostAnimList[0] != '' || ghostAnimList[0] != null)
+				ghost.playAnim(ghostAnimList[Std.parseInt(animation)], true);
 		});
 
 		tab_group.add(new FlxText(ghostAnimDropDown.x, ghostAnimDropDown.y - 18, 0, 'Ghost Animation:'));
@@ -178,6 +170,9 @@ class CharacterDebug extends MusicBeatState
 		MusicBeatState.camBeat = camHUD;
 		textAnim.text = char.animation.curAnim.name;
 		ghost.flipX = char.flipX;
+
+		ghost.visible = ghostAnimDropDown.selectedLabel != '';
+		char.alpha = (ghost.visible ? 0.85 : 1);
 
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
@@ -314,6 +309,20 @@ class CharacterDebug extends MusicBeatState
 	{
 		var daLoop:Int = 0;
 
+		var i:Int = dumbTexts.members.length - 1;
+		while (i >= 0)
+		{
+			var memb:FlxText = dumbTexts.members[i];
+			if (memb != null)
+			{
+				memb.kill();
+				dumbTexts.remove(memb);
+				memb.destroy();
+			}
+			--i;
+		}
+		dumbTexts.clear();
+
 		for (anim => offsets in char.animOffsets)
 		{
 			var text:FlxText = new FlxText(10, 20 + (18 * daLoop), 0, anim + ": " + offsets, 15);
@@ -326,13 +335,13 @@ class CharacterDebug extends MusicBeatState
 			if (pushList)
 			{
 				animList.push(anim);
+				ghostAnimList.push(anim);
 			}
 
 			daLoop++;
-
-			char.setPosition(offsets[0], offsets[1]);
 		}
 
+		textAnim.visible = true;
 		if (dumbTexts.length < 1)
 		{
 			animList = ['[ERROR]'];
@@ -341,7 +350,7 @@ class CharacterDebug extends MusicBeatState
 				No animations found
 				\nplease make sure your ${curCharacter}.hx script
 				has the offsets properly set up
-				\n\nTry: addOffset(\'animationName\', offsetX, offsetY);
+				\n\nTry: addOffset(\'animationName\', xPosition, yPosition);
 				', 15);
 			text.setFormat(Paths.font('vcr.ttf'), 18, FlxColor.WHITE);
 			text.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
@@ -349,6 +358,8 @@ class CharacterDebug extends MusicBeatState
 			text.color = FlxColor.RED;
 			text.cameras = [camHUD];
 			dumbTexts.add(text);
+
+			textAnim.visible = false;
 		}
 	}
 
