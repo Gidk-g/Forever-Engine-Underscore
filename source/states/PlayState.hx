@@ -676,14 +676,14 @@ class PlayState extends MusicBeatState
 					Main.switchState(this, new CharacterDebug(holdingShift ? SONG.player1 : holdingAlt ? SONG.gfVersion : SONG.player2, PlayState.curStage));
 				}
 
-				if (FlxG.keys.justPressed.FIVE)
+				if (FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.FIVE)
 				{
 					preventScoring = true;
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 					practiceMode = !practiceMode;
 				}
 
-				if (FlxG.keys.justPressed.SIX)
+				if (FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.SIX)
 				{
 					preventScoring = true;
 					FlxG.sound.play(Paths.sound('scrollMenu'));
