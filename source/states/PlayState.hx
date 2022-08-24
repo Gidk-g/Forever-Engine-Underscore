@@ -2404,11 +2404,12 @@ class PlayState extends MusicBeatState
 		var fools:Array<String> = [Paths.getPreloadPath('scripts/'), Paths.getPreloadPath('songs/${SONG.song.toLowerCase().replace(' ', '-')}/')];
 		var pushedScripts:Array<String> = [];
 
-		for (fool in fools)
+		// BROKEN AND NOT REALLY WORKING WITH MODS RN
+		/*for (fool in fools)
 		{
 			if (Assets.exists(fool))
 			{
-				for (file in Assets.list(TEXT))
+				for (file in FileSystem.readDirectory(fool))
 				{
 					if (file.endsWith('.hx') && !pushedScripts.contains(file))
 					{
@@ -2417,7 +2418,7 @@ class PlayState extends MusicBeatState
 					}
 				}
 			}
-		}
+		}*/
 	}
 
 	function completeTween(id:String)

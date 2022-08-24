@@ -555,12 +555,7 @@ class Character extends FNFSprite
 		 * @author Shadow_Mario_
 		 */
 		var path = Paths.getPreloadPath('characters/$char/' + character + '.json');
-
-		#if MOD_HANDLER
-		var rawJson = File.getContent(path);
-		#else
 		var rawJson = Assets.getText(path);
-		#end
 
 		var json:PsychEngineChar = cast Json.parse(rawJson);
 		var spriteType = "sparrow";

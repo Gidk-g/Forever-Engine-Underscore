@@ -9,6 +9,7 @@ import flixel.tweens.*;
 import flixel.util.*;
 import funkin.*;
 import lime.app.Application;
+import openfl.Assets;
 import openfl.display.GraphicsShader;
 import openfl.filters.ShaderFilter;
 import states.PlayState;
@@ -186,7 +187,7 @@ class ScriptFuncs extends PlayState
 			{
 				if (key != null || key != '')
 				{
-					var shader:GraphicsShader = new GraphicsShader("", File.getContent(Paths.shader(key)));
+					var shader:GraphicsShader = new GraphicsShader("", Assets.getText(Paths.shader(key)));
 					PlayState.ShaderMap.set(shaderID, shader);
 
 					switch (camera)

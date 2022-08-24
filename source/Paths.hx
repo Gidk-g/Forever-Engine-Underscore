@@ -177,14 +177,14 @@ class Paths
 	static public function getTextFromFile(key:String):String
 	{
 		if (Assets.exists(getPreloadPath(key)))
-			return File.getContent(getPreloadPath(key));
+			return Assets.getText(getPreloadPath(key));
 
 		if (currentLevel != null)
 		{
 			var levelPath:String = '';
 			levelPath = getLibraryPathForce(key, '');
 			if (Assets.exists(levelPath))
-				return File.getContent(levelPath);
+				return Assets.getText(levelPath);
 		}
 		return Assets.getText(getPath(key, TEXT));
 	}
@@ -351,7 +351,7 @@ class Paths
 	inline static public function getSparrowAtlas(key:String, folder:String = 'images', ?library:String)
 	{
 		var graphic:FlxGraphic = returnGraphic(key, folder, library);
-		return (FlxAtlasFrames.fromSparrow(graphic, File.getContent(file('$folder/$key.xml', library))));
+		return (FlxAtlasFrames.fromSparrow(graphic, Assets.getText(file('$folder/$key.xml', library))));
 	}
 
 	inline static public function getPackerAtlas(key:String, folder:String = 'images', ?library:String)
