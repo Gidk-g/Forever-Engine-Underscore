@@ -94,6 +94,7 @@ class HealthIcon extends FlxSprite
 			// ternary to avoid frame 1 playing where it shouldn't
 			animation.add('winning', (iconWidth == 3 ? [2] : [0]), 0, false, isPlayer);
 		}
+
 		animation.play('static');
 		scrollFactor.set();
 		updateHitbox();

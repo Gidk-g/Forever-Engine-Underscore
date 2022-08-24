@@ -36,19 +36,16 @@ class ScriptHandler extends SScript
 		interp.variables.set('FlxEase', FlxEase);
 		interp.variables.set('FlxMath', FlxMath);
 		interp.variables.set('FlxSound', FlxSound);
-
 		interp.variables.set("Polymod", polymod.Polymod);
 		interp.variables.set("Assets", openfl.utils.Assets);
 		interp.variables.set("LimeAssets", lime.utils.Assets);
 		interp.variables.set("StringTools", StringTools);
 		interp.variables.set("Math", Math);
 		interp.variables.set("Std", Std);
-
 		interp.variables.set("Paths", Paths);
 		interp.variables.set("PlayState", states.PlayState);
 		interp.variables.set("Conductor", base.Conductor);
 		interp.variables.set("CoolUtil", base.CoolUtil);
-
 		interp.variables.set('Controls', base.Controls);
 		interp.variables.set('Note', funkin.Note);
 		interp.variables.set('Strumline', funkin.Strumline);

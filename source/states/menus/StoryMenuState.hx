@@ -29,9 +29,9 @@ class StoryMenuState extends MusicBeatState
 	var scoreText:FlxText;
 	var curDifficulty:Int = 1;
 
-	public static var weekUnlocked:Array<Bool> = [true, true, true, true, true, true, true, true];
+	public static final weekUnlocked:Array<Bool> = [true, true, true, true, true, true, true, true];
 
-	public static var weekCharacters:Array<Dynamic> = [
+	public static final weekCharacters:Array<Dynamic> = [
 		['', 'bf', 'gf'],
 		['dad', 'bf', 'gf'],
 		['spooky', 'bf', 'gf'],

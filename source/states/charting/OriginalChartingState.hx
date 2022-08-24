@@ -37,7 +37,7 @@ import funkin.*;
 import funkin.Strumline.UIStaticArrow;
 import funkin.ui.*;
 import haxe.Json;
-import lime.utils.Assets;
+import openfl.utils.Assets;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.media.Sound;

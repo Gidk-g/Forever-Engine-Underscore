@@ -10,18 +10,8 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import funkin.Alphabet;
+import polymod.Polymod;
 import haxe.Json;
-
-typedef ModData =
-{
-	name:String,
-	icon:String,
-	description:String,
-	tags:Array<String>,
-	authors:Array<String>,
-	loadingImage:String,
-	loadingBarColor:Array<FlxColor>,
-}
 
 /**
 	* people have been asking and stuff so here it is
@@ -33,18 +23,13 @@ typedef ModData =
 **/
 class ModsMenuState extends MusicBeatState
 {
-	// look I don't feel like commenting specific lines on a MODS menu.
-	#if MOD_HANDLER
+	private static var curSelection:Int = -1;
+
 	var bg:FlxSprite;
 	var fg:FlxSprite;
 	var infoText:FlxText;
-
-	private static var curSelection:Int = -1;
-
 	var grpMenuMods:FlxTypedGroup<Alphabet>;
-
-	var modList:Array<String> = [];
-
+	var modList:Array<ModMetadata> = [];
 	var isEnabled = true;
 
 	override function create()
@@ -70,19 +55,18 @@ class ModsMenuState extends MusicBeatState
 		fg.scrollFactor.set();
 		add(fg);
 
-		var text:FlxText = new FlxText(0, 0, 0, '- MODS MENU -');
-		text.setFormat(Paths.font('vcr.ttf'), 36, FlxColor.WHITE);
-		text.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.5);
-		text.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
-		text.screenCenter(X);
-		add(text);
+		infoText = new FlxText(5, FlxG.height - 24, 0, "", 32);
+		infoText.setFormat("VCR OSD Mono", 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		infoText.textField.background = true;
+		infoText.textField.backgroundColor = FlxColor.BLACK;
+		add(infoText);
 
 		grpMenuMods = new FlxTypedGroup<Alphabet>();
 		add(grpMenuMods);
 
 		for (i in 0...modList.length)
 		{
-			var alphabet:Alphabet = new Alphabet(0, 70 * i, modList[i], true);
+			var alphabet:Alphabet = new Alphabet(0, 70 * i, modList[i].title, true);
 			alphabet.isMenuItem = true;
 			alphabet.screenCenter(X);
 			alphabet.targetY = i;
@@ -102,13 +86,17 @@ class ModsMenuState extends MusicBeatState
 	{
 		super.update(elapsed);
 
+		infoText.text = modList[curSelection].description;
+		infoText.screenCenter(X);
+
 		if (controls.BACK)
-		{
 			Main.switchState(this, new MainMenuState());
-		}
+		//else (controls.ACCEPT)
+			//CoolUtil.browserLoad(modList[curSelection].homepage);
+
 		if (controls.UI_UP_P)
 			updateSelection(-1);
-		if (controls.UI_DOWN_P)
+		else if (controls.UI_DOWN_P)
 			updateSelection(1);
 	}
 
@@ -140,5 +128,4 @@ class ModsMenuState extends MusicBeatState
 			}
 		}
 	}
-	#end
 }

@@ -93,7 +93,6 @@ class MusicBeatState extends FNFUIState
 		}
 		curStep = trueStep;
 
-		//
 		if (oldStep != curStep && curStep > 0 && !storedSteps.contains(curStep))
 			stepHit();
 		oldStep = curStep;
@@ -130,8 +129,6 @@ class MusicBeatState extends FNFUIState
 	{
 		if (curStep % 4 == 0)
 			beatHit();
-
-		// trace('step $curStep');
 
 		if (!storedSteps.contains(curStep))
 			storedSteps.push(curStep);

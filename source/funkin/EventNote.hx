@@ -21,7 +21,6 @@ class EventNote extends FlxSprite
 		this.val2 = val2;
 		this.eventName = eventName;
 
-		// loadGraphic(Paths.image('UI/default/base/charter/eventNote'));
 		loadGraphic(Paths.image(ForeverTools.returnSkinAsset('eventNote', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
 	}
 

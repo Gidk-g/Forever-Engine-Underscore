@@ -4,43 +4,97 @@ package base.mods;
 import polymod.Polymod;
 import polymod.backends.OpenFLBackend;
 import polymod.backends.PolymodAssets.PolymodAssetType;
+import polymod.format.ParseRules;
 import polymod.format.ParseRules.LinesParseFormat;
 import polymod.format.ParseRules.TextFileFormat;
 #end
 
 class ModHandler
 {
-	static final API_VER = "0.1.0";
-	static final MOD_DIR = "mods/";
+	static final API_VER = '0.1.0';
+	static final MOD_DIR = 'mods';
 
-	public static function loadModHandler()
+	public static var modsMetaData:Array<String> = [];
+
+	public static function loadModHandler():Void
 	{
 		#if MOD_HANDLER
 		trace('Initializing Polymod...');
-		loadMods(getMods());
+		getMods();
+		loadMods(modsMetaData);
 		#else
 		trace("Polymod is not supported on your Platform!")
 		#end
 	}
 
 	#if MOD_HANDLER
-	public static function loadMods(folders:Array<String>)
+	public static function loadMods(folders:Array<String>):Void
 	{
 		trace(folders);
 		trace('Attempting to Load ${folders.length} mods...');
 		var loadedModlist = Polymod.init({
+			/**
+			 * root directory of all mods
+			 * Required if you are on desktop and using the SysFileSystem (may be optional on some file systems)
+			 */
 			modRoot: MOD_DIR,
-			dirs: folders,
-			framework: OPENFL,
-			apiVersion: API_VER,
-			errorCallback: onError,
-			frameworkParams: buildFrameworkParams(),
-			customBackend: ModBackend,
-			ignoredFiles: Polymod.getDefaultIgnoreList(),
-			parseRules: parseRules(),
-		});
-		trace(loadedModlist);
 
+			/**
+			 * directory names of one or more mods, relative to modRoot
+			 */
+			dirs: folders,
+
+			/**
+			 * the Haxe framework you're using (OpenFL, HEAPS, Kha, NME, etc..).
+			 * If not provided, Polymod will attempt to determine this automatically.
+			 */
+			framework: OPENFL,
+
+			/**
+			 * any specific settings for your particular Framework
+			 */
+			frameworkParams: {
+				/**
+				 * if you're using Lime/OpenFL AND you're using custom or non-default asset libraries, then you must provide a key=>value store mapping the name of each asset library to a path prefix in your mod structure
+				 */
+				assetLibraryPaths: [
+					"default" => "assets",
+					"characters" => "characters",
+					"songs" => "songs",
+					"shaders" => "shaders",
+					"fonts" => "fonts",
+					"stages" => "stages",
+					"videos" => "videos",
+				]
+			},
+
+			/**
+			 * semantic version of your game's Modding API (will generate errors & warnings)
+			 */
+			apiVersion: API_VER,
+
+			/**
+			 * callback for any errors generated during mod initialization
+			 */
+			errorCallback: onError,
+
+			/**
+			 * parsing rules for various data formats
+			 */
+			parseRules: getParseRules(),
+
+			/**
+			 * list of filenames to ignore in mods
+			 */
+			ignoredFiles: Polymod.getDefaultIgnoreList(),
+
+			/**
+			 * your own custom backend for handling assets
+			 */
+			customBackend: ModBackend
+		});
+
+		trace(loadedModlist);
 		trace('Loading Successful, ${loadedModlist.length} / ${folders.length} new mods.');
 
 		for (mod in loadedModlist)
@@ -67,52 +121,40 @@ class ModHandler
 			trace(' * [$item]');
 	}
 
-	public static function getMods():Array<String>
+	public static function getMods():Array<ModMetadata>
 	{
+		var daList:Array<ModMetadata> = [];
+
 		trace('Searching for Mods...');
-		// look i'm NEW to this ok? -gabi
-		var modMeta = Polymod.scan('$MOD_DIR/', "*.*.*");
-		trace('Found ${modMeta.length} new mods.');
-		var modNames = [for (i in modMeta) i.id];
-		return modNames;
+
+		for (i in Polymod.scan(MOD_DIR, '*.*.*', onError))
+		{
+			modsMetaData.push(i.id);
+			daList.push(i);
+		}
+
+		trace('Found ${daList.length} new mods.');
+
+		return daList;
 	}
 
-	public static function parseRules():polymod.format.ParseRules
+	public static function getParseRules():ParseRules
 	{
-		var output = polymod.format.ParseRules.getDefault();
+		var output = ParseRules.getDefault();
 		output.addType("txt", TextFileFormat.LINES);
 		return output;
 	}
 
-	static inline function buildFrameworkParams():polymod.FrameworkParams
-	{
-		return {
-			assetLibraryPaths: [
-				"default" => "assets",
-				"characters" => "characters",
-				"songs" => "songs",
-				"shaders" => "shaders",
-				"fonts" => "fonts",
-				"stages" => "stages",
-				"videos" => "videos",
-			]
-		}
-	}
-
 	static function onError(error:PolymodError):Void
 	{
-		switch (error.code)
+		switch (error.severity)
 		{
-			default:
-				switch (error.severity)
-				{
-					case NOTICE:
-						trace(error.message, null);
-					case WARNING:
-						trace(error.message, null);
-					case ERROR:
-						trace(error.message, null);
-				}
+			case NOTICE:
+				trace(error.message, null);
+			case WARNING:
+				trace(error.message, null);
+			case ERROR:
+				trace(error.message, null);
 		}
 	}
 	#end

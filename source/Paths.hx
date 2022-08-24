@@ -9,13 +9,12 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import funkin.Character.CharacterType;
 import haxe.Json;
-import lime.utils.Assets;
+import openfl.utils.Assets;
 import openfl.display.BitmapData;
 import openfl.display3D.textures.Texture;
 import openfl.media.Sound;
 import openfl.system.System;
 import openfl.utils.AssetType;
-import openfl.utils.Assets as OpenFlAssets;
 import sys.io.File;
 
 using StringTools;
@@ -92,9 +91,9 @@ class Paths
 						texture = null;
 						currentTrackedTextures.remove(key);
 					}
-					OpenFlAssets.cache.removeBitmapData(key);
-					OpenFlAssets.cache.clearBitmapData(key);
-					OpenFlAssets.cache.clear(key);
+					Assets.cache.removeBitmapData(key);
+					Assets.cache.clearBitmapData(key);
+					Assets.cache.clear(key);
 					FlxG.bitmap._cache.remove(key);
 					#if DEBUG_TRACES trace('removed $key, ' + (isTexture ? 'is a texture' : 'is not a texture')); #end
 					obj.destroy();
@@ -119,9 +118,9 @@ class Paths
 			var obj = FlxG.bitmap._cache.get(key);
 			if (obj != null && !currentTrackedAssets.exists(key))
 			{
-				OpenFlAssets.cache.removeBitmapData(key);
-				OpenFlAssets.cache.clearBitmapData(key);
-				OpenFlAssets.cache.clear(key);
+				Assets.cache.removeBitmapData(key);
+				Assets.cache.clearBitmapData(key);
+				Assets.cache.clear(key);
 				FlxG.bitmap._cache.remove(key);
 				obj.destroy();
 				counterAssets++;
@@ -135,8 +134,8 @@ class Paths
 			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
 			{
 				// trace('test: ' + dumpExclusions, key);
-				OpenFlAssets.cache.removeSound(key);
-				OpenFlAssets.cache.clearSounds(key);
+				Assets.cache.removeSound(key);
+				Assets.cache.clearSounds(key);
 				currentTrackedSounds.remove(key);
 				counterSound++;
 			}
@@ -144,11 +143,11 @@ class Paths
 
 		// Clear everything everything that's left
 		var counterLeft:Int = 0;
-		for (key in OpenFlAssets.cache.getKeys())
+		for (key in Assets.cache.getKeys())
 		{
 			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
 			{
-				OpenFlAssets.cache.clear(key);
+				Assets.cache.clear(key);
 				counterLeft++;
 			}
 		}
@@ -163,11 +162,11 @@ class Paths
 
 		var path = getPath('$folder/$key.png', IMAGE, library);
 
-		if (OpenFlAssets.exists(path, IMAGE))
+		if (Assets.exists(path, IMAGE))
 		{
 			if (!currentTrackedAssets.exists(key))
 			{
-				var bitmap = OpenFlAssets.getBitmapData(path);
+				var bitmap = Assets.getBitmapData(path);
 				var newGraphic:FlxGraphic;
 				if (textureCompression)
 				{
@@ -217,10 +216,10 @@ class Paths
 		// gottenPath = gottenPath.substring(gottenPath.indexOf(':') + 1, gottenPath.length);
 		// trace(gottenPath);
 
-		if (OpenFlAssets.exists(gottenPath, SOUND))
+		if (Assets.exists(gottenPath, SOUND))
 		{
 			if (!currentTrackedSounds.exists(gottenPath))
-				currentTrackedSounds.set(gottenPath, OpenFlAssets.getSound(gottenPath, cached));
+				currentTrackedSounds.set(gottenPath, Assets.getSound(gottenPath, cached));
 			localTrackedAssets.push(key);
 			return currentTrackedSounds.get(gottenPath);
 		}
@@ -249,16 +248,16 @@ class Paths
 			if (currentLevel != null)
 			{
 				levelPath = getLibraryPathForce(file, currentLevel);
-				if (OpenFlAssets.exists(levelPath, type))
+				if (Assets.exists(levelPath, type))
 					return levelPath;
 
 				levelPath = getLibraryPathForce(file, "shared");
-				if (OpenFlAssets.exists(levelPath, type))
+				if (Assets.exists(levelPath, type))
 					return levelPath;
 		}*/
 
 		var levelPath = getLibraryPathForce(file, "mods");
-		if (OpenFlAssets.exists(levelPath, type))
+		if (Assets.exists(levelPath, type))
 			return levelPath;
 
 		return getPreloadPath(file);

@@ -49,7 +49,7 @@ class Main extends Sprite
 		Enough of that, here's how it works
 		[ [songs to use], [characters in songs], [color of week], name of week, week image file, shown from story mode ]
 	**/
-	public static var gameWeeks:Array<Dynamic> = [
+	public static final gameWeeks:Array<Dynamic> = [
 		[
 			['Tutorial'],
 			['gf'],

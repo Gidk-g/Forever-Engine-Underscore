@@ -22,7 +22,7 @@ import flixel.util.FlxTimer;
 import funkin.*;
 import funkin.Alphabet;
 import funkin.ui.HealthIcon;
-import lime.utils.Assets;
+import openfl.utils.Assets;
 import openfl.media.Sound;
 import states.charting.*;
 import sys.FileSystem;

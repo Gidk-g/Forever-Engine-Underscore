@@ -33,7 +33,6 @@ typedef PortraitDataDef =
 	var borderColor:Array<Int>;
 	var flipX:Null<Bool>;
 	var loop:Null<Bool>;
-
 	var sounds:Null<Array<String>>;
 	var soundChance:Null<Int>;
 	var soundPath:Null<String>;
@@ -52,7 +51,6 @@ typedef DialogueDataDef =
 	var expression:String;
 	var text:Null<String>;
 	var boxState:Null<String>;
-
 	var speed:Null<Int>;
 	var scale:Null<Int>;
 }
@@ -69,7 +67,6 @@ typedef BoxDataDef =
 	var boxType:Null<String>;
 	var textType:Null<String>;
 	var showArrow:Null<Bool>;
-
 	var states:Null<Dynamic>;
 }
 
@@ -85,12 +82,11 @@ typedef DialogueFileDataDef =
 
 class DialogueBox extends FlxSpriteGroup
 {
-	///
-	/*
-		Epic Dialogue Documentation!
-
-		nothing yet :P
-	 */
+	/**
+	 * Epic Dialogue Documentation!
+	 * 
+	 * nothing yet :P
+	**/
 	public var box:FNFSprite;
 	public var bgFade:FlxSprite;
 	public var portrait:FNFSprite;
@@ -108,19 +104,12 @@ class DialogueBox extends FlxSpriteGroup
 	public var curCharacter:String;
 	public var curExpression:String;
 	public var curBoxState:String;
-
 	public var eventImage:Null<FlxSprite>;
-
 	public var whenDaFinish:Void->Void;
-
 	public var textStarted:Bool = false;
 
 	public static function createDialogue(thisDialogue:String):DialogueBox
-	{
-		//
-		var newDialogue = new DialogueBox(false, thisDialogue);
-		return newDialogue;
-	}
+		return new DialogueBox(false, thisDialogue);
 
 	public function dialoguePath(file:String):String
 	{
@@ -199,11 +188,9 @@ class DialogueBox extends FlxSpriteGroup
 		// skip text
 		var skipText = new FlxText(100, 670, 1000, "PRESS SHIFT TO SKIP", 20);
 		skipText.alignment = FlxTextAlign.CENTER;
-
 		skipText.borderStyle = FlxTextBorderStyle.OUTLINE;
 		skipText.borderColor = FlxColor.BLACK;
 		skipText.borderSize = 3;
-
 		skipText.screenCenter(X);
 		add(skipText);
 	}

@@ -12,12 +12,11 @@ import sys.io.File;
 using StringTools;
 
 /**
-	This is the ChartParser class. it loads in charts, but also exports charts, the chart parameters are based on the type of chart, 
-	say the base game type loads the base game's charts, the forever chart type loads a custom forever structure chart with custom features,
-	and so on. This class will handle both saving and loading of charts with useful features and scripts that will make things much easier
-	to handle and load, as well as much more modular!
-**/
-/**
+ * This is the ChartParser class. it loads in charts, but also exports charts, the chart parameters are based on the type of chart, 
+ * say the base game type loads the base game's charts, the forever chart type loads a custom forever structure chart with custom features,
+ * and so on. This class will handle both saving and loading of charts with useful features and scripts that will make things much easier
+ * to handle and load, as well as much more modular!
+ * 
  * Song Information, such as name, notes, events, bpm, etc;
 **/
 typedef SwagSong =
@@ -28,7 +27,6 @@ typedef SwagSong =
 	var bpm:Float;
 	var needsVoices:Bool;
 	var speed:Float;
-
 	var player1:String;
 	var player2:String;
 	var gfVersion:String;
@@ -100,16 +98,15 @@ class ChartParser
 
 						// very stupid but I'm lazy
 						if (songNotes.length > 2)
-						{
 							daNoteAlt = songNotes[3];
-						}
-						/*
-							rest of this code will be mostly unmodified, I don't want to interfere with how FNF chart loading works
-							I'll keep all of the extra features in forever charts, which you'll be able to convert and export to very easily using
-							the in engine editor 
 
-							I'll be doing my best to comment the work below but keep in mind I didn't originally write it
-						 */
+						/**
+						 * rest of this code will be mostly unmodified, I don't want to interfere with how FNF chart loading works
+						 * I'll keep all of the extra features in forever charts, which you'll be able to convert and export to very easily using
+						 * the in engine editor 
+						 * 
+						 * I'll be doing my best to comment the work below but keep in mind I didn't originally write it
+						**/
 
 						// check the base section
 						var gottaHitNote:Bool = section.mustHitSection;
@@ -150,12 +147,8 @@ class ChartParser
 
 							unspawnNotes.push(sustainNote);
 							sustainNote.mustPress = gottaHitNote;
-							/*
-								This is handled in engine anyways, not necessary!
-								if (sustainNote.mustPress)
-									sustainNote.x += FlxG.width / 2;
-							 */
 						}
+
 						// oh and set the note's must hit section
 						swagNote.mustPress = gottaHitNote;
 					}
@@ -163,13 +156,14 @@ class ChartParser
 				}
 
 			case FOREVER:
-			// placeholder
+				// placeholder
 
 			case UNDERSCORE:
 				/**
-					a copy of FNF_LEGACY, except we have notetypes and events, that's all
-					I don't exactly know how chart parsing works, so I'm leaving it like this for the time being
-					- BeastlyGhost
+				 * a copy of FNF_LEGACY, except we have notetypes and events, that's all
+				 * I don't exactly know how chart parsing works, so I'm leaving it like this for the time being
+				 * 
+				 * - BeastlyGhost
 				**/
 
 				var daBeats:Int = 0;
@@ -219,8 +213,10 @@ class ChartParser
 							unspawnNotes.push(sustainNote);
 							sustainNote.mustPress = gottaHitNote;
 						}
+
 						swagNote.mustPress = gottaHitNote;
 					}
+
 					daBeats += 1;
 				}
 			case PSYCH:
@@ -263,7 +259,6 @@ class Song
 	public var bpm:Float;
 	public var needsVoices:Bool = true;
 	public var speed:Float = 1;
-
 	public var player1:String = 'bf';
 	public var player2:String = 'dad';
 

@@ -34,7 +34,7 @@ class MainMenuState extends MusicBeatState
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 
-	var optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
+	final optionShit:Array<String> = ['story mode', 'freeplay', 'donate', 'options'];
 	var canSnap:Array<Float> = [];
 
 	static var tweenFinished:Bool = true;

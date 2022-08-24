@@ -2,7 +2,7 @@ package base;
 
 import flixel.FlxCamera;
 import flixel.FlxG;
-import lime.utils.Assets;
+import openfl.utils.Assets;
 import states.PlayState;
 
 using StringTools;
@@ -45,24 +45,27 @@ class CoolUtil
 
 	public static function coolTextFile(path:String):Array<String>
 	{
-		var daList:Array<String> = Assets.getText(path).trim().split('\n');
+		var daList:Array<String> = [];
+
+		if (Assets.exists(path))
+			daList = Assets.getText(path).trim().split('\n');
 
 		for (i in 0...daList.length)
-		{
 			daList[i] = daList[i].trim();
-		}
 
 		return daList;
 	}
 
 	public static function getOffsetsFromTxt(path:String):Array<Array<String>>
 	{
-		var fullText:String = Assets.getText(path);
+		var daList:Array<String> = [];
 
-		var firstArray:Array<String> = fullText.split('\n');
+		if (Assets.exists(path))
+			daList = Assets.getText(path).trim().split('\n');
+
 		var swagOffsets:Array<Array<String>> = [];
 
-		for (i in firstArray)
+		for (i in daList)
 			swagOffsets.push(i.split(' '));
 
 		return swagOffsets;
@@ -76,10 +79,9 @@ class CoolUtil
 		var unfilteredLibrary = FileSystem.readDirectory('$subDir/$library');
 
 		for (folder in unfilteredLibrary)
-		{
 			if (!folder.contains('.'))
 				libraryArray.push(folder);
-		}
+
 		#if DEBUG_TRACES trace(libraryArray); #end
 		#end
 
@@ -88,15 +90,15 @@ class CoolUtil
 
 	public static function getAnimsFromTxt(path:String):Array<Array<String>>
 	{
-		var fullText:String = Assets.getText(path);
+		var daList:Array<String> = [];
 
-		var firstArray:Array<String> = fullText.split('\n');
+		if (Assets.exists(path))
+			daList = Assets.getText(path).trim().split('\n');
+
 		var swagOffsets:Array<Array<String>> = [];
 
-		for (i in firstArray)
-		{
+		for (i in daList)
 			swagOffsets.push(i.split('--'));
-		}
 
 		return swagOffsets;
 	}
@@ -105,9 +107,8 @@ class CoolUtil
 	{
 		var dumbArray:Array<Int> = [];
 		for (i in min...max)
-		{
 			dumbArray.push(i);
-		}
+
 		return dumbArray;
 	}
 

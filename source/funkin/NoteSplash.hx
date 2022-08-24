@@ -10,8 +10,8 @@ class NoteSplash extends FNFSprite
 	public function new(noteData:Int)
 	{
 		super(x, y);
-		visible = false;
-		alpha = (Init.trueSettings.get('Splash Opacity') * 0.01);
+
+		alpha = 0.000001;
 	}
 
 	override function update(elapsed:Float)
@@ -22,17 +22,16 @@ class NoteSplash extends FNFSprite
 		if (animation.finished)
 		{
 			// set the splash to invisible
-			if (visible)
-				visible = false;
+			if (alpha != 0.000001)
+				alpha = 0.000001;
 		}
-		//
 	}
 
 	override public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0)
 	{
 		// make sure the animation is visible
 		if (Init.trueSettings.get('Splash Opacity') >= 0)
-			visible = true;
+			alpha = (Init.trueSettings.get('Splash Opacity') * 0.01);
 
 		super.playAnim(AnimName, Force, Reversed, Frame);
 	}

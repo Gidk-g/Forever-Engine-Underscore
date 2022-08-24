@@ -207,7 +207,7 @@ class Note extends FNFSprite
 		//
 		if (!isSustainNote)
 			newNote.animation.play(UIStaticArrow.getColorFromNumber(noteData) + 'Scroll');
-		// trace(prevNote);
+
 		if (isSustainNote && prevNote != null)
 		{
 			newNote.noteSpeed = prevNote.noteSpeed;
@@ -222,7 +222,6 @@ class Note extends FNFSprite
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * prevNote.noteSpeed;
 				prevNote.updateHitbox();
-				// prevNote.setGraphicSize();
 			}
 		}
 
@@ -347,11 +346,8 @@ class Note extends FNFSprite
 				}
 		}
 
-		//
 		if (!isSustainNote)
 			newNote.animation.play(UIStaticArrow.getArrowFromNumber(noteData) + 'Scroll');
-
-		// trace(prevNote);
 
 		if (isSustainNote && prevNote != null)
 		{
@@ -367,7 +363,6 @@ class Note extends FNFSprite
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * (43 / 52) * 1.5 * prevNote.noteSpeed;
 				prevNote.updateHitbox();
-				// prevNote.setGraphicSize();
 			}
 		}
 

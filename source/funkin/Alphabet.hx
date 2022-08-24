@@ -325,7 +325,7 @@ class Alphabet extends FlxSpriteGroup
 			if (arrayLetters.length > 0)
 				for (i in 0...arrayLetters.length)
 					arrayLetters[i].destroy();
-			//
+
 			lastSprite = null;
 			startText(text, false);
 		}
