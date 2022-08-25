@@ -63,9 +63,7 @@ class Paths
 	public static var dumpExclusions:Array<String> = [
 		'assets/music/freakyMenu.$SOUND_EXT',
 		'assets/music/foreverMenu.$SOUND_EXT',
-		'assets/music/breakfast.$SOUND_EXT',
-		'assets/images/UI/default/base/alphabet.png',
-		'assets/images/UI/default/base/alphabet.xml',
+		'assets/music/breakfast.$SOUND_EXT'
 	];
 
 	/// haya I love you for the base cache dump I took to the max

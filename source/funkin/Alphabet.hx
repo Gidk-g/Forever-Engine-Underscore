@@ -23,8 +23,6 @@ class Alphabet extends FlxSpriteGroup
 
 	public var textSize:Float;
 
-	public var paused:Bool = false;
-
 	// for menu shit
 	public var forceX:Float = Math.NEGATIVE_INFINITY;
 	public var yMult:Float = 120;
@@ -340,7 +338,7 @@ class AlphaCharacter extends FlxSprite
 
 	public static var numbers:String = "1234567890";
 
-	public static var symbols:String = "|~#$%()[]*+-:;<=>@^_.,'!?¿/\\";
+	public static var symbols:String = "|~#$%()[]*+-:;<=>@^_.,'!?¿/";
 
 	public var row:Int = 0;
 

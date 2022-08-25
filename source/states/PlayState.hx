@@ -424,16 +424,10 @@ class PlayState extends MusicBeatState
 			// trace('Key $key is type $type');
 			switch (type)
 			{
-				case 'image':
-					Paths.image(key);
 				case 'sound':
 					Paths.sound(key);
 				case 'music':
 					Paths.music(key);
-				case 'sparrow':
-					Paths.getSparrowAtlas(key);
-				case 'packer':
-					Paths.getPackerAtlas(key);
 			}
 		}
 		Paths.clearUnusedMemory();
@@ -450,7 +444,6 @@ class PlayState extends MusicBeatState
 		precacheList.set('missnote2', 'sound');
 		precacheList.set('missnote3', 'sound');
 		precacheList.set('breakfast', 'music');
-		precacheList.set('UI/default/alphabet', 'image');
 
 		callFunc('postCreate', null);
 	}
