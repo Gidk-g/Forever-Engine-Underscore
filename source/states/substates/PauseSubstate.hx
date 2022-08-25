@@ -36,6 +36,7 @@ class PauseSubstate extends MusicBeatSubstate
 
 	public static var toOptions:Bool = false;
 	public static var levelPractice:FlxText;
+	private var levelError:FlxText;
 
 	public function new(x:Float, y:Float)
 	{
@@ -101,19 +102,26 @@ class PauseSubstate extends MusicBeatSubstate
 		levelPractice.scrollFactor.set();
 		levelPractice.setFormat(Paths.font('vcr.ttf'), 32);
 		levelPractice.updateHitbox();
-		levelPractice.x = FlxG.width - (levelPractice.width + 20);
 		levelPractice.visible = PlayState.practiceMode;
 		add(levelPractice);
+
+		levelError = new FlxText(20, 15 + 102, 0, '', 32);
+		levelError.scrollFactor.set();
+		levelError.setFormat(Paths.font('vcr.ttf'), 32);
+		levelError.updateHitbox();
+		add(levelError);
 
 		levelInfo.alpha = 0;
 		levelAuthor.alpha = 0;
 		levelDeaths.alpha = 0;
 		levelPractice.alpha = 0;
+		levelError.alpha = 0;
 
 		levelInfo.x = FlxG.width - (levelInfo.width + 20);
 		levelAuthor.x = FlxG.width - (levelAuthor.width + 20);
 		levelDeaths.x = FlxG.width - (levelDeaths.width + 20);
 		levelPractice.x = FlxG.width - (levelPractice.width + 20);
+		levelError.x = FlxG.width - (levelError.width + 20);
 
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 		FlxTween.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
@@ -174,14 +182,28 @@ class PauseSubstate extends MusicBeatSubstate
 		{
 			var daSelected:String = menuItems[curSelected];
 
-			if (daSelected != 'BACK' && difficultyArray.contains(daSelected))
+			if (menuItems == difficultyArray && daSelected != 'BACK' && difficultyArray.contains(daSelected))
 			{
-				var leSong = PlayState.SONG.song.toLowerCase();
+				var leSongRaw = PlayState.SONG.song.toLowerCase();
+				var leSong = Highscore.formatSong(PlayState.SONG.song.toLowerCase(), curSelected);
 
-				PlayState.SONG = Song.loadSong(Highscore.formatSong(leSong, curSelected), leSong);
-				PlayState.storyDifficulty = curSelected;
-				disableCheats(true);
-				Main.switchState(this, new PlayState());
+				try
+				{
+					PlayState.SONG = Song.loadSong(leSong, leSongRaw);
+					PlayState.storyDifficulty = curSelected;
+					disableCheats(true);
+					Main.switchState(this, new PlayState());
+				}
+				catch (e)
+				{
+					levelError.text = "Uncaught Error: " + e;
+					levelError.x = FlxG.width - (levelError.width + 20);
+					levelError.alpha = 1;
+					menuItems = pauseItems;
+					reloadOptions();
+
+					FlxTween.tween(levelError, {alpha: 0}, 2);
+				}
 				return;
 			}
 
