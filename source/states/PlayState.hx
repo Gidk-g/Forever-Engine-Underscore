@@ -1342,7 +1342,7 @@ class PlayState extends MusicBeatState
 			altString = '-alt';
 
 		if (((SONG.notes[Math.floor(curStep / 16)] != null) && (SONG.notes[Math.floor(curStep / 16)].altAnim))
-			&& (character.animOffsets.exists(baseString + '-alt')))
+			&& (character.animOffsets.exists(baseString + '-alt')) || (coolNote.noteType == 1))
 		{
 			if (altString != '-alt')
 				altString = '-alt';
@@ -1352,18 +1352,12 @@ class PlayState extends MusicBeatState
 
 		switch (coolNote.noteType)
 		{
-			case 1: // alt animations notes
-				altString = '-alt'; // sets the animation string for this note;
-
-				// note parameters;
-				coolNote.hitSounds = true;
-				coolNote.badNote = false;
-				coolNote.gfNote = false;
 			case 2: // hey notes
-				stringArrow = 'hey';
+				stringArrow = 'hey'; // sets the animation string for this note;
 				character.specialAnim = true;
 				character.heyTimer = 0.6;
 
+				// note parameters;
 				coolNote.hitSounds = true;
 				coolNote.badNote = false;
 				coolNote.gfNote = false;
@@ -1385,8 +1379,8 @@ class PlayState extends MusicBeatState
 				character.heyTimer = 0.6;
 
 				coolNote.healthLoss = 0.065;
-				coolNote.badNote = true;
 				coolNote.hitSounds = false;
+				coolNote.badNote = true;
 				coolNote.gfNote = false;
 			default: // anything else
 				stringArrow = baseString + altString;

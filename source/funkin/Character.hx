@@ -226,7 +226,7 @@ class Character extends FNFSprite
 					holdTimer = 0;
 			}
 
-			if (animation.curAnim.name.endsWith('miss') && animation.curAnim != null && animation.curAnim.finished)
+			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished)
 				dance();
 
 			if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
@@ -239,7 +239,7 @@ class Character extends FNFSprite
 				playAnim(animation.curAnim.name + '-loop');
 			}
 
-			if (animation.curAnim != null && animation.curAnim.finished && animation.curAnim.name == 'idle')
+			if (animation.curAnim.finished && animation.curAnim.name == 'idle')
 			{
 				if (animation.getByName('idlePost') != null)
 					animation.play('idlePost', true, false, 0);
@@ -273,7 +273,6 @@ class Character extends FNFSprite
 
 	override public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		specialAnim = false;
 		if (animation.getByName(AnimName) != null)
 			super.playAnim(AnimName, Force, Reversed, Frame);
 

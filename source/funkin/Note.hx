@@ -66,7 +66,7 @@ class Note extends FNFSprite
 		this.noteType = noteType;
 		isSustainNote = sustainNote;
 
-		if (noteType == null)
+		if (noteType == null || noteType <= 0)
 			noteType = 0;
 
 		// oh okay I know why this exists now
