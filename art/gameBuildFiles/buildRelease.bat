@@ -1,6 +1,7 @@
 @echo off
 color 0a
-title FNF: Forever Engine - Running Game (RELEASE MODE)
+title FNF: Forever Engine - Building Game (RELEASE MODE)
+cd ..
 cd ..
 echo BUILDING...
 lime build windows -release
