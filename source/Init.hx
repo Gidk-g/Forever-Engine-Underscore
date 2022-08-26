@@ -232,7 +232,7 @@ class Init extends FlxState
 		'ACCEPT' => [[FlxKey.SPACE, Z, FlxKey.ENTER], 6],
 		'BACK' => [[FlxKey.BACKSPACE, X, FlxKey.ESCAPE], 7],
 		'PAUSE' => [[FlxKey.ENTER, P], 8],
-		'RESET' => [[R, null], 9],
+		'RESET' => [[R, R], 9],
 		'UI_UP' => [[FlxKey.UP, W], 12],
 		'UI_DOWN' => [[FlxKey.DOWN, S], 13],
 		'UI_LEFT' => [[FlxKey.LEFT, A], 14],

@@ -421,13 +421,7 @@ class OriginalChartingState extends MusicBeatState
 			{
 				var note = _song.notes[curSection].sectionNotes[i];
 
-				// must press
-				var keys = 4;
-
-				// in total
-				var tolKeys = 8;
-
-				note[1] = (note[1] + keys) % tolKeys;
+				note[1] = (note[1] + 4) % 8;
 				_song.notes[curSection].sectionNotes[i] = note;
 				updateGrid();
 				updateHeads();
@@ -908,7 +902,9 @@ class OriginalChartingState extends MusicBeatState
 		if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.A)
 			changeSection(curSection - shiftThing);
 
-		bpmTxt.text = bpmTxt.text = Std.string(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))
+		bpmTxt.text = bpmTxt.text = "Song: " + _song.song
+			+ ' [${CoolUtil.difficultyFromNumber(PlayState.storyDifficulty)}]\n'
+			+ Std.string(FlxMath.roundDecimal(Conductor.songPosition / 1000, 2))
 			+ " / " + Std.string(FlxMath.roundDecimal(songMusic.length / 1000, 2))
 			+ "\nSection: " + curSection
 			+ "\nBeat: " + curBeat
@@ -1178,7 +1174,7 @@ class OriginalChartingState extends MusicBeatState
 
 			#if DEBUG_TRACES trace('Current note type is ' + curNoteName[daNoteType] + '.'); #end
 
-			var note:Note = ForeverAssets.generateArrow(PlayState.assetModifier, daStrumTime, daNoteInfo % 4, 0, null, null, daNoteType);
+			var note:Note = ForeverAssets.generateArrow(_song.assetModifier, daStrumTime, daNoteInfo % 4, 0, null, null, daNoteType);
 			note.sustainLength = daSus;
 			note.noteType = daNoteType;
 			note.setGraphicSize(GRID_SIZE, GRID_SIZE);
