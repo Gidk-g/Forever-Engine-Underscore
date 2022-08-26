@@ -49,6 +49,7 @@ typedef SwagMeta =
 	var assetModifier:String;
 	var ?offset:Int;
 	var ?color:Array<Int>;
+	var ?difficulties:Array<String>;
 }
 
 /**
@@ -349,6 +350,16 @@ class Song
 			swagShit.color = swagShit.color;
 		else
 			swagShit.color = [255, 255, 255];
+
+		// temporary custom difficulty things;
+		if (swagMeta.difficulties != null)
+		{
+			for (i in swagMeta.difficulties)
+			{
+				if (i != null && i.length > 1)
+					CoolUtil.difficulties.push(i);
+			}
+		}
 
 		return swagShit;
 	}

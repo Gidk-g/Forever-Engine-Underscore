@@ -142,13 +142,13 @@ class Note extends FNFSprite
 					{
 						case 5: // pixel mines
 							newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('mines', assetModifier, '', 'noteskins/mines')), true, 17, 17);
-							newNote.animation.add(noteColorID[noteData] + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7]);
+							newNote.animation.add(noteColorID[noteData] + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7], 12);
 
 						default: // pixel notes default
 							newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('arrows-pixels', assetModifier, Init.trueSettings.get("Note Skin"),
 								'noteskins/notes')),
 								true, 17, 17);
-							newNote.animation.add(noteColorID[noteData] + 'Scroll', [pixelNoteID[noteData]]);
+							newNote.animation.add(noteColorID[noteData] + 'Scroll', [pixelNoteID[noteData]], 12);
 					}
 				}
 				newNote.antialiasing = false;
@@ -271,12 +271,12 @@ class Note extends FNFSprite
 							if (assetModifier == 'pixel')
 							{
 								newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('mines', assetModifier, '', 'noteskins/mines')), true, 17, 17);
-								newNote.animation.add(directionID[noteData] + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7]);
+								newNote.animation.add(directionID[noteData] + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7], 12);
 							}
 							else
 							{
 								newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('mines', assetModifier, '', 'noteskins/mines')), true, 133, 128);
-								newNote.animation.add(directionID[noteData] + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+								newNote.animation.add(directionID[noteData] + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 12);
 							}
 
 						default:

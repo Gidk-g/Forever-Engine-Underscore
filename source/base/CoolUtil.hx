@@ -14,9 +14,9 @@ import sys.FileSystem;
 class CoolUtil
 {
 	public static var baseDifficulties:Array<String> = ["EASY", "NORMAL", "HARD"];
-	public static var difficultyLength = baseDifficulties.length;
-
 	public static var difficulties:Array<String> = [];
+	public static var difficultyLength = baseDifficulties.length;
+	public static var customDiffLength = difficulties.length;
 
 	inline public static function boundTo(value:Float, min:Float, max:Float):Float
 	{
@@ -25,7 +25,7 @@ class CoolUtil
 
 	public static function difficultyFromNumber(number:Int):String
 	{
-		return baseDifficulties[number];
+		return difficulties[number];
 	}
 
 	public static function dashToSpace(string:String):String

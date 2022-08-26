@@ -63,6 +63,7 @@ class ChartingState extends MusicBeatState
 
 	var curSelectedNote:Note;
 	var curSelectedSustain:Dynamic;
+	var curSelectedEvent:EventNote;
 
 	public static var songPosition:Float = 0;
 	public static var curSong:SwagSong;
@@ -73,7 +74,8 @@ class ChartingState extends MusicBeatState
 
 	var mouseIndicator:FlxSprite;
 	var curRenderedNotes:FlxTypedGroup<Note>;
-	var curRenderedSustains:FlxTypedGroup<FlxSprite>;
+	var curRenderedSustains:FlxTypedGroup<Note>;
+	var curRenderedOldSustains:FlxTypedGroup<FlxSprite>;
 	var curRenderedEvents:FlxTypedGroup<EventNote>;
 	var curRenderedSections:FlxTypedGroup<FlxBasic>;
 
@@ -177,7 +179,8 @@ class ChartingState extends MusicBeatState
 		// generateGrid();
 
 		curRenderedNotes = new FlxTypedGroup<Note>();
-		curRenderedSustains = new FlxTypedGroup<FlxSprite>();
+		curRenderedSustains = new FlxTypedGroup<Note>();
+		curRenderedOldSustains = new FlxTypedGroup<FlxSprite>();
 		curRenderedEvents = new FlxTypedGroup<EventNote>();
 		curRenderedSections = new FlxTypedGroup<FlxBasic>();
 
@@ -186,6 +189,7 @@ class ChartingState extends MusicBeatState
 
 		add(curRenderedSections);
 		add(curRenderedSustains);
+		add(curRenderedOldSustains);
 		add(curRenderedNotes);
 		add(curRenderedEvents);
 
@@ -385,10 +389,17 @@ class ChartingState extends MusicBeatState
 				{
 					if (FlxG.mouse.overlaps(event))
 					{
-						event.kill();
-						curRenderedEvents.remove(event, true);
-						deleteEvent(event);
-						event.destroy();
+						if (FlxG.keys.pressed.CONTROL)
+						{
+							curSelectedEvent = event;
+						}
+						else
+						{
+							event.kill();
+							curRenderedEvents.remove(event, true);
+							deleteEvent(event);
+							event.destroy();
+						}
 					}
 				});
 			}
@@ -531,15 +542,16 @@ class ChartingState extends MusicBeatState
 
 	function deleteEvent(event:EventNote)
 	{
-		var naughtyStrum:Float = event.strumTime;
+		var eventStrumTime:Float = event.strumTime;
 
 		for (i in _song.events)
 		{
-			if (i[0] == naughtyStrum)
+			if (i[0] == eventStrumTime)
 			{
 				_song.events.remove(i);
 				event.kill();
 				curRenderedEvents.remove(event, true);
+				_song.events[currentSection].remove(i);
 				event.destroy();
 				break;
 			}
@@ -684,6 +696,7 @@ class ChartingState extends MusicBeatState
 	{
 		curRenderedNotes.clear();
 		curRenderedSustains.clear();
+		curRenderedOldSustains.clear();
 		curRenderedEvents.clear();
 
 		var sectionInfo:Array<Dynamic> = _song.notes[currentSection].sectionNotes;
@@ -707,12 +720,12 @@ class ChartingState extends MusicBeatState
 		{
 			var daNoteInfo = i[1];
 			var daStrumTime = i[0];
-			var daSus = i[2];
+			var daSustainNote = i[2];
 			var daNoteType:Int = i[3];
 
 			// trace('Current note type is $daNoteType.');
 
-			generateChartNote(daNoteInfo, daStrumTime, daSus, 0, daNoteType, currentSection, false);
+			generateChartNote(daNoteInfo, daStrumTime, daSustainNote, 0, daNoteType, currentSection, false);
 		}
 
 		for (i in eventInfo)
@@ -733,7 +746,7 @@ class ChartingState extends MusicBeatState
 		gridGroup.clear();
 		var newAlpha = (26 / 255);
 
-		baseGrid = FlxGridOverlay.create(gridSize, gridSize, gridSize * 8, gridSize * 16, true, FlxColor.WHITE, FlxColor.BLACK);
+		baseGrid = FlxGridOverlay.create(gridSize, gridSize, gridSize * 9, gridSize * 16, true, FlxColor.WHITE, FlxColor.BLACK);
 		baseGrid.graphic.bitmap.colorTransform(baseGrid.graphic.bitmap.rect, new ColorTransform(1, 1, 1, newAlpha));
 		baseGrid.screenCenter(X);
 		gridGroup.add(baseGrid);
@@ -807,6 +820,7 @@ class ChartingState extends MusicBeatState
 		// GENERATING THE GRID NOTES!
 		curRenderedNotes.clear();
 		curRenderedSustains.clear();
+		curRenderedOldSustains.clear();
 
 		// sectionsMax = 1;
 		generateSection();
@@ -880,13 +894,11 @@ class ChartingState extends MusicBeatState
 		};
 	}
 
-	function generateChartNote(daNoteInfo, daStrumTime, daSus, daNoteAlt:Float, daNoteType:Int, noteSection, ?shouldPush:Bool = true)
+	function generateChartNote(daNoteInfo, daStrumTime, daSustainNote, daNoteAlt:Float, daNoteType:Int, noteSection, ?shouldPush:Bool = true)
 	{
-		// trace(daNoteInfo);
-
 		var note:Note = ForeverAssets.generateArrow(PlayState.assetModifier, daStrumTime, daNoteInfo % 4, 0, false, null);
 		note.rawNoteData = daNoteInfo;
-		note.sustainLength = daSus;
+		note.sustainLength = daSustainNote;
 		note.setGraphicSize(gridSize, gridSize);
 		note.updateHitbox();
 		note.screenCenter(X);
@@ -896,20 +908,44 @@ class ChartingState extends MusicBeatState
 
 		if (shouldPush)
 		{
-			_song.notes[noteSection].sectionNotes.push([daStrumTime, (daNoteInfo + 4) % 8, daSus, '']);
+			_song.notes[noteSection].sectionNotes.push([daStrumTime, (daNoteInfo + 4) % 8, daSustainNote, '']);
 			curSelectedNote = note;
 		}
 
 		curRenderedNotes.add(note);
 
-		if (daSus > 0)
+		if (daSustainNote > 0)
 		{
-			var sustainVis:FlxSprite = new FlxSprite(note.x + (gridSize / 2 - 3),
-				note.y + gridSize).makeGraphic(8, Math.floor(FlxMath.remapToRange(daSus, 0, Conductor.stepCrochet * 16, 0, baseGrid.height)));
-			curRenderedSustains.add(sustainVis);
+			var sustainVis:FlxSprite = new FlxSprite(note.x + (gridSize / 2 - 3), note.y + gridSize);
+			sustainVis.makeGraphic(8, Math.floor(FlxMath.remapToRange(daSustainNote, 0, Conductor.stepCrochet * 16, 0, baseGrid.height)));
+			curRenderedOldSustains.add(sustainVis);
 		}
+		generateSustain(daNoteInfo, daStrumTime, daSustainNote, daNoteAlt, daNoteType, note);
+	}
 
-		// generateSustain(daStrumTime, daNoteInfo, daSus, daNoteAlt, daNoteType, note);
+	function generateSustain(daNoteInfo:Int = 0, daStrumTime:Float = 0, daSustainNote:Float = 0, daNoteAlt:Float = 0, daNoteType:Int = 0, note:Note)
+	{
+		if (daSustainNote > 0)
+		{
+			var constSize = Std.int(gridSize / 3);
+
+			var sustainVis:Note = new Note(daStrumTime + (Conductor.stepCrochet * daSustainNote) + Conductor.stepCrochet, daNoteInfo % 4, daNoteAlt, note, true, daNoteType);
+			sustainVis.setGraphicSize(constSize, Math.floor(FlxMath.remapToRange((daSustainNote / 2) - constSize, 0, Conductor.stepCrochet * 16, 0, gridSize * gridSize)));
+			sustainVis.updateHitbox();
+			sustainVis.x = note.x + constSize;
+			sustainVis.y = note.y + (gridSize / 2);
+			sustainVis.rawNoteData = daNoteInfo;
+
+			var sustainEnd:Note = new Note(daStrumTime + (Conductor.stepCrochet * daSustainNote) + Conductor.stepCrochet, daNoteInfo % 4, daNoteAlt, sustainVis, true, daNoteType);
+			sustainEnd.setGraphicSize(constSize, constSize);
+			sustainEnd.updateHitbox();
+			sustainEnd.x = sustainVis.x;
+			sustainEnd.y = note.y + (sustainVis.height) + (gridSize / 2);
+			sustainEnd.rawNoteData = daNoteInfo;
+
+			curRenderedSustains.add(sustainVis);
+			curRenderedSustains.add(sustainEnd);
+		}
 	}
 
 	function generateEvent(strumTime:Float, val1:String, val2:String, id:String, ?shouldPush:Bool = false):Void
@@ -919,8 +955,8 @@ class ChartingState extends MusicBeatState
 		var eventNote:EventNote = new EventNote(strumTime, val1, val2, id);
 		eventNote.setGraphicSize(gridSize, gridSize);
 		eventNote.updateHitbox();
-		eventNote.x += 370;
-		eventNote.y = Math.floor(getYfromStrum((event[0] - sectionStartTime()) % (Conductor.stepCrochet * getSectionBeats(0))));
+		eventNote.x += 418;
+		eventNote.y = getYfromStrumNotes(event[0] - sectionStartTime(), getSectionBeats());
 
 		if (shouldPush)
 		{
@@ -930,39 +966,6 @@ class ChartingState extends MusicBeatState
 		curRenderedEvents.add(eventNote);
 	}
 
-	function generateSustain(daStrumTime:Float = 0, daNoteInfo:Int = 0, daSus:Float = 0, daNoteAlt:Float = 0, danoteType:Int = 0, note:Note)
-	{
-		/*
-			if (daSus > 0)
-			{
-				var prevNote:Note = null;
-				prevNote = note;
-				var constSize = Std.int(gridSize / 3);
-
-				var sustainVis:Note = new Note(daStrumTime + (Conductor.stepCrochet * daSus) + Conductor.stepCrochet, daNoteInfo % 4, daNoteAlt, prevNote, true, daNoteType);
-				sustainVis.setGraphicSize(constSize,
-					Math.floor(FlxMath.remapToRange((daSus / 2) - constSize, 0, Conductor.stepCrochet * 16, 0, gridSize * gridSize)));
-				sustainVis.updateHitbox();
-				sustainVis.x = note.x + constSize;
-				sustainVis.y = note.y + (gridSize / 2);
-
-				var sustainEnd:Note = new Note(daStrumTime + (Conductor.stepCrochet * daSus) + Conductor.stepCrochet, daNoteInfo % 4, daNoteAlt, sustainVis, true, daNoteType);
-				sustainEnd.setGraphicSize(constSize, constSize);
-				sustainEnd.updateHitbox();
-				sustainEnd.x = sustainVis.x;
-				sustainEnd.y = note.y + (sustainVis.height) + (gridSize / 2);
-
-				// loll for later
-				sustainVis.rawNoteData = daNoteInfo;
-				sustainEnd.rawNoteData = daNoteInfo;
-
-				curRenderedSustains.add(sustainVis);
-				curRenderedSustains.add(sustainEnd);
-			}
-		 */
-	}
-
-	///*
 	var coolGrid:FlxBackdrop;
 	var coolGradient:FlxSprite;
 

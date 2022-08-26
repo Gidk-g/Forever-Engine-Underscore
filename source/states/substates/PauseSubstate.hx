@@ -16,11 +16,11 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import sys.FileSystem;
 import funkin.Alphabet;
 import funkin.Highscore;
 import states.*;
 import states.menus.*;
+import sys.FileSystem;
 
 class PauseSubstate extends MusicBeatSubstate
 {
@@ -47,7 +47,7 @@ class PauseSubstate extends MusicBeatSubstate
 		// menu items set up!
 		menuItems = pauseItems;
 
-		for (i in CoolUtil.baseDifficulties)
+		for (i in CoolUtil.difficulties)
 		{
 			// check for existance of difficulty files, and then push said files to the difficulty array as an entry;
 			if (FileSystem.exists(Paths.songJson(CoolUtil.dashToSpace(PlayState.SONG.song), CoolUtil.dashToSpace(PlayState.SONG.song) + '-' + i))

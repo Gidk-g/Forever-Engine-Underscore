@@ -151,7 +151,7 @@ class StoryMenuState extends MusicBeatState
 		{
 			lastDifficultyName = 'NORMAL';
 		}
-		curDifficulty = Math.round(Math.max(0, CoolUtil.baseDifficulties.indexOf(lastDifficultyName)));
+		curDifficulty = Math.round(Math.max(0, CoolUtil.difficulties.indexOf(lastDifficultyName)));
 
 		sprDifficulty = new FlxSprite(0, leftArrow.y);
 		sprDifficulty.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
@@ -296,7 +296,7 @@ class StoryMenuState extends MusicBeatState
 		if (curDifficulty > CoolUtil.difficultyLength - 1)
 			curDifficulty = 0;
 
-		var diff:String = CoolUtil.baseDifficulties[curDifficulty];
+		var diff:String = CoolUtil.difficulties[curDifficulty];
 		var newImage:FlxGraphic = Paths.image('menus/base/storymenu/difficulties/' + Paths.songPath(diff));
 
 		if (sprDifficulty.graphic != newImage)
