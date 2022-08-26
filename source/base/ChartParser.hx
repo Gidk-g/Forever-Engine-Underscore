@@ -57,7 +57,7 @@ typedef SwagMeta =
 typedef SwagSection =
 {
 	var sectionNotes:Array<Dynamic>;
-	var lengthInSteps:Int;
+	var sectionBeats:Float; // thx shadowmario;
 	var typeOfSection:Int;
 	var mustHitSection:Bool;
 	var gfSection:Bool;
@@ -87,8 +87,6 @@ class ChartParser
 
 				for (section in noteData)
 				{
-					var coolSection:Int = Std.int(section.lengthInSteps / 4);
-
 					for (songNotes in section.sectionNotes)
 					{
 						var daStrumTime:Float = #if !neko songNotes[0] - Init.trueSettings['Offset'] /* - | late, + | early*/ #else songNotes[0] #end;
@@ -170,8 +168,6 @@ class ChartParser
 
 				for (section in noteData)
 				{
-					var coolSection:Int = Std.int(section.lengthInSteps / 4);
-
 					for (songNotes in section.sectionNotes)
 					{
 						var daStrumTime:Float = songNotes[0]#if !neko - Init.trueSettings['Offset'] #end; // - | late, + | early
@@ -362,8 +358,9 @@ class Section
 {
 	public var sectionNotes:Array<Dynamic> = [];
 
-	public var lengthInSteps:Int = 16;
+	public var sectionBeats:Float = 4;
 	public var typeOfSection:Int = 0;
+	public var gfSection:Bool = false;
 	public var mustHitSection:Bool = true;
 
 	/**
@@ -371,8 +368,8 @@ class Section
 	 */
 	public static var COPYCAT:Int = 0;
 
-	public function new(lengthInSteps:Int = 16)
+	public function new(sectionBeats:Float = 4)
 	{
-		this.lengthInSteps = lengthInSteps;
+		this.sectionBeats = sectionBeats;
 	}
 }

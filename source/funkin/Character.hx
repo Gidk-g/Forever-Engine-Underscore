@@ -108,13 +108,15 @@ class Character extends FNFSprite
 	public function setCharacter(x:Float, y:Float, character:String):Character
 	{
 		this.character = character;
-		curCharacter = character;
 
-		antialiasing = (!character.endsWith('-pixel'));
+		if (icon == null)
+			icon = character;
+
+		antialiasing = (!character.endsWith('-pixel') || !Init.trueSettings.get('Disable Antialiasing'));
 
 		var psychChar = Assets.exists(Paths.getPreloadPath('characters/$character/' + character + '.json'));
 
-		switch (curCharacter)
+		switch (character)
 		{
 			// hardcoded (example, in case you want to hardcode characters)
 			/*
@@ -147,7 +149,7 @@ class Character extends FNFSprite
 		recalcDance();
 		dance();
 
-		switch (curCharacter)
+		switch (character)
 		{
 			case 'pico-speaker':
 				skipDance = true;
@@ -466,9 +468,6 @@ class Character extends FNFSprite
 		setVar('song', PlayState.SONG.song.toLowerCase());
 
 		callFunc('loadAnimations', null);
-
-		if (icon == null)
-			icon = char;
 
 		if (adjustPos)
 		{

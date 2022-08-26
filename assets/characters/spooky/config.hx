@@ -19,5 +19,5 @@ function loadAnimations()
 	setBarColor([213, 126, 0]);
 	setCamOffsets(0, 250);
 	setOffsets(0, 500);
-	quickDancer(true);
+	quickDancer(false);
 }

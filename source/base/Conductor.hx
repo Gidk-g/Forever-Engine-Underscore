@@ -66,10 +66,24 @@ class Conductor
 				bpmChangeMap.push(event);
 			}
 
-			var deltaSteps:Int = song.notes[i].lengthInSteps;
+			var deltaSteps:Int = Math.round(getSectionBeats(song, i) * 4);
 			totalSteps += deltaSteps;
 			totalPos += ((60 / curBPM) * 1000 / 4) * deltaSteps;
 		}
+	}
+
+	/**
+	* new code for lengthInSteps that my friend ShadowMario made;
+	* it's probably unlikely, but if you didn't check out Psych Engine yet, give it a chance;
+	* it provides ease of access and reliability, along with mod support;
+	* https://github.com/ShadowMario/FNF-PsychEngine;
+	**/
+	static function getSectionBeats(song:SwagSong, section:Int)
+	{
+		var val:Null<Float> = null;
+		if (song.notes[section] != null)
+			val = song.notes[section].sectionBeats;
+		return val != null ? val : 4;
 	}
 
 	public static function changeBPM(newBpm:Float, measure:Float = 4 / 4)

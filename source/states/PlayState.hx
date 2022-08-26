@@ -779,7 +779,8 @@ class PlayState extends MusicBeatState
 			var lerpVal = (elapsed * 2.4) * cameraSpeed;
 			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 
-			var easeLerp = 1 - Main.framerateAdjust(0.5);
+			var easeLerp = 1 - (0.05 * (60 / FlxG.stage.window.frameRate));
+
 			// camera stuffs
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom + forceZoom[0], FlxG.camera.zoom, easeLerp);
 			for (hud in allUIs)
@@ -805,16 +806,16 @@ class PlayState extends MusicBeatState
 				var dunceNote:Note = unspawnNotes[0];
 				// push note to its correct strumline
 				strumLines.members[Math.floor((dunceNote.noteData + (dunceNote.mustPress ? 4 : 0)) / numberOfKeys)].push(dunceNote);
-				notes.add(dunceNote);
 				unspawnNotes.splice(unspawnNotes.indexOf(dunceNote), 1);
+				notes.add(dunceNote);
 			}
 
 			if (unspawnEvents[0] != null && unspawnEvents[0].strumTime - Conductor.songPosition < 3500)
 			{
 				var dunceEvent:EventNote = unspawnEvents[0];
 				dunceEvent.visible = false;
-				events.add(dunceEvent);
 				unspawnEvents.splice(unspawnEvents.indexOf(dunceEvent), 1);
+				events.add(dunceEvent);
 			}
 
 			noteCalls();
@@ -1148,16 +1149,13 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	function eventNoteHit(name:String, val1:String, val2:String, ?eventNote:EventNote)
+	function eventNoteHit(name:String, val1:String, val2:String)
 	{
-		if (!eventNote.shouldExecute)
-			return;
-
-		switch (eventNote.eventName)
+		switch (name)
 		{
 			case 'Change Character':
 				var ogPosition:Array<Float> = [770, 450];
-				switch (eventNote.val2)
+				switch (val1)
 				{
 					case 'dad' | 'opponent' | 'dadOpponent':
 						ogPosition = [100, 100];
@@ -1166,17 +1164,17 @@ class PlayState extends MusicBeatState
 					case 'bf' | 'player' | 'boyfriend':
 						ogPosition = [770, 450];
 				}
-				changeCharacter(eventNote.val1, eventNote.val2, ogPosition[0], ogPosition[1]);
+				changeCharacter(val1, val2, ogPosition[0], ogPosition[1]);
 
 			case 'Set GF Speed':
-				var speed:Int = Std.parseInt(eventNote.val1);
+				var speed:Int = Std.parseInt(val1);
 				if (Math.isNaN(speed) || speed < 1)
 					speed = 1;
 				gfSpeed = speed;
 
 			case 'Hey!':
 				var who:Int = -1;
-				switch (eventNote.val1.toLowerCase().trim())
+				switch (val1.toLowerCase().trim())
 				{
 					case 'bf' | 'boyfriend' | 'player':
 						who = 0;
@@ -1184,7 +1182,7 @@ class PlayState extends MusicBeatState
 						who = 1;
 				}
 
-				var tmr:Float = Std.parseFloat(eventNote.val2);
+				var tmr:Float = Std.parseFloat(val2);
 				if (Math.isNaN(tmr) || tmr <= 0)
 					tmr = 0.6;
 
@@ -1212,14 +1210,14 @@ class PlayState extends MusicBeatState
 
 			case 'Play Animation':
 				var char:Character = dadOpponent;
-				switch (eventNote.val2.toLowerCase().trim())
+				switch (val2.toLowerCase().trim())
 				{
 					case 'bf' | 'boyfriend':
 						char = boyfriend;
 					case 'gf' | 'girlfriend':
 						char = gf;
 					default:
-						var val2:Int = Std.parseInt(eventNote.val2);
+						var val2:Int = Std.parseInt(val2);
 						if (Math.isNaN(val2))
 							val2 = 0;
 
@@ -1232,7 +1230,7 @@ class PlayState extends MusicBeatState
 
 				if (char != null)
 				{
-					char.playAnim(eventNote.val1, true);
+					char.playAnim(val1, true);
 					char.specialAnim = true;
 				}
 		}
