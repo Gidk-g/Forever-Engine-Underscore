@@ -177,8 +177,6 @@ class PlayState extends MusicBeatState
 
 	public static var prevCharter:Int = 0;
 
-	var precacheList:Map<String, String> = new Map<String, String>();
-
 	var canMiss:Bool = true;
 
 	// at the beginning of the playstate
@@ -419,17 +417,6 @@ class PlayState extends MusicBeatState
 			FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		}
 
-		for (key => type in precacheList)
-		{
-			// trace('Key $key is type $type');
-			switch (type)
-			{
-				case 'sound':
-					Paths.sound(key);
-				case 'music':
-					Paths.music(key);
-			}
-		}
 		Paths.clearUnusedMemory();
 
 		// call the funny intro cutscene depending on the song
@@ -438,14 +425,43 @@ class PlayState extends MusicBeatState
 		else
 			startCountdown();
 
-		if (Init.trueSettings.get('Hitsound Volume') > 0)
-			precacheList.set('hitsound', 'sound');
-		precacheList.set('missnote1', 'sound');
-		precacheList.set('missnote2', 'sound');
-		precacheList.set('missnote3', 'sound');
-		precacheList.set('breakfast', 'music');
+		precacheImages();
+		precacheSounds();
 
 		callFunc('postCreate', null);
+	}
+
+	/**
+	 * Simply put, a Function to Precache Sounds and Songs;
+	 * when adding yours, make sure to use `FlxSound` and `volume = 0.00000001`;
+	**/
+	private function precacheSounds()
+	{
+		var soundArray:Array<String> = [];
+
+		var pauseMusic:FlxSound = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
+		pauseMusic.volume = 0.00000001;
+		pauseMusic.play();
+
+		soundArray.push('missnote1');
+		soundArray.push('missnote2');
+		soundArray.push('missnote3');
+		soundArray.push('hitsounds/$changeableSound/hit');
+
+		for (i in soundArray)
+		{
+			var allSounds:FlxSound = new FlxSound().loadEmbedded(Paths.sound(i));
+			allSounds.volume = 0.00000001;
+			allSounds.play();
+		}	
+	}
+
+	/**
+	 * a Function to Precache Images;
+	**/
+	private function precacheImages()
+	{
+		Paths.image('UI/default/base/alphabet');
 	}
 
 	public static function copyKey(arrayToCopy:Array<FlxKey>):Array<FlxKey>

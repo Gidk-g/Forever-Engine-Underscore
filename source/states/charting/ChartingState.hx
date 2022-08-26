@@ -70,6 +70,7 @@ class ChartingState extends MusicBeatState
 	public static var curSong:SwagSong;
 
 	var baseGrid:FlxSprite;
+	var gridBlackLine:FlxSprite;
 
 	public static var gridSize:Int = 50;
 
@@ -260,6 +261,8 @@ class ChartingState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
+		updateText();
+
 		super.update(elapsed);
 
 		curStep = recalculateSteps();
@@ -283,8 +286,6 @@ class ChartingState extends MusicBeatState
 				// playButtonAnimation('play');
 			}
 		}
-
-		updateText();
 
 		FlxG.watch.addQuick('daBeat', curBeat);
 		FlxG.watch.addQuick('daStep', curStep);
@@ -684,12 +685,46 @@ class ChartingState extends MusicBeatState
 		return gridSize * beats * 4 * value + baseGrid.y;
 	}
 
+	var fullGrid:FlxTiledSprite;
+
+	function recreateGrid():Void
+	{
+		gridGroup.clear();
+		var newAlpha = (26 / 255);
+
+		baseGrid = FlxGridOverlay.create(gridSize, gridSize, gridSize * 9, gridSize * 16, true, FlxColor.WHITE, FlxColor.BLACK);
+		baseGrid.graphic.bitmap.colorTransform(baseGrid.graphic.bitmap.rect, new ColorTransform(1, 1, 1, newAlpha));
+		baseGrid.screenCenter(X);
+		gridGroup.add(baseGrid);
+
+		fullGrid = new FlxTiledSprite(null, gridSize * keysTotal, gridSize);
+		fullGrid.loadGraphic(baseGrid.graphic);
+		fullGrid.screenCenter(X);
+		fullGrid.height = (songMusic.length / Conductor.stepCrochet) * gridSize;
+		//gridGroup.add(fullGrid);
+
+		gridBlackLine = new FlxSprite(baseGrid.x + gridSize).makeGraphic(2, Std.int(baseGrid.height), FlxColor.BLACK);
+
+		gridGroup.add(baseGrid);
+		gridGroup.add(gridBlackLine);
+
+		updateGrid();
+	}
+
 	function updateGrid(creating:Bool = false):Void
 	{
 		curRenderedNotes.clear();
 		curRenderedSustains.clear();
 		curRenderedOldSustains.clear();
 		curRenderedEvents.clear();
+
+		// kill grid
+		gridGroup.remove(baseGrid);
+		gridGroup.remove(gridBlackLine);
+
+		// regenerate
+		gridGroup.add(baseGrid);
+		gridGroup.add(gridBlackLine);
 
 		var sectionInfo:Array<Dynamic> = _song.notes[currentSection].sectionNotes;
 		var eventInfo:Array<Dynamic> = _song.events;
@@ -727,30 +762,6 @@ class ChartingState extends MusicBeatState
 
 			generateEvent(strum, val1, val2, id, creating);
 		}
-	}
-
-	var fullGrid:FlxTiledSprite;
-
-	function recreateGrid():Void
-	{
-		gridGroup.clear();
-		var newAlpha = (26 / 255);
-
-		baseGrid = FlxGridOverlay.create(gridSize, gridSize, gridSize * 9, gridSize * 16, true, FlxColor.WHITE, FlxColor.BLACK);
-		baseGrid.graphic.bitmap.colorTransform(baseGrid.graphic.bitmap.rect, new ColorTransform(1, 1, 1, newAlpha));
-		baseGrid.screenCenter(X);
-		gridGroup.add(baseGrid);
-
-		fullGrid = new FlxTiledSprite(null, gridSize * keysTotal, gridSize);
-		fullGrid.loadGraphic(baseGrid.graphic);
-		fullGrid.screenCenter(X);
-		fullGrid.height = (songMusic.length / Conductor.stepCrochet) * gridSize;
-		//gridGroup.add(fullGrid);
-
-		var gridBlackLine:FlxSprite = new FlxSprite(baseGrid.x + gridSize).makeGraphic(2, Std.int(baseGrid.height), FlxColor.BLACK);
-		gridGroup.add(gridBlackLine);
-
-		updateGrid();
 	}
 
 	public var sectionLineGraphic:FlxGraphic;
@@ -894,7 +905,7 @@ class ChartingState extends MusicBeatState
 		note.updateHitbox();
 		note.screenCenter(X);
 		note.x = Math.floor(daNoteInfo * gridSize) + gridSize + 418;
-		note.y = getYfromStrumNotes(daStrumTime - sectionStartTime(), getSectionBeats());
+		note.y = getYfromStrumNotes(daStrumTime - sectionStartTime(), getSectionBeats()) - 1;
 
 		var sectionInfo:Array<Dynamic> = _song.notes[currentSection].sectionNotes;
 
