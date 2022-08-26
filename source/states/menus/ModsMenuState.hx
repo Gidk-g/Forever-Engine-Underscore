@@ -2,6 +2,7 @@ package states.menus;
 
 import base.MusicBeat.MusicBeatState;
 import base.mods.ModHandler;
+import dependency.AbsoluteSprite;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
@@ -28,8 +29,12 @@ class ModsMenuState extends MusicBeatState
 	var bg:FlxSprite;
 	var fg:FlxSprite;
 	var infoText:FlxText;
+
 	var grpMenuMods:FlxTypedGroup<Alphabet>;
+
+	var icons:Array<AbsoluteSprite> = [];
 	var modList:Array<ModMetadata> = [];
+
 	var isEnabled = true;
 
 	override function create()
