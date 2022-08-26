@@ -69,6 +69,29 @@ class Note extends FNFSprite
 		if (noteType == null || noteType <= 0)
 			noteType = 0;
 
+		switch (noteType)
+		{
+			case 2: // hey notes
+				hitSounds = true;
+				badNote = false;
+				gfNote = false;
+			case 3: // gf notes
+				gfNote = true;
+			case 4: // no animation notes
+				hitSounds = false;
+				badNote = false;
+				gfNote = false;
+			case 5: // mines
+				healthLoss = 0.065;
+				hitSounds = false;
+				badNote = true;
+				gfNote = false;
+			default: // anything else
+				hitSounds = true;
+				badNote = false;
+				gfNote = false;
+		}
+
 		// oh okay I know why this exists now
 		y -= 2000;
 
@@ -177,8 +200,7 @@ class Note extends FNFSprite
 						newNote.animation.addByPrefix(noteColorID[noteData] + 'holdend', noteColorID[noteData] + ' hold end');
 						newNote.animation.addByPrefix(noteColorID[noteData] + 'hold', noteColorID[noteData] + ' hold piece');
 
-						if (noteData == 0)
-							newNote.animation.addByPrefix('purpleholdend', 'pruple end hold'); // uh?
+						newNote.animation.addByPrefix('purpleholdend', 'pruple end hold'); // PA god dammit.
 
 						newNote.setGraphicSize(Std.int(newNote.width * 0.7));
 						newNote.updateHitbox();

@@ -1347,20 +1347,9 @@ class PlayState extends MusicBeatState
 				stringArrow = 'hey'; // sets the animation string for this note;
 				character.specialAnim = true;
 				character.heyTimer = 0.6;
-
-				// note parameters;
-				coolNote.hitSounds = true;
-				coolNote.badNote = false;
-				coolNote.gfNote = false;
-			case 3: // gf notes
-				coolNote.gfNote = true;
 			case 4: // no animation notes
 				stringArrow = '';
 				altString = '';
-
-				coolNote.hitSounds = false;
-				coolNote.badNote = false;
-				coolNote.gfNote = false;
 			case 5: // mines
 				if (character.curCharacter == 'bf-psych')
 					stringArrow = 'hurt';
@@ -1368,18 +1357,9 @@ class PlayState extends MusicBeatState
 					stringArrow = baseString + 'miss';
 				character.specialAnim = true;
 				character.heyTimer = 0.6;
-
-				coolNote.healthLoss = 0.065;
-				coolNote.hitSounds = false;
-				coolNote.badNote = true;
-				coolNote.gfNote = false;
 			default: // anything else
 				stringArrow = baseString + altString;
-
 				character.specialAnim = false;
-				coolNote.hitSounds = true;
-				coolNote.badNote = false;
-				coolNote.gfNote = false;
 		}
 
 		character.playAnim(stringArrow, true);
