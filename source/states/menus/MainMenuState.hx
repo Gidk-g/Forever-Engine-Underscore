@@ -66,12 +66,15 @@ class MainMenuState extends MusicBeatState
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
 
-		var tex = Paths.getSparrowAtlas('menus/base/title/FNF_main_menu_assets');
+		var menuItemScale:Int = 1;
 
 		for (i in 0...optionShit.length)
 		{
 			var menuItem:FlxSprite = new FlxSprite(0, FlxG.height * 1.1);
-			menuItem.frames = tex;
+			menuItem.frames = Paths.getSparrowAtlas('menus/base/menuItems/' + optionShit[i]);
+
+			menuItem.scale.x = menuItemScale;
+			menuItem.scale.y = menuItemScale;
 
 			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
@@ -86,8 +89,12 @@ class MainMenuState extends MusicBeatState
 			else
 				menuItem.x -= 1000;
 
+			var newScroll:Float = (optionShit.length - 4) * 0.135;
+			if(optionShit.length < 6)
+				newScroll = 0;
+
 			menuItems.add(menuItem);
-			menuItem.scrollFactor.set();
+			menuItem.scrollFactor.set(0, newScroll);
 			menuItem.antialiasing = !Init.trueSettings.get('Disable Antialiasing');
 			menuItem.updateHitbox();
 

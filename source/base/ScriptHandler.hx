@@ -174,7 +174,7 @@ class ScriptFuncs extends PlayState
 			PlayState.contents.changeCharacter(key, target, x, y);
 		});
 
-		PlayState.contents.setVar('castShader', function(shaderID:String, key:String, camera:String = 'camGame', startEnabled:Bool = true)
+		PlayState.contents.setVar('castShader', function(shaderID:String, key:String, camera:String = 'camGame')
 		{
 			if (Init.trueSettings.get('Disable Shaders'))
 			{
@@ -196,9 +196,6 @@ class ScriptFuncs extends PlayState
 						case 'strumhud' | 'strumHUD' | 'strum' | 'strumlines':
 							PlayState.strumHUD.setFilters([new ShaderFilter(shader)]);
 					}
-
-					if (!startEnabled)
-						FlxG.camera.filtersEnabled = false;
 				}
 				else
 				{

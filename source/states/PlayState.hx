@@ -438,14 +438,17 @@ class PlayState extends MusicBeatState
 	private function precacheSounds()
 	{
 		var soundArray:Array<String> = [];
+		var missArray:Array<String> = [];
 
 		var pauseMusic:FlxSound = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
 		pauseMusic.volume = 0.00000001;
 		pauseMusic.play();
 
-		soundArray.push('missnote1');
-		soundArray.push('missnote2');
-		soundArray.push('missnote3');
+		missArray.push('missnote1');
+		missArray.push('missnote2');
+		missArray.push('missnote3');
+
+		// push your sound paths to this array
 		soundArray.push('hitsounds/$changeableSound/hit');
 
 		for (i in soundArray)
@@ -453,6 +456,20 @@ class PlayState extends MusicBeatState
 			var allSounds:FlxSound = new FlxSound().loadEmbedded(Paths.sound(i));
 			allSounds.volume = 0.00000001;
 			allSounds.play();
+		}
+
+		for (i in missArray)
+		{
+			var missSounds:FlxSound = new FlxSound().loadEmbedded(Paths.sound(i));
+			missSounds.volume = 0.00000001;
+			missSounds.play();
+
+			// stopping the pause music once these are done;
+			missSounds.onComplete = function():Void
+			{
+				pauseMusic.stop();
+				pauseMusic.destroy();
+			}
 		}	
 	}
 

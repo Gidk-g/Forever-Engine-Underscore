@@ -43,6 +43,14 @@ class Init extends FlxState
 	public static var FORCED = 'forced';
 	public static var NOT_FORCED = 'not forced';
 
+	public static var arrowHSV:Array<Array<Int>> =
+	[
+		[0, 0, 0],
+		[0, 0, 0],
+		[0, 0, 0],
+		[0, 0, 0]
+	];
+
 	public static var gameSettings:Map<String, Dynamic> = [
 		// GAMEPLAY;
 		'Controller Mode' => [

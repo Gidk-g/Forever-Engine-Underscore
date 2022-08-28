@@ -37,7 +37,7 @@ class Main extends Sprite
 	public static var foreverVersion:String = '0.3.1';
 	public static var underscoreVersion:String = '0.2.2 BETA';
 	public static var commitHash:String;
-	public static var showCommitHash:Bool = true;
+	public static var showCommitHash:Bool = false;
 
 	static var infoCounter:Overlay; // initialize the heads up display that shows information before creating it.
 

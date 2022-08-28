@@ -5,24 +5,15 @@ import base.MusicBeat.MusicBeatState;
 import dependency.Discord;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.addons.display.FlxBackdrop;
-import flixel.addons.display.FlxGridOverlay;
-import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.addons.transition.TransitionData;
-import flixel.graphics.FlxGraphic;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.graphics.frames.FlxFrame;
 import flixel.group.FlxGroup;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
-import flixel.system.FlxSound;
-import flixel.system.ui.FlxSoundTray;
-import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
@@ -48,11 +39,24 @@ class TitleState extends MusicBeatState
 
 	var wackyImage:FlxSprite;
 
+	var swagShader:ColorSwap;
+
 	override public function create():Void
 	{
 		controls.setKeyboardScheme(None, false);
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 		super.create();
+
+		try
+		{
+			swagShader = new ColorSwap();
+			trace('Initializing ColorSwap Shader');
+		}
+		catch (e)
+		{
+			swagShader = null;
+			trace('Uncaught Error: ' + e);
+		}
 
 		startIntro();
 	}
@@ -75,17 +79,6 @@ class TitleState extends MusicBeatState
 			#if DISCORD_RPC
 			Discord.changePresence('TITLE SCREEN', 'Main Menu');
 			#end
-
-			/*
-				var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
-				diamond.persist = true;
-				diamond.destroyOnNoUse = false;
-
-				FlxTransitionableState.defaultTransIn = new TransitionData(FADE, FlxColor.BLACK, 0.32, new FlxPoint(0, -1),
-					{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
-				FlxTransitionableState.defaultTransOut = new TransitionData(FADE, FlxColor.BLACK, 0.32, new FlxPoint(0, 1),
-					{asset: diamond, width: 32, height: 32}, new FlxRect(-200, -200, FlxG.width * 1.4, FlxG.height * 1.4));
-			 */
 
 			transIn = FlxTransitionableState.defaultTransIn;
 			transOut = FlxTransitionableState.defaultTransOut;
@@ -121,6 +114,12 @@ class TitleState extends MusicBeatState
 		initLogowidth = gameLogo.width;
 		newLogoScale = gameLogo.scale.x;
 		add(gameLogo);
+
+		if (swagShader != null)
+		{
+			gfDance.shader = swagShader.shader;
+			gameLogo.shader = swagShader.shader;
+		}
 
 		titleText = new FlxSprite(100, FlxG.height * 0.8);
 		titleText.frames = Paths.getSparrowAtlas('menus/base/title/titleEnter');
@@ -280,6 +279,14 @@ class TitleState extends MusicBeatState
 		// hi game, please stop crashing its kinda annoyin, thanks!
 		if (pressedEnter && !skippedIntro && initialized)
 			skipIntro();
+
+		if(swagShader != null)
+		{
+			if(controls.UI_LEFT)
+				swagShader.hue -= elapsed * 0.1;
+			if(controls.UI_RIGHT)
+				swagShader.hue += elapsed * 0.1;
+		}
 
 		super.update(elapsed);
 	}

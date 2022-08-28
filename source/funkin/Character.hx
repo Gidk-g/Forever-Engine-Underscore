@@ -481,8 +481,6 @@ class Character extends FNFSprite
 			flipX = !!flipX;
 		}
 
-		antialiasing = (!character.endsWith('-pixel') || !Init.trueSettings.get('Disable Antialiasing'));
-
 		if (animation.getByName('danceLeft') != null)
 			playAnim('danceLeft');
 		else

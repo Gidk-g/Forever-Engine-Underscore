@@ -17,21 +17,52 @@ import haxe.Json;
 import sys.FileSystem;
 import sys.io.File;
 
+/**
+* this state is a mess, will clean it up later
+**/
+
 typedef CreditsDataDef =
 {
-	data:Array<Dynamic>,
-	name:String,
-	icon:String,
-	desc:String,
-	quote:String,
-	url:Array<Array<String>>,
-	color:Array<FlxColor>,
-	offsetX:Int,
-	offsetY:Int,
-	size:Float,
+	/**
+	* menu preferences;
+	* background, background color, and whether it should change colors when selecting a user;
+	**/
 	menuBG:String,
 	menuBGColor:Array<FlxColor>,
 	colorTween:Bool,
+
+	/**
+	* array with credits data;
+	**/
+	data:Array<Dynamic>,
+
+	/**
+	* the user's name;
+	**/
+	name:String,
+
+	/**
+	* an array with icon information;
+	* usage: ["iconName", horizontalOffset, verticalOffset, size],
+	**/
+	iconArray:Array<Dynamic>,
+
+	/**
+	* description for this user, along with (an optional) quote.
+	* usage: ["Description", "quote"],
+	**/
+	textArray:Array<String>,
+
+	/**
+	 * an array full of social media links and names;
+	 * usage: [["Example", "urlExample.com"], ["url2", "url2.com"]],
+	 **/
+	url:Array<Array<String>>,
+
+	/**
+	* an array with integers, for the background color when selecting a user;
+	**/
+	color:Array<FlxColor>,
 }
 
 class CreditsMenuState extends MusicBeatState
@@ -89,10 +120,11 @@ class CreditsMenuState extends MusicBeatState
 
 			if (selectableItem(i))
 			{
-				var curIcon = 'credits/${creditsData.data[i][1]}';
-				var icon:AbsoluteSprite = new AbsoluteSprite(curIcon, alphabet, creditsData.data[i][6], creditsData.data[i][7]);
-				if (creditsData.data[i][8] != null)
-					icon.setGraphicSize(Std.int(icon.width * creditsData.data[i][8]));
+				var curIcon = 'credits/${creditsData.data[i][1][0]}';
+				var icon:AbsoluteSprite = new AbsoluteSprite(curIcon, alphabet, creditsData.data[i][1][1], creditsData.data[i][1][2]);
+
+				if (creditsData.data[i][1][3] != null)
+					icon.setGraphicSize(Std.int(icon.width * creditsData.data[i][1][3]));
 
 				if (creditsData.data[i][1].length <= 1 || creditsData.data[i][1] == null)
 					icon.visible = false;
@@ -121,41 +153,11 @@ class CreditsMenuState extends MusicBeatState
 
 	var holdTime:Float = 0;
 
-	var finalText:String;
-	var textValue:String = '';
-	var infoTimer:FlxTimer;
-
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
-		if (fullText != null)
-		{
-			// lol had to set this or else itd tell me expected }
-			if (fullText == null)
-				fullText = "";
-
-			if (finalText != fullText)
-			{
-				// trace('call??');
-				// trace(fullText);
-				regenInfoText();
-
-				var textSplit = [];
-				finalText = fullText;
-				textSplit = finalText.split("");
-
-				var loopTimes = 0;
-				infoTimer = new FlxTimer().start(0.025, function(tmr:FlxTimer)
-				{
-					//
-					infoText.text += textSplit[loopTimes];
-					infoText.screenCenter(X);
-
-					loopTimes++;
-				}, textSplit.length);
-			}
-		}
+		infoText.screenCenter(X);
 
 		var shiftMult:Int = 1;
 		if (FlxG.keys.pressed.SHIFT)
@@ -193,7 +195,6 @@ class CreditsMenuState extends MusicBeatState
 		 * Hold Scrolling Code
 		 * @author ShadowMario
 		**/
-
 		if (controls.UI_DOWN || controls.UI_UP)
 		{
 			var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
@@ -219,16 +220,8 @@ class CreditsMenuState extends MusicBeatState
 			Paths.clearUnusedMemory();
 		}
 
-		if (controls.ACCEPT || FlxG.mouse.justPressed && doChecks(4, curSocial, 1))
-			CoolUtil.browserLoad(creditsData.data[curSelected][4][curSocial][1]);
-	}
-
-	function regenInfoText()
-	{
-		if (infoTimer != null)
-			infoTimer.cancel();
-		if (infoText != null)
-			infoText.text = "";
+		if (controls.ACCEPT || FlxG.mouse.justPressed && doChecks(3, curSocial, 1))
+			CoolUtil.browserLoad(creditsData.data[curSelected][3][curSocial][1]);
 	}
 
 	public function changeSelection(hey:Int = 0)
@@ -247,8 +240,8 @@ class CreditsMenuState extends MusicBeatState
 
 		if (creditsData.colorTween)
 		{
-			var color:FlxColor = FlxColor.fromRGB(creditsData.data[curSelected][5][0], creditsData.data[curSelected][5][1],
-				creditsData.data[curSelected][5][2]);
+			var color:FlxColor = FlxColor.fromRGB(creditsData.data[curSelected][4][0], creditsData.data[curSelected][4][1],
+				creditsData.data[curSelected][4][2]);
 			if (bgTween != null)
 				bgTween.cancel();
 
@@ -286,11 +279,11 @@ class CreditsMenuState extends MusicBeatState
 
 		curSocial += huh;
 		if (curSocial < 0)
-			curSocial = creditsData.data[curSelected][4][0].length - 1;
-		if (curSocial >= creditsData.data[curSelected][4].length)
+			curSocial = creditsData.data[curSelected][3][0].length - 1;
+		if (curSocial >= creditsData.data[curSelected][3].length)
 			curSocial = 0;
 
-		// iconSocial.updateAnim(data[curSelected][4][curSocial][0]);
+		// iconSocial.updateAnim(data[curSelected][3][curSocial][0]);
 	}
 
 	public function updateInfoText()
@@ -300,16 +293,16 @@ class CreditsMenuState extends MusicBeatState
 		fullText = '';
 
 		// description
-		if (data[curSelected][2] != null && data[curSelected][2].length >= 1)
-			fullText += data[curSelected][2];
+		if (data[curSelected][2][0] != null && data[curSelected][2][0].length >= 1)
+			fullText += data[curSelected][2][0];
 
 		// quotes
-		if (data[curSelected][3] != null && data[curSelected][3].length >= 1)
-			fullText += ' - "' + data[curSelected][3] + '"';
+		if (data[curSelected][2][1] != null && data[curSelected][2][1].length >= 1)
+			fullText += ' - "' + data[curSelected][2][1] + '"';
 
 		// socials
-		if (doChecks(4, curSocial, 0))
-			fullText += ' • Visit: <' + data[curSelected][4][curSocial][0] + '>';
+		if (doChecks(3, curSocial, 0))
+			fullText += ' • Visit: <' + data[curSelected][3][curSocial][0] + '>';
 
 		infoText.text = fullText;
 	}
