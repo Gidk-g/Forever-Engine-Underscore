@@ -238,7 +238,7 @@ class PlayState extends MusicBeatState
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 
-		setupScripts();
+		getScripts();
 
 		callFunc('create', []);
 
@@ -2249,7 +2249,7 @@ class PlayState extends MusicBeatState
 	function callTextbox()
 	{
 		var dialogPath = Paths.json(SONG.song.toLowerCase() + '/dialogue');
-		if (sys.FileSystem.exists(dialogPath))
+		if (Assets.exists(dialogPath))
 		{
 			startedCountdown = false;
 
@@ -2414,29 +2414,26 @@ class PlayState extends MusicBeatState
 		return true;
 	}
 
-	function setupScripts()
+	function getScripts()
 	{
-		var fools:Array<String> = [
-			Paths.getPreloadPath('scripts/'),
-			Paths.getPreloadPath('songs/${SONG.song.toLowerCase().replace(' ', '-')}/')
-		];
+		var folders:Array<String> = [Paths.getPreloadPath('scripts/'), Paths.getPreloadPath('songs/' + CoolUtil.dashToSpace(SONG.song.toLowerCase()) + '/')];
+
 		var pushedScripts:Array<String> = [];
 
-		// BROKEN AND NOT REALLY WORKING WITH MODS RN
-		/*for (fool in fools)
+		for (folder in folders)
+		{
+			if (Assets.exists(folder))
 			{
-				if (Assets.exists(fool))
+				for (file in FileSystem.readDirectory(folder))
 				{
-					for (file in FileSystem.readDirectory(fool))
+					if (file.endsWith('.hx') && !pushedScripts.contains(file))
 					{
-						if (file.endsWith('.hx') && !pushedScripts.contains(file))
-						{
-							scriptArray.push(new ScriptHandler(fool.replace('.', '') + file));
-							pushedScripts.push(file);
-						}
+						scriptArray.push(new ScriptHandler(folders + file));
+						pushedScripts.push(file);
 					}
 				}
-		}*/
+			}
+		}
 	}
 
 	function completeTween(id:String)

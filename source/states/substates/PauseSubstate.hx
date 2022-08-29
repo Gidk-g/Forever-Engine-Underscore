@@ -18,6 +18,7 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import funkin.Alphabet;
 import funkin.Highscore;
+import openfl.Assets;
 import states.*;
 import states.menus.*;
 import sys.FileSystem;
@@ -50,8 +51,8 @@ class PauseSubstate extends MusicBeatSubstate
 		for (i in CoolUtil.difficulties)
 		{
 			// check for existance of difficulty files, and then push said files to the difficulty array as an entry;
-			if (FileSystem.exists(Paths.songJson(CoolUtil.dashToSpace(PlayState.SONG.song), CoolUtil.dashToSpace(PlayState.SONG.song) + '-' + i))
-				|| (FileSystem.exists(Paths.songJson(CoolUtil.dashToSpace(PlayState.SONG.song), CoolUtil.dashToSpace(PlayState.SONG.song))) && i == "NORMAL"))
+			if (Assets.exists(Paths.songJson(CoolUtil.dashToSpace(PlayState.SONG.song), CoolUtil.dashToSpace(PlayState.SONG.song) + '-' + i))
+				|| (Assets.exists(Paths.songJson(CoolUtil.dashToSpace(PlayState.SONG.song), CoolUtil.dashToSpace(PlayState.SONG.song))) && i == "NORMAL"))
 				difficultyArray.push(i);
 		}
 

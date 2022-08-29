@@ -1,13 +1,12 @@
 package base.mods;
 
 #if MOD_HANDLER
-import polymod.Polymod;
+import polymod.*;
+import polymod.Polymod.ModMetadata;
+import polymod.Polymod.PolymodError;
 import polymod.backends.OpenFLBackend;
 import polymod.backends.PolymodAssets.PolymodAssetType;
 import polymod.format.ParseRules;
-import polymod.format.ParseRules.LinesParseFormat;
-import polymod.format.ParseRules.TextFileFormat;
-#end
 
 class ModHandler
 {
@@ -160,7 +159,6 @@ class ModHandler
 	#end
 }
 
-#if MOD_HANDLER
 class ModBackend extends OpenFLBackend
 {
 	public function new()

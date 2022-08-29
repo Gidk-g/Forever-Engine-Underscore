@@ -198,8 +198,8 @@ class FreeplayState extends MusicBeatState
 		var coolDiffs = [];
 
 		for (i in CoolUtil.difficulties)
-			if (FileSystem.exists(Paths.songJson(songName, songName + '-' + i))
-				|| (FileSystem.exists(Paths.songJson(songName, songName)) && i == "NORMAL"))
+			if (Assets.exists(Paths.songJson(songName, songName + '-' + i))
+				|| (Assets.exists(Paths.songJson(songName, songName)) && i == "NORMAL"))
 				coolDiffs.push(i);
 
 		if (coolDiffs.length > 0)
