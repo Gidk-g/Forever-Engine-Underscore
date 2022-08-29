@@ -55,7 +55,7 @@ class ScriptHandler extends SScript
 
 class ScriptFuncs extends PlayState
 {
-	public static function callBaseVars()
+	public static function setBaseVars()
 	{
 		PlayState.contents.setVar('fnfVer', Application.current.meta.get('version'));
 		PlayState.contents.setVar('foreverVer', Main.foreverVersion);

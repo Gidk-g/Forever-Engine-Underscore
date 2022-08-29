@@ -467,7 +467,8 @@ class Character extends FNFSprite
 		setVar('curStage', PlayState.curStage);
 		setVar('song', PlayState.SONG.song.toLowerCase());
 
-		callFunc('loadAnimations', null);
+		for (i in scriptArray)
+			i.call('loadAnimations', []);
 
 		if (adjustPos)
 		{
@@ -485,17 +486,6 @@ class Character extends FNFSprite
 			playAnim('danceLeft');
 		else
 			playAnim('idle');
-	}
-
-	public function callFunc(key:String, value:Dynamic)
-	{
-		for (i in scriptArray)
-		{
-			if (i.exists(key))
-				i.get(key)(value);
-		}
-
-		return key;
 	}
 
 	public function setVar(key:String, value:Dynamic):Bool

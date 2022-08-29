@@ -138,7 +138,7 @@ class CreditsMenuState extends MusicBeatState
 		}
 
 		infoText = new FlxText(5, FlxG.height - 24, 0, "", 32);
-		infoText.setFormat("VCR OSD Mono", 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		infoText.setFormat(Paths.font('vcr.ttf'), 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		infoText.textField.background = true;
 		infoText.textField.backgroundColor = FlxColor.BLACK;
 		add(infoText);
@@ -167,7 +167,6 @@ class CreditsMenuState extends MusicBeatState
 		{
 			curSocial = 0;
 			changeSelection(-shiftMult);
-			updateInfoText();
 			holdTime = 0;
 		}
 
@@ -175,20 +174,17 @@ class CreditsMenuState extends MusicBeatState
 		{
 			curSocial = 0;
 			changeSelection(shiftMult);
-			updateInfoText();
 			holdTime = 0;
 		}
 
 		if (controls.UI_LEFT_P)
 		{
 			changeSocial(-shiftMult);
-			updateInfoText();
 		}
 
 		if (controls.UI_RIGHT_P)
 		{
 			changeSocial(shiftMult);
-			updateInfoText();
 		}
 
 		/**
@@ -204,14 +200,12 @@ class CreditsMenuState extends MusicBeatState
 			if (holdTime > 0.5 && checkNewHold - checkLastHold > 0)
 			{
 				changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
-				updateInfoText();
 			}
 		}
 
 		if (FlxG.mouse.wheel != 0)
 		{
 			changeSelection(-shiftMult * FlxG.mouse.wheel);
-			updateInfoText();
 		}
 
 		if (controls.BACK || FlxG.mouse.justPressedRight)
@@ -269,6 +263,8 @@ class CreditsMenuState extends MusicBeatState
 				item.alpha = 1;
 			}
 		}
+
+		updateInfoText();
 	}
 
 	public function changeSocial(huh:Int = 0) // HUH???

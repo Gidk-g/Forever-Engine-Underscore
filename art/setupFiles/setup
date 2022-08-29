@@ -16,4 +16,4 @@ haxelib install hxcpp-debug-server
 haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons
 haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
 haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons
-haxelib git SScript https://github.com/TheWorldMachine/SScript
+haxelib git SScript https://github.com/BeastlyGhost/SScript-OpenFL

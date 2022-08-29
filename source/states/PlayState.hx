@@ -240,7 +240,7 @@ class PlayState extends MusicBeatState
 
 		setupScripts();
 
-		callFunc('create', null);
+		callFunc('create', []);
 
 		// cache shit
 		displayRating('sick', 'early', true);
@@ -428,7 +428,7 @@ class PlayState extends MusicBeatState
 		precacheImages();
 		precacheSounds();
 
-		callFunc('postCreate', null);
+		callFunc('postCreate', []);
 	}
 
 	/**
@@ -603,7 +603,7 @@ class PlayState extends MusicBeatState
 
 	override public function destroy()
 	{
-		callFunc('destroy', null);
+		callFunc('destroy', []);
 
 		if (!Init.trueSettings.get('Controller Mode'))
 		{
@@ -625,7 +625,7 @@ class PlayState extends MusicBeatState
 	{
 		super.update(elapsed);
 
-		callFunc('update', elapsed);
+		callFunc('update', [elapsed]);
 
 		if (Init.trueSettings.get('Stage Opacity') > 0)
 			stageBuild.stageUpdateConstant(elapsed, boyfriend, gf, dadOpponent);
@@ -893,7 +893,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		callFunc('postUpdate', null);
+		callFunc('postUpdate', []);
 	}
 
 	// maybe theres a better place to put this, idk -saw
@@ -1273,7 +1273,7 @@ class PlayState extends MusicBeatState
 	{
 		if (!coolNote.wasGoodHit)
 		{
-			callFunc('goodNoteHit', coolNote);
+			callFunc('goodNoteHit', [coolNote, character]);
 
 			coolNote.wasGoodHit = true;
 			Conductor.songVocals.volume = 1;
@@ -1340,7 +1340,7 @@ class PlayState extends MusicBeatState
 
 	public function missNoteCheck(?includeAnimation:Bool = false, direction:Int = 0, character:Character, popMiss:Bool = false, lockMiss:Bool = false)
 	{
-		callFunc('missNoteCheck', null);
+		callFunc('missNoteCheck', []);
 
 		if (includeAnimation)
 		{
@@ -1510,7 +1510,7 @@ class PlayState extends MusicBeatState
 
 	public function pauseGame()
 	{
-		callFunc('pauseGame', null);
+		callFunc('pauseGame', []);
 
 		// pause discord rpc
 		updateRPC(true);
@@ -1787,7 +1787,7 @@ class PlayState extends MusicBeatState
 
 	function startSong():Void
 	{
-		callFunc('startSong', null);
+		callFunc('startSong', []);
 
 		startingSong = false;
 
@@ -1855,7 +1855,7 @@ class PlayState extends MusicBeatState
 
 		Conductor.resyncBySteps();
 
-		callFunc('stepHit', curStep);
+		callFunc('stepHit', [curStep]);
 	}
 
 	public var characterArray:Array<Character> = [];
@@ -1903,7 +1903,7 @@ class PlayState extends MusicBeatState
 
 	function doGameOverCheck()
 	{
-		callFunc('doGameOverCheck', null);
+		callFunc('doGameOverCheck', []);
 
 		if (!practiceMode && health <= 0 && !isDead)
 		{
@@ -1956,7 +1956,7 @@ class PlayState extends MusicBeatState
 		if (Init.trueSettings.get('Stage Opacity') > 0)
 			stageBuild.stageUpdate(curBeat, boyfriend, gf, dadOpponent);
 
-		callFunc('beatHit', curBeat);
+		callFunc('beatHit', [curBeat]);
 	}
 
 	//
@@ -2006,7 +2006,7 @@ class PlayState extends MusicBeatState
 
 		Paths.clearUnusedMemory();
 
-		callFunc('closeSubState', null);
+		callFunc('closeSubState', []);
 
 		super.closeSubState();
 	}
@@ -2019,7 +2019,7 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
-		callFunc('endSong', null);
+		callFunc('endSong', []);
 
 		if (!canMiss)
 			health = 0;
@@ -2160,7 +2160,7 @@ class PlayState extends MusicBeatState
 
 	public function songIntroCutscene()
 	{
-		callFunc('songIntroCutscene', null);
+		callFunc('songIntroCutscene', []);
 		switch (curSong.toLowerCase())
 		{
 			case "winter-horrorland":
@@ -2294,7 +2294,7 @@ class PlayState extends MusicBeatState
 
 		camHUD.visible = true;
 
-		callFunc('startCountdown', null);
+		callFunc('startCountdown', []);
 
 		startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 		{
@@ -2380,7 +2380,7 @@ class PlayState extends MusicBeatState
 					Conductor.songPosition = -(Conductor.crochet * 1);
 			}
 
-			callFunc('onCountdownTick', swagCounter);
+			callFunc('onCountdownTick', [swagCounter]);
 			swagCounter += 1;
 		}, 5);
 	}
@@ -2392,18 +2392,15 @@ class PlayState extends MusicBeatState
 		return super.add(Object);
 	}
 
-	public function callFunc(key:String, value:Dynamic)
+	public function callFunc(key:String, args:Array<Dynamic>)
 	{
 		for (i in scriptArray)
-		{
-			if (i.exists(key))
-				i.get(key)(value);
-		}
-
+			i.call(key, args);
+		
 		if (generatedMusic)
 		{
-			ScriptHandler.ScriptFuncs.callBaseVars();
-			callPlayStateVars();
+			ScriptHandler.ScriptFuncs.setBaseVars();
+			setPlayStateVars();
 		}
 
 		return key;
@@ -2444,11 +2441,11 @@ class PlayState extends MusicBeatState
 
 	function completeTween(id:String)
 	{
-		callFunc('completeTween', null);
+		callFunc('completeTween', []);
 		// add your custom actions for finishing a tween here;
 	}
 
-	function callPlayStateVars()
+	function setPlayStateVars()
 	{
 		// PlayState values
 		setVar('song', PlayState.SONG);

@@ -663,8 +663,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				}
 		}
 
-		if (stageScript.exists('repositionPlayers'))
-			stageScript.get('repositionPlayers')(boyfriend, dad, gf);
+		stageScript.call('repositionPlayers', [boyfriend, dad, gf]);
 	}
 
 	var curLight:Int = 0;
@@ -760,8 +759,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 			}
 		}
 
-		if (stageScript.exists('updateStage'))
-			stageScript.get('updateStage')(curBeat);
+		stageScript.call('updateStage', [curBeat]);
 	}
 
 	public function stageUpdateConstant(elapsed:Float, boyfriend:Character, gf:Character, dadOpponent:Character)
@@ -783,8 +781,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				moveTank();
 		}
 
-		if (stageScript.exists('updateStageConst'))
-			stageScript.get('updateStageConst')(elapsed);
+		stageScript.call('updateStageConst', [elapsed]);
 	}
 
 	// PHILLY STUFFS!
@@ -968,7 +965,6 @@ class Stage extends FlxTypedGroup<FlxBasic>
 		stageScript.set('stageName', curStage);
 		stageScript.set('Conductor', Conductor);
 
-		if (stageScript.exists('generateStage'))
-			stageScript.get('generateStage')();
+		stageScript.call('generateStage', []);
 	}
 }
