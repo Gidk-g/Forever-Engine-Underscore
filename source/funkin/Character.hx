@@ -112,9 +112,7 @@ class Character extends FNFSprite
 		if (icon == null)
 			icon = character;
 
-		antialiasing = (!character.endsWith('-pixel') || !Init.trueSettings.get('Disable Antialiasing'));
-
-		var psychChar = Assets.exists(Paths.getPreloadPath('characters/$character/' + character + '.json'));8
+		var psychChar = Assets.exists(Paths.getPreloadPath('characters/$character/' + character + '.json'));
 
 		switch (character)
 		{
