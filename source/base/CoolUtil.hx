@@ -134,9 +134,7 @@ class CoolUtil
 		if (!file.endsWith('/'))
 			file = '$file/';
 
-		var path:String = Paths.getModpack(file);
-		if (!FileSystem.exists(path))
-			path = Paths.rawPath(file);
+		var path:String = Paths.rawPath(file);
 
 		var absolutePath:String = FileSystem.absolutePath(path);
 		var directory:Array<String> = FileSystem.readDirectory(absolutePath);
