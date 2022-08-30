@@ -43,7 +43,7 @@ class MainMenuState extends MusicBeatState
 	{
 		super.create();
 
-		CreditsMenuState.offsetNumbers = false;
+		CreditsState.repositionNumbers = false;
 
 		// make sure the music is playing
 		ForeverTools.resetMenuMusic();
@@ -290,7 +290,7 @@ class MainMenuState extends MusicBeatState
 			case 'freeplay':
 				Main.switchState(this, new FreeplayState());
 			case 'donate':
-				Main.switchState(this, new CreditsMenuState());
+				Main.switchState(this, new CreditsState());
 			case 'options':
 				PauseSubstate.toOptions = false;
 				transIn = FlxTransitionableState.defaultTransIn;

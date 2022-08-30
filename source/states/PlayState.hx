@@ -614,6 +614,14 @@ class PlayState extends MusicBeatState
 		GraphicMap.clear();
 		ShaderMap.clear();
 
+		// clear scripts;
+		scriptArray = [];
+
+		// just to be sure;
+		gf.charScripts = [];
+		boyfriend.charScripts = [];
+		dadOpponent.charScripts = [];
+
 		super.destroy();
 	}
 
@@ -714,6 +722,7 @@ class PlayState extends MusicBeatState
 					preventScoring = true;
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 					bfStrums.autoplay = !bfStrums.autoplay;
+					canMiss = !canMiss;
 					uiHUD.autoplayMark.visible = bfStrums.autoplay;
 					uiHUD.autoplayMark.alpha = 1;
 					uiHUD.autoplaySine = 0;
@@ -812,7 +821,7 @@ class PlayState extends MusicBeatState
 			var lerpVal = (elapsed * 2.4) * cameraSpeed;
 			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 
-			var easeLerp = 1 - (0.05 * (60 / FlxG.stage.window.frameRate));
+			var easeLerp = 1 - Main.framerateAdjust(0.05);
 
 			// camera stuffs
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom + forceZoom[0], FlxG.camera.zoom, easeLerp);
@@ -1048,9 +1057,11 @@ class PlayState extends MusicBeatState
 
 								Conductor.songVocals.volume = 0;
 								if (canMiss)
+								{
 									missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, boyfriend, true);
-								// ambiguous name
-								Timings.updateAccuracy(0);
+									// ambiguous name
+									Timings.updateAccuracy(0);
+								}
 							}
 							else if (daNote.isSustainNote)
 							{
@@ -1450,9 +1461,7 @@ class PlayState extends MusicBeatState
 
 				var curSection = Std.int(curStep / 16);
 
-				var gfSec = (SONG.notes[Math.floor(curStep / 16)] != null) && (SONG.notes[Math.floor(curStep / 16)].gfSection);
-
-				if (daNote.gfNote || gfSec)
+				if (daNote.gfNote || (SONG.notes[curSection] != null) && (SONG.notes[curSection].gfSection))
 					char = gf;
 
 				goodNoteHit(daNote, char, strumline, canDisplayJudgement);
@@ -2402,38 +2411,37 @@ class PlayState extends MusicBeatState
 			ScriptHandler.ScriptFuncs.setBaseVars();
 			setPlayStateVars();
 		}
-
-		return key;
 	}
 
-	public function setVar(key:String, value:Dynamic):Bool
+	public function setVar(key:String, value:Dynamic)
 	{
+		var allSucceed:Bool = true;
 		for (i in scriptArray)
+		{
 			i.set(key, value);
 
-		return true;
+			if (!i.exists(key))
+			{
+				trace('${i.scriptFile} failed to set $key for its interpreter, continuing.');
+				allSucceed = false;
+				continue;
+			}
+		}
+		return allSucceed; 
 	}
 
 	function getScripts()
 	{
-		var folders:Array<String> = [Paths.getPreloadPath('scripts/'), Paths.getPreloadPath('songs/' + CoolUtil.dashToSpace(SONG.song.toLowerCase()) + '/')];
-
-		var pushedScripts:Array<String> = [];
-
-		for (folder in folders)
-		{
-			if (Assets.exists(folder))
-			{
-				for (file in FileSystem.readDirectory(folder))
-				{
-					if (file.endsWith('.hx') && !pushedScripts.contains(file))
-					{
-						scriptArray.push(new ScriptHandler(folders + file));
-						pushedScripts.push(file);
-					}
-				}
-			}
-		}
+		var fools:Array<Array<String>> = [
+			CoolUtil.absoluteDirectory('scripts'),
+			CoolUtil.absoluteDirectory('songs/${SONG.song.toLowerCase().replace(' ', '-')}')
+		]; 
+		
+		for (fool in fools)
+			for (shit in fool)
+				if (fool.length > 0)
+					if (shit.length > 0 && shit.endsWith('.hx'))
+						scriptArray.push(new ScriptHandler(shit));
 	}
 
 	function completeTween(id:String)

@@ -82,7 +82,7 @@ class Character extends FNFSprite
 	public var isPlayer:Bool = false;
 	public var quickDancer:Bool = false;
 
-	public var scriptArray:Array<ScriptHandler> = [];
+	public var charScripts:Array<ScriptHandler> = [];
 
 	public var idleSuffix:String = '';
 
@@ -337,8 +337,7 @@ class Character extends FNFSprite
 
 	function generateBaseChar(char:String = 'bf')
 	{
-		var path:String = Paths.getPreloadPath('characters/$char/config.hx');
-		var scripts:Array<String> = [path];
+		var scripts:Array<String> = [Paths.getPreloadPath('characters/$char/config.hx')];
 
 		var pushedScripts:Array<String> = [];
 
@@ -354,7 +353,7 @@ class Character extends FNFSprite
 					continue;
 				}
 
-				scriptArray.push(script);
+				charScripts.push(script);
 				pushedScripts.push(i);
 			}
 		}
@@ -465,7 +464,7 @@ class Character extends FNFSprite
 		setVar('curStage', PlayState.curStage);
 		setVar('song', PlayState.SONG.song.toLowerCase());
 
-		for (i in scriptArray)
+		for (i in charScripts)
 			i.call('loadAnimations', []);
 
 		if (adjustPos)
@@ -488,7 +487,7 @@ class Character extends FNFSprite
 
 	public function setVar(key:String, value:Dynamic):Bool
 	{
-		for (i in scriptArray)
+		for (i in charScripts)
 			i.set(key, value);
 
 		return true;

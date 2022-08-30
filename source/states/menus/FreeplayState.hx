@@ -352,6 +352,9 @@ class FreeplayState extends MusicBeatState
 		var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(),
 			CoolUtil.difficulties.indexOf(existingDifficulties[curSelected][curDifficulty]));
 
+		if (existingDifficulties[curSelected][curDifficulty] == null)
+			return;
+
 		PlayState.SONG = Song.loadSong(poop, songs[curSelected].songName.toLowerCase());
 		PlayState.isStoryMode = false;
 		PlayState.storyDifficulty = curDifficulty;

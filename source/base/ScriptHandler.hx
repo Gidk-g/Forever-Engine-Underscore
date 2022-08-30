@@ -20,36 +20,23 @@ class ScriptHandler extends SScript
 	public function new(file:String, ?preset:Bool = true)
 	{
 		super(file, preset);
+		traces = false;
 	}
 
 	override public function preset():Void
 	{
 		super.preset();
 
-		interp.variables.set('FlxG', FlxG);
-		interp.variables.set('FlxBasic', FlxBasic);
-		interp.variables.set('FlxObject', FlxObject);
-		interp.variables.set('FlxCamera', FlxCamera);
-		interp.variables.set('FlxSprite', FlxSprite);
-		interp.variables.set('FlxTimer', FlxTimer);
-		interp.variables.set('FlxTween', FlxTween);
-		interp.variables.set('FlxEase', FlxEase);
-		interp.variables.set('FlxMath', FlxMath);
-		interp.variables.set('FlxSound', FlxSound);
-		interp.variables.set("Polymod", polymod.Polymod);
-		interp.variables.set("Assets", openfl.utils.Assets);
-		interp.variables.set("LimeAssets", lime.utils.Assets);
-		interp.variables.set("StringTools", StringTools);
-		interp.variables.set("Math", Math);
-		interp.variables.set("Std", Std);
-		interp.variables.set("Paths", Paths);
-		interp.variables.set("PlayState", states.PlayState);
-		interp.variables.set("Conductor", base.Conductor);
-		interp.variables.set("CoolUtil", base.CoolUtil);
-		interp.variables.set('Controls', base.Controls);
-		interp.variables.set('Note', funkin.Note);
-		interp.variables.set('Strumline', funkin.Strumline);
-		interp.variables.set('Timings', funkin.Timings);
+		set('FlxG', FlxG);
+		set('FlxBasic', FlxBasic);
+		set('FlxObject', FlxObject);
+		set('FlxCamera', FlxCamera);
+		set('FlxSprite', FlxSprite);
+		set('FlxTimer', FlxTimer);
+		set('FlxTween', FlxTween);
+		set('FlxEase', FlxEase);
+		set('FlxMath', FlxMath);
+		set('FlxSound', FlxSound);
 	}
 }
 

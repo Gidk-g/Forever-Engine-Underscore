@@ -9,12 +9,12 @@ import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
 import funkin.Character.CharacterType;
 import haxe.Json;
-import openfl.utils.Assets;
 import openfl.display.BitmapData;
 import openfl.display3D.textures.Texture;
 import openfl.media.Sound;
 import openfl.system.System;
 import openfl.utils.AssetType;
+import openfl.utils.Assets;
 import sys.io.File;
 
 using StringTools;
@@ -23,7 +23,7 @@ using StringTools;
 	future chart types support (unfinished!)
 	code taken from: FNF-Forever-Engine, https://github.com/Yoshubs/FNF-Forever-Engine
 **/
-@:enum abstract ChartType(String) to String
+enum abstract ChartType(String) to String
 {
 	var FNF;
 	var FNF_LEGACY;
@@ -32,7 +32,7 @@ using StringTools;
 	var PSYCH;
 }
 
-class Paths
+final class Paths
 {
 	// Here we set up the paths class. This will be used to
 	// Return the paths of assets and call on those assets as well.
@@ -227,7 +227,7 @@ class Paths
 	}
 
 	//
-	inline public static function getPath(file:String, type:AssetType, ?library:Null<String>)
+	inline public static function getPath(file:String, ?type:AssetType, ?library:Null<String>)
 	{
 		/*
 				Okay so, from what I understand, this loads in the current path based on the level
@@ -293,6 +293,11 @@ class Paths
 		if (!Assets.exists(returnPath))
 			returnPath = CoolUtil.swapSpaceDash(returnPath);
 		return returnPath;
+	}
+
+	public static function rawPath(file:String)
+	{
+		return 'assets/$file';
 	}
 
 	inline static public function file(file:String, type:AssetType = TEXT, ?library:String)

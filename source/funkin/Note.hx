@@ -47,6 +47,7 @@ class Note extends FNFSprite
 
 	public var hitSounds:Bool = true;
 	public var badNote:Bool = false;
+	public var cpuPress:Bool = false;
 	public var gfNote:Bool = false;
 
 	public var hitsoundSuffix = '';
@@ -86,6 +87,7 @@ class Note extends FNFSprite
 				hitSounds = false;
 				badNote = true;
 				gfNote = false;
+				cpuPress = true;
 			default: // anything else
 				hitSounds = true;
 				badNote = false;

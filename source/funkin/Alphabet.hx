@@ -9,7 +9,7 @@ import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
-import states.menus.CreditsMenuState;
+import states.menus.CreditsState;
 
 using StringTools;
 
@@ -47,6 +47,7 @@ class Alphabet extends FlxSpriteGroup
 	public var widthOfWords:Float = FlxG.width;
 
 	public var finishedLine:Bool = false;
+	public var typed:Bool = false;
 
 	var yMulti:Float = 1;
 
@@ -66,6 +67,12 @@ class Alphabet extends FlxSpriteGroup
 	public var playSounds:Bool = true;
 	public var lastPlayed:Int = 0;
 
+	// psych changetext stuff, credits for @Shadow_Mario_, he's epic and he's currently watching me coding this atm!! lol;
+	var consecutiveSpaces:Int = 0;
+	var loopNum:Int = 0;
+	var xPos:Float = 0;
+	var curRow:Int = 0;
+
 	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = false, typed:Bool = false, ?textSize:Float = 1)
 	{
 		super(x, y);
@@ -76,6 +83,45 @@ class Alphabet extends FlxSpriteGroup
 		this.textSize = textSize;
 
 		startText(text, typed);
+	}
+
+	public function changeText(newText:String, newTextSpeed:Float = -1)
+	{
+		for (i in 0...arrayLetters.length) {
+			var letter = arrayLetters[0];
+			letter.destroy();
+			remove(letter);
+			arrayLetters.remove(letter);
+		}
+		arrayLetters = [];
+		splitWords = [];
+		loopNum = 0;
+		xPos = 0;
+		curRow = 0;
+		consecutiveSpaces = 0;
+		xPosResetted = false;
+		finishedLine = false;
+		lastSprite = null;
+
+		var lastX = x;
+		x = 0;
+		_finalText = newText;
+		text = newText;
+		if(newTextSpeed != -1) {
+			textSpeed = newTextSpeed;
+		}
+
+		if (text != "") {
+			if (typed)
+			{
+				startTypedText();
+			} else {
+				addText();
+			}
+		} else {
+			finishedLine = true;
+		}
+		x = lastX;
 	}
 
 	public function startText(newText, typed)
@@ -110,7 +156,7 @@ class Alphabet extends FlxSpriteGroup
 		}
 	}
 
-	function destroyText():Void
+	public function destroyText():Void
 	{
 		for (_sprite in _sprites.copy())
 			_sprite.destroy();
@@ -197,11 +243,6 @@ class Alphabet extends FlxSpriteGroup
 
 		// Remove all the old garbage
 		destroyText();
-
-		var loopNum:Int = 0;
-
-		var xPos:Float = 0;
-		var curRow:Int = 0;
 
 		// Forget any potential old timers
 		if (swagTypingTimer != null)
@@ -425,7 +466,7 @@ class AlphaCharacter extends FlxSprite
 
 	public function createNumber(letter:String):Void
 	{
-		if (CreditsMenuState.offsetNumbers)
+		if (CreditsState.repositionNumbers)
 			y += 58;
 
 		animation.addByPrefix(letter, letter, 24);

@@ -19,6 +19,7 @@ import flixel.system.scaleModes.*;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import funkin.background.*;
+import openfl.Assets;
 import openfl.display.BlendMode;
 import openfl.display.BlendModeEffect;
 import openfl.display.GraphicsShader;
@@ -82,9 +83,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 
 	public var spawnGirlfriend:Bool = true;
 
-	public static var screenRes:String = '1280x720';
-
-	public static var stageScript:ScriptHandler;
+	public var stageScript:ScriptHandler;
 
 	public function new(curStage)
 	{
@@ -663,7 +662,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				}
 		}
 
-		stageScript.call('repositionPlayers', [boyfriend, dad, gf]);
+		callFunc('repositionPlayers', [boyfriend, dad, gf]);
 	}
 
 	var curLight:Int = 0;
@@ -759,7 +758,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 			}
 		}
 
-		stageScript.call('updateStage', [curBeat]);
+		callFunc('updateStage', [curBeat]);
 	}
 
 	public function stageUpdateConstant(elapsed:Float, boyfriend:Character, gf:Character, dadOpponent:Character)
@@ -781,7 +780,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				moveTank();
 		}
 
-		stageScript.call('updateStageConst', [elapsed]);
+		callFunc('updateStageConst', [elapsed]);
 	}
 
 	// PHILLY STUFFS!
@@ -854,9 +853,12 @@ class Stage extends FlxTypedGroup<FlxBasic>
 
 	function callStageScript()
 	{
-		stageScript = new ScriptHandler(Paths.getPreloadPath('stages/$curStage.hx'));
+		var path:String = Paths.getPreloadPath('stages/$curStage.hx');
 
-		stageScript.set('createSprite', function(spriteID:String, image:String, x:Float, y:Float, onForeground:Bool = false)
+		if (Assets.exists(path))
+			stageScript = new ScriptHandler(path);
+
+		setVar('createSprite', function(spriteID:String, image:String, x:Float, y:Float, onForeground:Bool = false)
 		{
 			var newSprite:FNFSprite = new FNFSprite(x, y).loadGraphic(Paths.image(image));
 			newSprite.updateHitbox();
@@ -870,7 +872,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 				add(newSprite);
 		});
 
-		stageScript.set('createAnimatedSprite',
+		setVar('createAnimatedSprite',
 			function(spriteID:String, key:String, spriteType:String, x:Float = 0, y:Float = 0, spriteAnims:Array<Array<Dynamic>>, defAnim:String,
 					onForeground:Bool = false)
 			{
@@ -901,7 +903,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 					add(newSprite);
 			});
 
-		stageScript.set('addSpriteAnimation', function(spriteID:String, newAnims:Array<Array<Dynamic>>)
+		setVar('addSpriteAnimation', function(spriteID:String, newAnims:Array<Array<Dynamic>>)
 		{
 			var gottenSprite:FNFSprite = PlayState.GraphicMap.get(spriteID);
 			for (anim in newAnims)
@@ -910,61 +912,77 @@ class Stage extends FlxTypedGroup<FlxBasic>
 			}
 		});
 
-		stageScript.set('addSpriteOffset', function(spriteID:String, anim:String, x:Float, y:Float)
+		setVar('addSpriteOffset', function(spriteID:String, anim:String, x:Float, y:Float)
 		{
 			var gottenSprite:FNFSprite = PlayState.GraphicMap.get(spriteID);
 			gottenSprite.addOffset(anim, x, y);
 		});
 
-		stageScript.set('spritePlayAnimation', function(spriteID:String, animToPlay:String, forced:Bool = true)
+		setVar('spritePlayAnimation', function(spriteID:String, animToPlay:String, forced:Bool = true)
 		{
 			var gottenSprite:FNFSprite = PlayState.GraphicMap.get(spriteID);
 			gottenSprite.animation.play(animToPlay, forced);
 		});
 
-		stageScript.set('setSpriteBlend', function(spriteID:String, blendString:String)
+		setVar('setSpriteBlend', function(spriteID:String, blendString:String)
 		{
 			var gottenSprite:FNFSprite = PlayState.GraphicMap.get(spriteID);
 			gottenSprite.blend = ForeverTools.getBlendFromString(blendString);
 		});
 
-		stageScript.set('setSpriteScrollFactor', function(spriteID:String, x:Float, y:Float)
+		setVar('setSpriteScrollFactor', function(spriteID:String, x:Float, y:Float)
 		{
 			var gottenSprite:FNFSprite = PlayState.GraphicMap.get(spriteID);
 			gottenSprite.scrollFactor.set(x, y);
 		});
 
-		stageScript.set('setSpriteSize', function(spriteID:String, newSize:Float)
+		setVar('setSpriteSize', function(spriteID:String, newSize:Float)
 		{
 			var gottenSprite:FNFSprite = PlayState.GraphicMap.get(spriteID);
 			gottenSprite.setGraphicSize(Std.int(gottenSprite.width * newSize));
 		});
 
-		stageScript.set('setSpriteAlpha', function(spriteID:String, newAlpha:Float)
+		setVar('setSpriteAlpha', function(spriteID:String, newAlpha:Float)
 		{
 			var gottenSprite:FNFSprite = PlayState.GraphicMap.get(spriteID);
 			gottenSprite.alpha = newAlpha;
 		});
 
-		stageScript.set('addSound', function(sndString:String = '')
+		setVar('addSound', function(sndString:String = '')
 		{
 			var sound:FlxSound;
 			sound = new FlxSound().loadEmbedded(Paths.sound(sndString));
 			FlxG.sound.list.add(sound);
 		});
 
-		stageScript.set('setStageZoom', function(newZoom:Float = 0.9)
+		setVar('setStageZoom', function(newZoom:Float = 0.9)
 		{
 			PlayState.defaultCamZoom = newZoom;
 		});
-		stageScript.set('spawnGirlfriend', function(bool:Bool = true)
+		setVar('spawnGirlfriend', function(bool:Bool = true)
 		{
 			spawnGirlfriend = bool;
 		});
 
-		stageScript.set('stageName', curStage);
-		stageScript.set('Conductor', Conductor);
+		setVar('stageName', curStage);
+		setVar('Conductor', Conductor);
 
-		stageScript.call('generateStage', []);
+		callFunc('generateStage', []);
+	}
+
+	public function callFunc(key:String, args:Array<Dynamic>):Dynamic
+	{
+		if (stageScript == null)
+            return null;
+		else
+			return stageScript.call(key, args);
+	}
+
+	public function setVar(key:String, value:Dynamic):Void
+	{
+        if (stageScript == null)
+            return;
+
+		return stageScript.set(key, value);
 	}
 }
