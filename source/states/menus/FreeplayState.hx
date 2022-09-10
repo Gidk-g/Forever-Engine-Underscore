@@ -90,28 +90,30 @@ class FreeplayState extends MusicBeatState
 			if (checkLock(WeekParser.weeksList[i]))
 				continue;
 
+			var baseWeek = WeekParser.loadedWeeks.get(WeekParser.weeksList[i]);
+
 			var songs:Array<String> = [];
 			var chars:Array<String> = [];
+			var colors:Array<FlxColor> = [];
 
-			if (!WeekParser.loadedWeeks.get(WeekParser.weeksList[i]).hideFreeplay) // no need to add week songs if they are hidden from the freeplay list;
+			if (!baseWeek.hideFreeplay) // no need to add week songs if they are hidden from the freeplay list;
 			{
-				var baseWeek = WeekParser.loadedWeeks.get(WeekParser.weeksList[i]);
-				var colorArray:Array<Int> = [255, 255, 255];
-				var songColor:Array<FlxColor> = [FlxColor.WHITE];
-
 				// push song names and characters;
 				for (i in 0...baseWeek.songs.length)
 				{
-					songs.push(baseWeek.songs[i].name);
-					chars.push(baseWeek.songs[i].character);
-					if (baseWeek.songs[i].colors != null)
-						colorArray = baseWeek.songs[i].colors;
+					var baseArray = baseWeek.songs[i];
+
+					songs.push(baseArray.name);
+					chars.push(baseArray.character);
+
+					// get out of my head get out of my head get out of my head GET OUT OF MY HEAD
+					if (baseArray.colors != null)
+						colors.push(FlxColor.fromRGB(baseArray.colors[0], baseArray.colors[1], baseArray.colors[2]));
+					else
+						colors.push(FlxColor.fromRGB(255, 255, 255));
 				}
 
-				if (colorArray != null)
-					songColor = [FlxColor.fromRGB(colorArray[0], colorArray[1], colorArray[2])];
-
-				addWeek(songs, i, chars, songColor);
+				addWeek(songs, i, chars, colors);
 			}
 
 			// add songs to the existing songs array to avoid duplicates;

@@ -34,23 +34,15 @@ class ForeverAssets
 			height = 12;
 		}
 
-		/*
-		var combo = group.recycle(FNFSprite, function()
-		{
-			var comboNum:FNFSprite = new FNFSprite();
-			comboNum.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary)), true, width, height);
-			comboNum.animation.add('combo', [(Std.parseInt(number) != null ? Std.parseInt(number) + 1 : 0) + (!allSicks ? 0 : 11)], 0, false);
-			//
-			return comboNum;
-		});
-		*/
+		var parsedNumber = Std.parseInt(number);
 
-		var combo:FNFSprite = new FNFSprite();
+		var combo = group.recycle(FNFSprite);
 		combo.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary)), true, width, height);
-		combo.animation.add('combo', [(Std.parseInt(number) != null ? Std.parseInt(number) + 1 : 0) + (!allSicks ? 0 : 11)], 0, false);
+		combo.animation.add('combo', [(parsedNumber != null ? parsedNumber + 1 : 0) + (!allSicks ? 0 : 11)], 0, false);
 
 		combo.alpha = 1;
 		combo.zDepth = -Conductor.songPosition;
+		combo.animation.play('combo');
 		combo.screenCenter();
 		combo.x += (43 * scoreInt) + 20;
 		combo.y += 60;
@@ -74,30 +66,13 @@ class ForeverAssets
 		combo.velocity.y = -FlxG.random.int(140, 160);
 		combo.velocity.x = FlxG.random.float(-5, 5);
 
-		combo.animation.play('combo');
-
 		return combo;
 	}
 
 	public static function generateRating(newRating:String, perfect:Bool, lateHit:Bool, group:FlxTypedGroup<FNFSprite>, assetModifier:String = 'base', changeableSkin:String = 'default',
 			baseLibrary:String):FNFSprite
 	{
-		/*
-		var rating = group.recycle(FNFSprite, function()
-		{
-			var judge:FNFSprite = new FNFSprite();
-			judge.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('judgements', assetModifier, changeableSkin, baseLibrary)), true,
-				assetModifier == 'pixel' ? 72 : 500, assetModifier == 'pixel' ? 32 : 163);
-
-			judge.animation.add(newRating, [
-				Std.int((Timings.judgementsMap.get(newRating)[0] * 2) + (perfect ? 0 : 2) + (lateHit ? 1 : 0))
-			], (assetModifier == 'pixel' ? 12 : 24), false);
-			//
-			return judge;
-		});
-		*/
-
-		var rating:FNFSprite = new FNFSprite();
+		var rating = group.recycle(FNFSprite);
 		rating.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('judgements', assetModifier, changeableSkin, baseLibrary)), true,
 			assetModifier == 'pixel' ? 72 : 500, assetModifier == 'pixel' ? 32 : 163);
 
@@ -107,6 +82,8 @@ class ForeverAssets
 
 		rating.alpha = 1;
 		rating.zDepth = -Conductor.songPosition;
+		rating.screenCenter();
+		rating.animation.play(newRating);
 
 		if (assetModifier == 'pixel')
 		{
@@ -119,14 +96,11 @@ class ForeverAssets
 			rating.setGraphicSize(Std.int(rating.frameWidth * 0.7));
 		}
 
-		rating.screenCenter();
-		rating.x = (FlxG.width * 0.55) - 40;
 		rating.y -= 60;
-		rating.acceleration.y = 550;
+		rating.x = (FlxG.width * 0.55) - 40;
 		rating.velocity.y = -FlxG.random.int(140, 175);
 		rating.velocity.x = -FlxG.random.int(0, 10);
-
-		rating.animation.play(newRating);
+		rating.acceleration.y = 550;
 
 		return rating;
 	}

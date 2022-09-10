@@ -124,10 +124,20 @@ class ClassHUD extends FlxTypedGroup<FlxBasic>
 		add(centerMark);
 
 		autoplayMark = new FlxText(-5, (Init.trueSettings.get('Downscroll') ? centerMark.y - 60 : centerMark.y + 60), FlxG.width - 800, "AUTOPLAY\n", 32);
-		autoplayMark.screenCenter(X);
 		autoplayMark.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
-		autoplayMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 1.25);
+		autoplayMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+		autoplayMark.screenCenter(X);
 		autoplayMark.visible = PlayState.bfStrums.autoplay;
+
+		// repositioning for it to not be covered by the receptors
+		if (Init.trueSettings.get('Centered Receptors'))
+		{
+			if (Init.trueSettings.get('Downscroll'))
+				autoplayMark.y = autoplayMark.y - 85;
+			else
+				autoplayMark.y = autoplayMark.y + 85;
+		}
+
 		add(autoplayMark);
 
 		traceBar = new FlxText(10, 20, 0, '', 16);

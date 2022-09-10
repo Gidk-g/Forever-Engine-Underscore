@@ -237,9 +237,6 @@ class PlayState extends MusicBeatState
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
 
-		// precaching judgements and combo;
-		popJudgement('sick', false, true);
-
 		GameOverSubstate.resetGameOver();
 
 		// set up a class for the stage type in here afterwards
@@ -1659,9 +1656,13 @@ class PlayState extends MusicBeatState
 	function popJudgement(newRating:String, lateHit:Bool, perfect:Bool)
 	{
 		var rating = ForeverAssets.generateRating('$newRating', perfect, lateHit, ratingsGroup, assetModifier, changeableSkin, 'UI');
-		add(rating);
 
-		FlxTween.tween(rating, {alpha: 0}, Conductor.stepCrochet / 1000, {
+		/**
+		 * Credits to Shadow_Mario_;
+		 */
+		insert(members.indexOf(strumLines), rating);
+
+		FlxTween.tween(rating, {alpha: 0}, (Conductor.stepCrochet) / 1000, {
 			onComplete: function(tween:FlxTween)
 			{
 				rating.kill();
@@ -1692,7 +1693,11 @@ class PlayState extends MusicBeatState
 		for (scoreInt in 0...stringArray.length)
 		{
 			var comboNum = ForeverAssets.generateCombo('combo_numbers', stringArray[scoreInt], (!negative ? perfect : false), comboGroup, assetModifier, changeableSkin, 'UI', negative, createdColor, scoreInt);
-			add(comboNum);
+			
+			/**
+			 * Credits to Shadow_Mario_;
+			 */
+			insert(members.indexOf(strumLines), comboNum);
 
 			FlxTween.tween(comboNum, {alpha: 0}, (Conductor.stepCrochet * 2) / 1000, {
 				onComplete: function(tween:FlxTween)

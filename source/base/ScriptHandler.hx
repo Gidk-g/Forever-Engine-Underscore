@@ -44,11 +44,16 @@ class ScriptHandler extends SScript
 		set('FlxSpriteGroup', FlxSpriteGroup);
 		set('FlxSort', FlxSort);
 
+		set('Paths', Paths);
+		set('Controls', Controls);
+		set('PlayState', PlayState);
 		set('Note', Note);
-		set('Strumline', Strumline);
-		set('Conductor', Conductor);
 		set('ForeverAssets', ForeverAssets);
 		set('ForeverTools', ForeverTools);
+		set('Strumline', Strumline);
+		set('Timings', Timings);
+		set('Conductor', Conductor);
+		set('Init', Init);
 	}
 }
 
@@ -67,11 +72,6 @@ class ScriptFuncs extends PlayState
 		PlayState.contents.setVar('trueAccuracy', Timings.trueAccuracy);
 		PlayState.contents.setVar('formattedAccuracy', Math.floor(Timings.getAccuracy() * 100) / 100);
 		PlayState.contents.setVar('formattedRanking', Timings.returnScoreRating().toUpperCase());
-
-		PlayState.contents.setVar('Paths', Paths);
-		PlayState.contents.setVar('Controls', Controls);
-		PlayState.contents.setVar('PlayState', PlayState);
-		PlayState.contents.setVar('Timings', Timings);
 
 		PlayState.contents.setVar('makeSprite', function(spriteID:String, x:Int = 0, y:Int = 0, graphicCol:Dynamic)
 		{
@@ -119,7 +119,7 @@ class ScriptFuncs extends PlayState
 				PlayState.contents.setVar('$spriteID', newSprite);
 				PlayState.contents.add(newSprite);
 			});
-			
+
 		PlayState.contents.setVar('addSpriteAnimation', function(spriteID:String, newAnims:Array<Dynamic>)
 		{
 			var gottenSprite:FNFSprite = PlayState.ScriptedGraphics.get(spriteID);
@@ -134,7 +134,7 @@ class ScriptFuncs extends PlayState
 			var gottenSprite:FNFSprite = PlayState.ScriptedGraphics.get(spriteID);
 			gottenSprite.addOffset(anim, x, y);
 		});
-		
+
 		PlayState.contents.setVar('spritePlayAnimation', function(spriteID:String, animToPlay:String, forced:Bool = true)
 		{
 			var gottenSprite:FNFSprite = PlayState.ScriptedGraphics.get(spriteID);
@@ -237,16 +237,6 @@ class ScriptFuncs extends PlayState
 			FlxG.sound.play(Paths.sound(sound));
 		});
 
-		PlayState.contents.setVar('getSetting', function(key:String)
-		{
-			Init.trueSettings.get(key);
-		});
-
-		PlayState.contents.setVar('setSetting', function(key:String, value:Dynamic)
-		{
-			Init.trueSettings.set(key, value);
-		});
-
 		PlayState.contents.setVar('getColor', function(color:String)
 		{
 			ForeverTools.getColorFromString(color);
@@ -276,38 +266,39 @@ class ScriptFuncs extends PlayState
 			}));
 		});
 
-		PlayState.contents.setVar('doStrumTween', function(tweenID:String, tweenProperty:String, strumline:String, newNote:Int, value:Dynamic, time:Float, ease:String)
-		{
-			endTween(tweenID);
-			var tweenType = {};
-			var epicNote = PlayState.bfStrums.receptors.members[newNote];
-			var newTween:FlxTween = null;
-
-			switch (strumline)
+		PlayState.contents.setVar('doStrumTween',
+			function(tweenID:String, tweenProperty:String, strumline:String, newNote:Int, value:Dynamic, time:Float, ease:String)
 			{
-				case 'dadStrums' | 'dadOpponentStrums' | 'dad' | 'opponentStrums':
-					epicNote = PlayState.dadStrums.receptors.members[newNote];
-				default:
-					epicNote = PlayState.bfStrums.receptors.members[newNote];
-			}
+				endTween(tweenID);
+				var tweenType = {};
+				var epicNote = PlayState.bfStrums.receptors.members[newNote];
+				var newTween:FlxTween = null;
 
-			/**
-			 * originally made for psych engine as a pull request
-			 * https://github.com/ShadowMario/FNF-PsychEngine/pull/10433
-			 * credits to Cherri#0815
-			 */
-			Reflect.setField(tweenType, tweenProperty, value);
-
-			PlayState.ScriptedTweens.set(tweenID, newTween = FlxTween.tween(epicNote, tweenType, time, {
-				ease: ForeverTools.getEaseFromString(ease),
-				onComplete: function(tween:FlxTween)
+				switch (strumline)
 				{
-					newTween.cancel();
-					completeTween(tweenID);
-					newTween = null;
+					case 'dadStrums' | 'dadOpponentStrums' | 'dad' | 'opponentStrums':
+						epicNote = PlayState.dadStrums.receptors.members[newNote];
+					default:
+						epicNote = PlayState.bfStrums.receptors.members[newNote];
 				}
-			}));
-		});
+
+				/**
+				 * originally made for psych engine as a pull request
+				 * https://github.com/ShadowMario/FNF-PsychEngine/pull/10433
+				 * credits to Cherri#0815
+				 */
+				Reflect.setField(tweenType, tweenProperty, value);
+
+				PlayState.ScriptedTweens.set(tweenID, newTween = FlxTween.tween(epicNote, tweenType, time, {
+					ease: ForeverTools.getEaseFromString(ease),
+					onComplete: function(tween:FlxTween)
+					{
+						newTween.cancel();
+						completeTween(tweenID);
+						newTween = null;
+					}
+				}));
+			});
 	}
 
 	public static function completeTween(tweenID:String)
@@ -318,11 +309,11 @@ class ScriptFuncs extends PlayState
 
 	public static function endTween(tweenID:String)
 	{
-		if(PlayState.ScriptedTweens.exists(tweenID))
+		if (PlayState.ScriptedTweens.exists(tweenID))
 		{
 			PlayState.ScriptedTweens.get(tweenID).cancel();
 			PlayState.ScriptedTweens.get(tweenID).destroy();
 			PlayState.ScriptedTweens.remove(tweenID);
 		}
-	}	
+	}
 }
