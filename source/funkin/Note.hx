@@ -50,8 +50,7 @@ class Note extends FNFSprite
 	// it has come to this.
 	public var endHoldOffset:Float = Math.NEGATIVE_INFINITY;
 
-	public var healthGain:Float = 0.023;
-	public var healthLoss:Float = 0.0475;
+	public var noteHealth:Float = 0.023;
 
 	public var hitSounds:Bool = true;
 	public var canHurt:Bool = false;
@@ -60,13 +59,18 @@ class Note extends FNFSprite
 
 	public var hitsoundSuffix = '';
 
-	static var noteColorID:Array<String> = ['purple', 'blue', 'green', 'red'];
-	static var directionID:Array<String> = ['left', 'down', 'up', 'right'];
 	static var pixelNoteID:Array<Int> = [4, 5, 6, 7];
+
+	public static var noteScript:ScriptHandler;
+	public static var existingNotes:Map<Int, ScriptHandler> = [];
+
+	public static var contents:Note;
 
 	public function new(strumTime:Float, noteData:Int, noteAlt:Float, ?prevNote:Note, ?sustainNote:Bool = false, ?noteType:Int = 0)
 	{
 		super(x, y);
+
+		contents = this;
 
 		if (prevNote == null)
 			prevNote = this;
@@ -86,7 +90,7 @@ class Note extends FNFSprite
 				canHurt = false;
 				gfNote = false;
 			case 3: // mines
-				healthLoss = 0.065;
+				noteHealth -= 0.065;
 				updateAccuracy = true;
 				hitSounds = false;
 				canHurt = true;
@@ -127,7 +131,39 @@ class Note extends FNFSprite
 		}
 		else if (!isSustainNote)
 			parentNote = null;
+
+		loadNote(noteType);
 	}
+
+	public function loadNote(noteType:Int)
+	{
+		noteScript = getNoteScript(noteType);
+
+		noteScript.call(isSustainNote ? 'generateSustain' : 'generateNote', [noteType]);
+
+		noteScript.set('getNoteColor', getNoteColor);
+		noteScript.set('getNoteDir', getNoteDir);
+
+		antialiasing = !Init.trueSettings.get('Disable Antialiasing');
+		setGraphicSize(Std.int(width * 0.7));
+		updateHitbox();
+	}
+
+	public static function getNoteScript(noteType:Int):ScriptHandler
+	{
+		if(!existingNotes.exists(noteType))
+		{
+			trace('new note script ID: $noteType');
+			existingNotes.set(noteType, new ScriptHandler(Paths.getPreloadPath('notetypes/$noteType.hx')));
+		}
+		return existingNotes.get(noteType);
+	}
+	
+	static function getNoteDir(?id:Int)
+		return UIStaticArrow.getArrowFromNumber(id);
+
+	static function getNoteColor(?id:Int)
+		return UIStaticArrow.getColorFromNumber(id);
 
 	override function update(elapsed:Float)
 	{
@@ -180,7 +216,7 @@ class Note extends FNFSprite
 					{
 						case 3: // pixel mines;
 							newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('mines', assetModifier, '', 'noteskins/mines')), true, 17, 17);
-							newNote.animation.add(noteColorID[noteData] + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7], 12);
+							newNote.animation.add(getNoteColor(noteData) + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7], 12);
 
 						default: // pixel notes default
 							reloadPrefixes('arrows-pixels', 'noteskins/notes', true, assetModifier, newNote);
@@ -195,7 +231,7 @@ class Note extends FNFSprite
 				{
 					case 3: // mines
 						newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('mines', assetModifier, '', 'noteskins/mines')), true, 133, 128);
-						newNote.animation.add(noteColorID[noteData] + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+						newNote.animation.add(getNoteColor(noteData) + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
 						if (isSustainNote)
 							newNote.kill();
@@ -292,12 +328,12 @@ class Note extends FNFSprite
 							if (assetModifier == 'pixel')
 							{
 								newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('mines', assetModifier, '', 'noteskins/mines')), true, 17, 17);
-								newNote.animation.add(directionID[noteData] + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7], 12);
+								newNote.animation.add(getNoteDir(noteData) + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7], 12);
 							}
 							else
 							{
 								newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('mines', assetModifier, '', 'noteskins/mines')), true, 133, 128);
-								newNote.animation.add(directionID[noteData] + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 12);
+								newNote.animation.add(getNoteDir(noteData) + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 12);
 							}
 
 						default:
@@ -387,9 +423,9 @@ class Note extends FNFSprite
 		{
 			newNote.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset(texture, assetModifier, (changeable ? Init.trueSettings.get("Note Skin") : ''), texturePath));
 
-			newNote.animation.addByPrefix(noteColorID[newNote.noteData] + 'Scroll', noteColorID[newNote.noteData] + '0');
-			newNote.animation.addByPrefix(noteColorID[newNote.noteData] + 'holdend', noteColorID[newNote.noteData] + ' hold end');
-			newNote.animation.addByPrefix(noteColorID[newNote.noteData] + 'hold', noteColorID[newNote.noteData] + ' hold piece');
+			newNote.animation.addByPrefix(getNoteColor(newNote.noteData) + 'Scroll', getNoteColor(newNote.noteData) + '0');
+			newNote.animation.addByPrefix(getNoteColor(newNote.noteData) + 'holdend', getNoteColor(newNote.noteData) + ' hold end');
+			newNote.animation.addByPrefix(getNoteColor(newNote.noteData) + 'hold', getNoteColor(newNote.noteData) + ' hold piece');
 
 			newNote.animation.addByPrefix('purpleholdend', 'pruple end hold'); // PA god dammit.
 
@@ -402,13 +438,13 @@ class Note extends FNFSprite
 			if (newNote.isSustainNote)
 			{
 				newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(texture, assetModifier, (changeable ? Init.trueSettings.get("Note Skin") : ''), texturePath)), true, 7, 6);
-				newNote.animation.add(noteColorID[newNote.noteData] + 'holdend', [pixelNoteID[newNote.noteData]]);
-				newNote.animation.add(noteColorID[newNote.noteData] + 'hold', [pixelNoteID[newNote.noteData] - 4]);
+				newNote.animation.add(getNoteColor(newNote.noteData) + 'holdend', [pixelNoteID[newNote.noteData]]);
+				newNote.animation.add(getNoteColor(newNote.noteData) + 'hold', [pixelNoteID[newNote.noteData] - 4]);
 			}
 			else
 			{
 				newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(texture, assetModifier, (changeable ? Init.trueSettings.get("Note Skin") : ''), texturePath)), true, 17, 17);
-				newNote.animation.add(noteColorID[newNote.noteData] + 'Scroll', [pixelNoteID[newNote.noteData]], 12);
+				newNote.animation.add(getNoteColor(newNote.noteData) + 'Scroll', [pixelNoteID[newNote.noteData]], 12);
 			}
 		}
 	}
@@ -425,7 +461,7 @@ class Note extends FNFSprite
 		{
 			case 3:
 				PlayState.contents.decreaseCombo(true);
-				PlayState.health -= healthLoss;
+				PlayState.health -= noteHealth;
 			default:
 				if (newNote.hitSounds)
 				{

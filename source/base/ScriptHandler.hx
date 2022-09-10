@@ -3,6 +3,9 @@ package base;
 import base.*;
 import dependency.FNFSprite;
 import flixel.*;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.group.FlxGroup;
+import flixel.group.FlxSpriteGroup;
 import flixel.math.*;
 import flixel.system.*;
 import flixel.tweens.*;
@@ -36,6 +39,16 @@ class ScriptHandler extends SScript
 		set('FlxEase', FlxEase);
 		set('FlxMath', FlxMath);
 		set('FlxSound', FlxSound);
+		set('FlxGroup', FlxGroup);
+		set('FlxTypedGroup', FlxTypedGroup);
+		set('FlxSpriteGroup', FlxSpriteGroup);
+		set('FlxSort', FlxSort);
+
+		set('Note', Note);
+		set('Strumline', Strumline);
+		set('Conductor', Conductor);
+		set('ForeverAssets', ForeverAssets);
+		set('ForeverTools', ForeverTools);
 	}
 }
 
@@ -58,10 +71,7 @@ class ScriptFuncs extends PlayState
 		PlayState.contents.setVar('Paths', Paths);
 		PlayState.contents.setVar('Controls', Controls);
 		PlayState.contents.setVar('PlayState', PlayState);
-		PlayState.contents.setVar('Note', Note);
-		PlayState.contents.setVar('Strumline', Strumline);
 		PlayState.contents.setVar('Timings', Timings);
-		PlayState.contents.setVar('Conductor', Conductor);
 
 		PlayState.contents.setVar('makeSprite', function(spriteID:String, x:Int = 0, y:Int = 0, graphicCol:Dynamic)
 		{

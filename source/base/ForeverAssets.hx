@@ -264,12 +264,7 @@ class ForeverAssets
 			noteType:Int = 0):Note
 	{
 		var newNote:Note;
-		var changeableSkin:String = Init.trueSettings.get("Note Skin");
-		// gonna improve the system eventually
-		if (changeableSkin.startsWith('quant'))
-			newNote = Note.returnQuantNote(assetModifier, strumTime, noteData, noteAlt, isSustainNote, prevNote, noteType);
-		else
-			newNote = Note.returnDefaultNote(assetModifier, strumTime, noteData, noteAlt, isSustainNote, prevNote, noteType);
+		newNote = Note.returnDefaultNote(assetModifier, strumTime, noteData, noteAlt, isSustainNote, prevNote, noteType);
 
 		// hold note shit
 		if (isSustainNote && prevNote != null)

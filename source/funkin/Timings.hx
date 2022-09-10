@@ -109,6 +109,7 @@ class Timings
 			case 'GFC': curFC = 1;
 			case 'FC': curFC = 2;
 			case 'SDCB': curFC = 3;
+			case '' | null: curFC = -1;
 			default: curFC = 0;
 		}
 
