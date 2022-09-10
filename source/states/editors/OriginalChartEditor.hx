@@ -1319,9 +1319,9 @@ class OriginalChartEditor extends MusicBeatState
 			var daStrumTime = i[0];
 			var daNoteInfo = i[1];
 			var daSus = i[2];
-			var daNoteType:Int = i[3];
+			var daNoteType:String = i[3];
 
-			#if DEBUG_TRACES trace('Current note type is ' + curNoteName[daNoteType] + '.'); #end
+			#if DEBUG_TRACES trace('Current note type is ' + daNoteType + '.'); #end
 			
 			var note:Note = ForeverAssets.generateArrow(_song.assetModifier, daStrumTime, daNoteInfo % 4, 0, null, null, daNoteType);
 			note.sustainLength = daSus;
@@ -1341,7 +1341,7 @@ class OriginalChartEditor extends MusicBeatState
 			}
 
 			// attach a text to their respective notetype;
-			if (daNoteType != 0)
+			if (daNoteType != 'default')
 			{
 				var noteTypeNum:EventText = new EventText(0, 0, 100, Std.string(daNoteType), 24);
 				noteTypeNum.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);

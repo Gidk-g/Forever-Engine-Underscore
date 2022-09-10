@@ -377,7 +377,7 @@ class ChartEditor extends MusicBeatState
 
 					var notesSection = Math.floor(noteStrum / (Conductor.stepCrochet * 16));
 					var noteData = adjustSide(Math.floor((dummyArrow.x - fullGrid.x) / gridSize), _song.notes[notesSection].mustHitSection);
-					var noteType = curNoteType;
+					var noteType = Std.string(curNoteType);
 					var noteSus = 0; // ninja you will NOT get away with this
 
 					// noteCleanup(notesSection, noteStrum, noteData);
@@ -665,7 +665,7 @@ class ChartEditor extends MusicBeatState
 		generateSustain(daStrumTime, daNoteInfo, daSus, daNoteAlt, daNoteType, note);
 
 		// attach a text to their respective notetype;
-		if (daNoteType != 0)
+		if (daNoteType != 'default')
 		{
 			var noteTypeNum:EventText = new EventText(0, 0, 100, Std.string(daNoteType), 24);
 			noteTypeNum.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -681,7 +681,7 @@ class ChartEditor extends MusicBeatState
 			note.mustPress = !note.mustPress;
 	}
 
-	private function generateSustain(daStrumTime:Float = 0, daNoteInfo:Int = 0, daSus:Float = 0, daNoteAlt:Float = 0, daNoteType:Int = 0, prevNote:Note)
+	private function generateSustain(daStrumTime:Float = 0, daNoteInfo:Int = 0, daSus:Float = 0, daNoteAlt:Float = 0, daNoteType:String = 'default', prevNote:Note)
 	{
 		if (daSus > 0 && prevNote != null)
 		{
