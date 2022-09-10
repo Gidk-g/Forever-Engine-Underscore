@@ -11,7 +11,7 @@ class NoteScript extends ScriptHandler
     {
         this.type = type;
 
-        var scriptFile:String = Paths.getModPath('custom_notes', '${type}', 'hx');
+		var scriptFile:String = Paths.getModPath('notetypes', '${type}', 'hx');
         if (!FileSystem.exists(scriptFile))
 			scriptFile = Paths.getPreloadPath('notetypes/${type}.hx');
         if (!FileSystem.exists(scriptFile))
@@ -28,14 +28,14 @@ class NoteScript extends ScriptHandler
     override function preset():Void
     {
         set('type', type);
-        set('reloadNote', function(sk:String)
+		set('reloadNote', function(tex:String)
         {
-            this.skin = sk;
+            this.skin = tex;
 
             @:privateAccess
             for (i in states.PlayState.contents.unspawnNotes)
             {
-                funkin.Note.reloadPrefixes(sk, null, null, null, i);
+				funkin.Note.reloadPrefixes(tex, '${type}', false, 'base', i);
             }
         });
     
@@ -48,7 +48,6 @@ class NoteScript extends ScriptHandler
 	function get_skin():String 
     {
         //if (isMine)
-
-		return skin;
+		    return skin;
 	}
 }
