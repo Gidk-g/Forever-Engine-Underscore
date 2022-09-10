@@ -19,9 +19,9 @@ import sys.io.File;
 
 class ScriptHandler extends SScript
 {
-	public function new(file:String, ?preset:Bool = true)
+	public function new(file:String, ?preset:Bool = true, ?executeOnStart:Bool = true)
 	{
-		super(file, preset);
+		super(file, preset, executeOnStart);
 		traces = false;
 	}
 

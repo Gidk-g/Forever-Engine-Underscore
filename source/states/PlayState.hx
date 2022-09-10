@@ -1426,7 +1426,7 @@ class PlayState extends MusicBeatState
 
 		if (((SONG.notes[Math.floor(curStep / 16)] != null) && (SONG.notes[Math.floor(curStep / 16)].altAnim))
 			&& (character.animOffsets.exists(baseString + '-alt'))
-			|| (coolNote.noteType == 1))
+			|| (coolNote.noteType == 'Alt Animation'))
 		{
 			if (altString != '-alt')
 				altString = '-alt';
@@ -1436,18 +1436,18 @@ class PlayState extends MusicBeatState
 
 		switch (coolNote.noteType)
 		{
-			case 2: // hey notes
+			case 'Hey': // hey notes
 				stringArrow = 'hey'; // sets the animation string for this note;
 				character.specialAnim = true;
 				character.heyTimer = 0.6;
-			case 3: // mines
+			case 'Mine': // mines
 				if (character.curCharacter == 'bf-psych')
 					stringArrow = 'hurt';
 				else
 					stringArrow = baseString + 'miss';
 				character.specialAnim = true;
 				character.heyTimer = 0.6;
-			case 5: // no animation notes
+			case 'No Animation': // no animation notes
 				stringArrow = '';
 				altString = '';
 			default: // anything else
@@ -2401,7 +2401,8 @@ class PlayState extends MusicBeatState
 	{
 		var dirs:Array<Array<String>> = [
 			CoolUtil.absoluteDirectory('scripts'),
-			CoolUtil.absoluteDirectory('songs/${SONG.song.toLowerCase().replace(' ', '-')}')
+			CoolUtil.absoluteDirectory('songs/${SONG.song.toLowerCase().replace(' ', '-')}'),
+			CoolUtil.absoluteDirectory('notetypes'),
 		];
 
 		for (dir in dirs)

@@ -16,7 +16,7 @@ class Note extends FNFSprite
 	public var mustPress:Bool = false;
 	public var noteData:Int = 0;
 	public var noteAlt:Float = 0;
-	public var noteType:Int = 0;
+	public var noteType:String;
 
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
@@ -61,12 +61,11 @@ class Note extends FNFSprite
 
 	static var pixelNoteID:Array<Int> = [4, 5, 6, 7];
 
-	public static var noteScript:ScriptHandler;
-	public static var existingNotes:Map<Int, ScriptHandler> = [];
+	public var globalScript:NoteScript;
 
 	public static var contents:Note;
 
-	public function new(strumTime:Float, noteData:Int, noteAlt:Float, ?prevNote:Note, ?sustainNote:Bool = false, ?noteType:Int = 0)
+	public function new(strumTime:Float, noteData:Int, noteAlt:Float, ?prevNote:Note, ?sustainNote:Bool = false)
 	{
 		super(x, y);
 
@@ -76,30 +75,26 @@ class Note extends FNFSprite
 			prevNote = this;
 
 		this.prevNote = prevNote;
-		this.noteType = noteType;
 		isSustainNote = sustainNote;
-
-		if (noteType == null || noteType <= 0)
-			noteType = 0;
 
 		switch (noteType)
 		{
-			case 2: // hey notes
+			case 'Hey!': // hey notes
 				updateAccuracy = true;
 				hitSounds = true;
 				canHurt = false;
 				gfNote = false;
-			case 3: // mines
+			case 'Mine': // mines
 				noteHealth -= 0.065;
 				updateAccuracy = true;
 				hitSounds = false;
 				canHurt = true;
 				lowPriority = true;
 				gfNote = false;
-			case 4: // gf notes
+			case 'GF Note': // gf notes
 				updateAccuracy = true;
 				gfNote = true;
-			case 5: // no animation notes
+			case 'No Animation': // no animation notes
 				updateAccuracy = true;
 				hitSounds = false;
 				canHurt = false;
@@ -129,34 +124,9 @@ class Note extends FNFSprite
 
 			hitSounds = false;
 		}
+		
 		else if (!isSustainNote)
 			parentNote = null;
-
-		loadNote(noteType);
-	}
-
-	public function loadNote(noteType:Int)
-	{
-		noteScript = getNoteScript(noteType);
-
-		noteScript.call(isSustainNote ? 'generateSustain' : 'generateNote', [noteType]);
-
-		noteScript.set('getNoteColor', getNoteColor);
-		noteScript.set('getNoteDir', getNoteDir);
-
-		antialiasing = !Init.trueSettings.get('Disable Antialiasing');
-		setGraphicSize(Std.int(width * 0.7));
-		updateHitbox();
-	}
-
-	public static function getNoteScript(noteType:Int):ScriptHandler
-	{
-		if(!existingNotes.exists(noteType))
-		{
-			trace('new note script ID: $noteType');
-			existingNotes.set(noteType, new ScriptHandler(Paths.getPreloadPath('notetypes/$noteType.hx')));
-		}
-		return existingNotes.get(noteType);
 	}
 	
 	static function getNoteDir(?id:Int)
@@ -192,10 +162,11 @@ class Note extends FNFSprite
 		at the very bottom of this file you can find the function
 		for setting up custom note behavior when hit and such
 	**/
-	public static function returnDefaultNote(assetModifier, strumTime, noteData, noteAlt, ?isSustainNote:Bool = false, ?prevNote:Note, noteType:Int = 0):Note
+	public static function returnDefaultNote(assetModifier, strumTime, noteData, noteAlt, ?isSustainNote:Bool = false, ?prevNote:Note, ?noteType:String):Note
 	{
-		var newNote:Note = new Note(strumTime, noteData, noteAlt, prevNote, isSustainNote, noteType);
-
+		var newNote:Note = new Note(strumTime, noteData, noteAlt, prevNote, isSustainNote);
+		newNote.noteType = noteType;
+		
 		// frames originally go here
 		switch (assetModifier)
 		{
@@ -204,7 +175,7 @@ class Note extends FNFSprite
 				{
 					switch (noteType)
 					{
-						case 3:
+						case 'Mine':
 							newNote.kill();
 						default: // pixel holds default
 							reloadPrefixes('arrowEnds', 'noteskins/notes', true, assetModifier, newNote);
@@ -214,7 +185,7 @@ class Note extends FNFSprite
 				{
 					switch (noteType)
 					{
-						case 3: // pixel mines;
+						case 'Mine': // pixel mines;
 							newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('mines', assetModifier, '', 'noteskins/mines')), true, 17, 17);
 							newNote.animation.add(getNoteColor(noteData) + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7], 12);
 
@@ -229,7 +200,7 @@ class Note extends FNFSprite
 			default: // base game arrows for no reason whatsoever
 				switch (noteType)
 				{
-					case 3: // mines
+					case 'Mine': // mines
 						newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('mines', assetModifier, '', 'noteskins/mines')), true, 133, 128);
 						newNote.animation.add(getNoteColor(noteData) + 'Scroll', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
@@ -267,9 +238,10 @@ class Note extends FNFSprite
 		return newNote;
 	}
 
-	public static function returnQuantNote(assetModifier, strumTime, noteData, noteAlt, ?isSustainNote:Bool = false, ?prevNote:Note = null, noteType:Int = 0):Note
+	public static function returnQuantNote(assetModifier, strumTime, noteData, noteAlt, ?isSustainNote:Bool = false, ?prevNote:Note = null, ?noteType:String):Note
 	{
-		var newNote:Note = new Note(strumTime, noteData, noteAlt, prevNote, isSustainNote, noteType);
+		var newNote:Note = new Note(strumTime, noteData, noteAlt, prevNote, isSustainNote);
+		newNote.noteType = noteType;
 
 		// actually determine the quant of the note
 		if (newNote.noteQuant == -1)
@@ -324,7 +296,7 @@ class Note extends FNFSprite
 				{
 					switch (noteType)
 					{
-						case 3: // pixel mines
+						case 'Mine': // pixel mines
 							if (assetModifier == 'pixel')
 							{
 								newNote.loadGraphic(Paths.image(ForeverTools.returnSkinAsset('mines', assetModifier, '', 'noteskins/mines')), true, 17, 17);
@@ -354,7 +326,7 @@ class Note extends FNFSprite
 				{
 					switch (noteType)
 					{
-						case 3:
+						case 'Mine':
 							newNote.kill();
 						default:
 							// quant holds
@@ -369,7 +341,7 @@ class Note extends FNFSprite
 				}
 
 				var sizeThing = 0.7;
-				if (noteType == 5)
+				if (noteType == 'No Animation')
 					sizeThing = 0.8;
 
 				if (assetModifier == 'pixel')
@@ -459,7 +431,7 @@ class Note extends FNFSprite
 		var hitsound = Init.trueSettings.get('Hitsound Type');
 		switch (newNote.noteType)
 		{
-			case 3:
+			case 'Mine':
 				PlayState.contents.decreaseCombo(true);
 				PlayState.health -= noteHealth;
 			default:

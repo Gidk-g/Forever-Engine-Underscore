@@ -174,12 +174,13 @@ class ChartParser
 						var daStrumTime:Float = songNotes[0]#if !neko - Init.trueSettings['Offset'] #end; // - | late, + | early
 						var daNoteData:Int = Std.int(songNotes[1] % 4);
 						var daNoteAlt:Float = 0;
-						var daNoteType:Int = 0; // define the note's type
+						var daNoteType:String = null; // define the note's type
 
 						if (songNotes.length > 2)
 						{
 							daNoteType = songNotes[3];
 						}
+						
 						var gottaHitNote:Bool = section.mustHitSection;
 						if (songNotes[1] > 3)
 							gottaHitNote = !section.mustHitSection;

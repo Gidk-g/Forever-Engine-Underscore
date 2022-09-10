@@ -261,7 +261,7 @@ class ForeverAssets
 		Notes!
 	**/
 	public static function generateArrow(assetModifier, strumTime, noteData, noteAlt, ?isSustainNote:Bool = false, ?prevNote:Note = null,
-			noteType:Int = 0):Note
+			?noteType:String):Note
 	{
 		var newNote:Note;
 		newNote = Note.returnDefaultNote(assetModifier, strumTime, noteData, noteAlt, isSustainNote, prevNote, noteType);
