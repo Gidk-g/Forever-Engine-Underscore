@@ -481,7 +481,7 @@ final class Paths
 		return getModPath('videos', key, VIDEO_EXT);
 	}
 
-	inline public static function modNonMP4Video(key:String)
+	inline static public function modNonMP4Video(key:String)
 	{
 		var returnPath:String = 'mods/$currentPack/videos/$key';
 		if (!FileSystem.exists(returnPath))
