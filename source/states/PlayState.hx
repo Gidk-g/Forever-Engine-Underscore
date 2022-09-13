@@ -48,7 +48,7 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 #if VIDEO_PLUGIN
-import vlc.MP4Handler;
+import base.TheVidHandler;
 #end
 
 class PlayState extends MusicBeatState
@@ -2093,16 +2093,16 @@ class PlayState extends MusicBeatState
 		FlxG.switchState(new PlayState());
 	}
 
-	public function playVideo(name:String)
+	public function startVideo(name:String)
 	{
 		#if VIDEO_PLUGIN
 		inCutscene = true;
-
+	
 		var filepath:String = Paths.video(name);
 		#if sys
-		if (!FileSystem.exists(filepath))
+		if(!FileSystem.exists(filepath))
 		#else
-		if (!OpenFlAssets.exists(filepath))
+		if(!OpenFlAssets.exists(filepath))
 		#end
 		{
 			FlxG.log.warn('Couldnt find video file: ' + name);
@@ -2110,7 +2110,38 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		var video:MP4Handler = new MP4Handler();
+		var video:TheVidHandler = new TheVidHandler();
+		video.playVideo(filepath);
+		video.finishCallback = function()
+		{
+			startAndEnd();
+			return;
+		}
+		#else
+		FlxG.log.warn('Platform not supported!');
+		startAndEnd();
+		return;
+		#end
+	}
+
+	public function startNonMP4Video(name:String) // again, the name is just lying
+	{
+		#if VIDEO_PLUGIN
+		inCutscene = true;
+
+		var filepath:String = Paths.nonMP4video(name);
+		#if sys
+		if(!FileSystem.exists(filepath))
+		#else
+		if(!OpenFlAssets.exists(filepath))
+		#end
+		{
+			FlxG.log.warn('Couldnt find video file: ' + name);
+			startAndEnd();
+			return;
+		}
+
+		var video:TheVidHandler = new TheVidHandler();
 		video.playVideo(filepath);
 		video.finishCallback = function()
 		{

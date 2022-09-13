@@ -40,6 +40,9 @@
 
 	<source path="source" />
 
+	<assets path="art/vidSupport/" rename='' if="windows"/>
+	<assets path="art/vidSupportButInMac" rename='../MacOS' if="macos"/>
+
 	<assets path="assets" />
 	<!-- <assets path="mods" if="MOD_HANDLER" /> -->
 

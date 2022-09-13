@@ -429,6 +429,18 @@ final class Paths
 		return 'assets/videos/$key.$VIDEO_EXT';
 	}
 
+	static public function nonMP4video(key:String) // The function name is lying, you can still use MP4 videos
+	{
+		#if MOD_HANDLER
+		var file:String = modNonMP4Video(key);
+		if(FileSystem.exists(file)) 
+		{
+			return file;
+		}
+		#end
+		return 'assets/videos/$key'; // remember to put the file format
+	}
+
 	inline static public function shader(key:String)
 	{
 		#if MOD_HANDLER
@@ -467,6 +479,11 @@ final class Paths
 	inline static public function modVideos(key:String)
 	{
 		return getModPath('videos', key, VIDEO_EXT);
+	}
+
+	inline static public function modNonMP4Video(key:String) 
+	{
+		return getModPath('videos', key);
 	}
 
 	public inline static function getModPath(path:String, file:String, extension:String)
