@@ -481,9 +481,12 @@ final class Paths
 		return getModPath('videos', key, VIDEO_EXT);
 	}
 
-	inline static public function modNonMP4Video(key:String) 
+	public inline static function modNonMP4Video(key:String)
 	{
-		return getModPath('videos', key);
+		var returnPath:String = 'mods/$currentPack/videos/$key';
+		if (!FileSystem.exists(returnPath))
+			returnPath = CoolUtil.swapSpaceDash(returnPath);
+		return returnPath;
 	}
 
 	public inline static function getModPath(path:String, file:String, extension:String)
